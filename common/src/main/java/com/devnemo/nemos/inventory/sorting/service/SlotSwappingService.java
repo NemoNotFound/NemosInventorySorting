@@ -54,7 +54,7 @@ public class SlotSwappingService {
         }
 
         try {
-            var itemTagClass = Class.forName("com.nemonotfound.nemos.backpacks.tags.NemosBackpackItemTags");
+            var itemTagClass = Class.forName("com.nemonotfound.nemos.backpacks.tags.BackpackItemTags");
             var field = itemTagClass.getDeclaredField("BACKPACKS");
 
             @SuppressWarnings("unchecked")
