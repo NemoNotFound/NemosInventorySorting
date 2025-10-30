@@ -292,7 +292,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 
         if (NemosInventorySortingClientCommon.MOD_LOADER_HELPER.isModLoaded(NEMOS_BACKPACKS_MOD_ID)) {
             try {
-                var clazz = Class.forName("com.devnemo.nemos.backpacks.world.inventory.BackpackMenu");
+                var clazz = Class.forName("com.nemonotfound.nemos.backpacks.world.inventory.BackpackMenu");
 
                 if (clazz.isInstance(menu)) {
                     return true;
@@ -304,7 +304,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 
         return menu instanceof ChestMenu ||
                 menu instanceof ShulkerBoxMenu ||
-                nemosInventorySorting$isModdedContainerMenu(menu, NEMOS_BACKPACKS_MOD_ID, "com.devnemo.nemos.backpacks.world.inventory.BackpackMenu") ||
+                nemosInventorySorting$isModdedContainerMenu(menu, NEMOS_BACKPACKS_MOD_ID, "com.nemonotfound.nemos.backpacks.world.inventory.BackpackMenu") ||
                 nemosInventorySorting$isModdedContainerMenu(menu, REINFORCED_CHESTS_MOD_ID, "atonkish.reinfcore.screen.ReinforcedStorageScreenHandler") ||
                 nemosInventorySorting$isModdedContainerMenu(menu, REINFORCED_BARRELS_MOD_ID, "atonkish.reinfcore.screen.ReinforcedStorageScreenHandler") ||
                 nemosInventorySorting$isModdedContainerMenu(menu, REINFORCED_SHULKER_BOXES_MOD_ID, "atonkish.reinfcore.screen.ReinforcedStorageScreenHandler");
