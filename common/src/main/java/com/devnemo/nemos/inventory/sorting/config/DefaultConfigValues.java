@@ -32,7 +32,7 @@ public class DefaultConfigValues {
     public static int RIGHT_X_OFFSET_MOVE_SAME_STORAGE_CONTAINER = -47;
     public static int RIGHT_X_OFFSET_MOVE_ALL_STORAGE_CONTAINER = -33;
     public static int RIGHT_X_OFFSET_DROP_ALL_STORAGE_CONTAINER = -19;
-    public static int Y_OFFSET_CONTAINER = -6;
+    public static int Y_OFFSET_CONTAINER = 5;
 
     public static int X_OFFSET_SORT_INVENTORY = 136;
     public static int X_OFFSET_DROP_ALL_INVENTORY = 154;
