@@ -39,7 +39,7 @@ public class MoveSameButton extends AbstractSingleClickButton<MoveSameButton> {
     }
 
     @Override
-    public void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean bl) {
+    public void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
         interactWithAllItems(ClickType.QUICK_MOVE, 0);
     }
 
@@ -55,10 +55,9 @@ public class MoveSameButton extends AbstractSingleClickButton<MoveSameButton> {
     @Override
     protected @NotNull List<Integer> getItemSlotsToInteractWith(AbstractContainerMenu menu) {
         var slots = menu.slots;
-        var newEndIndex = calculateEndIndex();
-        var itemsOutOfIndexRange = getItemsOutOfIndexRange(slots, startIndex, newEndIndex);
+        var itemsOutOfIndexRange = getItemsOutOfIndexRange(slots, startIndex, currentEndIndex);
 
-        return IntStream.range(startIndex, newEndIndex)
+        return IntStream.range(startIndex, currentEndIndex)
                 .mapToObj(slotIndex -> Map.entry(slotIndex, slots.get(slotIndex).getItem()))
                 .filter(itemStackEntry -> isItemInOtherContainer(itemStackEntry.getValue(), itemsOutOfIndexRange))
                 .map(Map.Entry::getKey)

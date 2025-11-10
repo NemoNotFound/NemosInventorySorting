@@ -6,6 +6,7 @@ import com.devnemo.nemos.inventory.sorting.config.model.FilterConfig;
 import com.devnemo.nemos.inventory.sorting.config.service.ConfigService;
 import com.devnemo.nemos.inventory.sorting.factory.*;
 import com.devnemo.nemos.inventory.sorting.gui.components.FilterBox;
+import com.devnemo.nemos.inventory.sorting.gui.components.buttons.ToggleFilterPersistenceButton;
 import com.devnemo.nemos.inventory.sorting.helper.ButtonTypeMapping;
 import com.devnemo.nemos.inventory.sorting.model.FilterResult;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,6 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.*;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -140,7 +142,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
         var yOffset = config.yOffset() != null ? config.yOffset() : Y_OFFSET_ITEM_FILTER;
 
         nemosInventorySorting$createSearchBox(xOffset, yOffset, nemosInventorySorting$filterBoxWidth, config.height(), nemosInventorySorting$filterConfig.getFilter());
-        nemosInventorySorting$createButton(configs, FILTER_PERSISTENCE_TOGGLE, ToggleFilterPersistenceButtonFactory.getInstance());
+        nemosInventorySorting$createButton(configs, FILTER_PERSISTENCE_TOGGLE);
     }
 
     @Inject(method = "onClose", at = @At("TAIL"))
@@ -172,7 +174,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(KeyEvent keyEvent, CallbackInfoReturnable<Boolean> cir) {
         if (this.nemosInventorySorting$filterBox != null) {
-            if (this.nemosInventorySorting$filterBox.isFocused() && keyEvent.key() != 256) {
+            if (this.nemosInventorySorting$filterBox.isFocused() && keyEvent.key() != GLFW.GLFW_KEY_ESCAPE) {
                 cir.setReturnValue(this.nemosInventorySorting$filterBox.keyPressed(keyEvent));
                 return;
             }
@@ -399,7 +401,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
     }
 
     @Unique
-    private void nemosInventorySorting$createButton(List<ComponentConfig> configs, String componentName, FilterButtonCreator filterButtonCreator) {
+    private void nemosInventorySorting$createButton(List<ComponentConfig> configs, String componentName) {
         var optionalComponentConfig = nemosInventorySorting$configService.getOrDefaultComponentConfig(configs, componentName);
 
         if (optionalComponentConfig.isEmpty()) {
@@ -415,7 +417,16 @@ public abstract class AbstractContainerScreenMixin extends Screen {
         var width = config.width();
         var xOffset = config.xOffset() != null ? config.xOffset() : nemosInventorySorting$filterBoxWidth + 3;
         var yOffset = config.yOffset() != null ? config.yOffset() : Y_OFFSET_ITEM_FILTER;
-        var button = filterButtonCreator.createButton(leftPos, topPos, xOffset, yOffset, width, config.height(), nemosInventorySorting$filterConfig);
+        var buttonName = Component.translatable("nemos_inventory_sorting.gui.toggleFilterPersistence");
+        var button = new ToggleFilterPersistenceButton(
+                leftPos + xOffset,
+                topPos + yOffset,
+                xOffset,
+                width,
+                config.height(),
+                buttonName,
+                nemosInventorySorting$filterConfig
+        );
 
         nemosInventorySorting$widgets.add(button);
     }

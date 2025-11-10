@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-//TODO: Refactor and extract logic
+//TODO: Rename, Refactor and extract logic
 public abstract class AbstractSingleClickButton<T extends AbstractInventoryButton> extends AbstractInventoryButton {
 
     public AbstractSingleClickButton(Builder<T> builder) {
@@ -52,7 +52,7 @@ public abstract class AbstractSingleClickButton<T extends AbstractInventoryButto
     protected @NotNull List<Integer> getItemSlotsToInteractWith(AbstractContainerMenu menu) {
         var slots = menu.slots;
 
-        return IntStream.range(startIndex, calculateEndIndex())
+        return IntStream.range(startIndex, currentEndIndex)
                 .mapToObj(slotIndex -> Map.entry(slotIndex, slots.get(slotIndex).getItem()))
                 .filter(itemStackEntry -> !itemStackEntry.getValue().is(Items.AIR))
                 .map(Map.Entry::getKey)

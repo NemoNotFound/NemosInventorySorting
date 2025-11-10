@@ -38,12 +38,4 @@ public class InventoryService {
         var slotItemsToMerge = sortingService.sortSlotItems(menu, startIndex, endIndex);
         mergeService.mergeAllItems(menu, slotItemsToMerge, containerId);
     }
-
-    public int calculateEndIndex(boolean shouldIncludeHotbar, int endIndex) {
-        if (shouldIncludeHotbar) {
-            return endIndex + 9;
-        }
-
-        return endIndex;
-    }
 }

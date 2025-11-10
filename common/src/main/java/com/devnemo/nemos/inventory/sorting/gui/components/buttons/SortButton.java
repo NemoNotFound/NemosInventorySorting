@@ -14,8 +14,11 @@ public class SortButton extends AbstractInventoryButton {
     private final ResourceLocation buttonTexture = ResourceLocation.fromNamespaceAndPath(MOD_ID, "sort_button");
     private final ResourceLocation buttonHoverTexture = ResourceLocation.fromNamespaceAndPath(MOD_ID, "sort_button_highlighted");
 
+    private final InventoryService inventoryService;
+
     public SortButton(Builder<SortButton> builder) {
         super(builder);
+        this.inventoryService = InventoryService.getInstance();
     }
 
     @Override
@@ -29,11 +32,8 @@ public class SortButton extends AbstractInventoryButton {
     }
 
     @Override
-    public void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean bl) {
-        var inventoryService = InventoryService.getInstance();
-        var endIndex = inventoryService.calculateEndIndex(isButtonShiftable(), this.endIndex);
-
-        inventoryService.handleSorting(menu, startIndex, endIndex);
+    public void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
+        inventoryService.handleSorting(menu, startIndex, currentEndIndex);
     }
 
     @Override

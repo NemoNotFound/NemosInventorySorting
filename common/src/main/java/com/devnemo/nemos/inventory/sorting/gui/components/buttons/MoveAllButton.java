@@ -29,7 +29,7 @@ public class MoveAllButton extends AbstractSingleClickButton<MoveAllButton> {
     }
 
     @Override
-    public void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean bl) {
+    public void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
         interactWithAllItems(ClickType.QUICK_MOVE, 0);
     }
 

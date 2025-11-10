@@ -1,141 +1,86 @@
 package com.devnemo.nemos.inventory.sorting.gui.components.buttons;
 
-import com.devnemo.nemos.inventory.sorting.gui.components.RecipeBookUpdatable;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.input.MouseButtonInfo;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 
-import java.util.Arrays;
-
-public abstract class AbstractInventoryButton extends AbstractWidget implements RecipeBookUpdatable {
+public abstract class AbstractInventoryButton extends AbstractButton {
 
     protected final AbstractContainerMenu menu;
     protected final Integer startIndex;
     protected final Integer endIndex;
-    private final int xOffset;
     private final Component buttonName;
     private final Component shiftButtonName;
     protected final boolean isInventoryButton;
 
-    protected boolean isShiftKeyDown = false;
+    protected int currentEndIndex;
 
     public AbstractInventoryButton(Builder<? extends AbstractInventoryButton> builder) {
-        super(builder.x, builder.y, builder.width, builder.height, builder.buttonName);
+        super(builder.x, builder.y, builder.xOffset, builder.width, builder.height, builder.buttonName);
         this.setTooltip(Tooltip.create(builder.buttonName));
         this.buttonName = builder.buttonName;
         this.shiftButtonName = builder.shiftButtonName;
         this.menu = builder.menu;
         this.startIndex = builder.startIndex;
         this.endIndex = builder.endIndex;
-        this.xOffset = builder.xOffset;
         this.isInventoryButton = builder.isInventoryButton;
+        this.currentEndIndex = endIndex;
     }
 
     @Override
-    public abstract void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean bl);
+    public boolean keyPressed(@NotNull KeyEvent keyEvent) {
+        handleShiftKeyEvent(keyEvent);
 
-    @Override
-    public boolean keyPressed(KeyEvent keyEvent) {
-        if (keyEvent.key() == 340) {
-            setIsShiftKeyDown(true);
-            setTooltip();
-        }
-
-        var minecraft = Minecraft.getInstance();
-        var isKeyPressed = Arrays.stream(minecraft.options.keyMappings)
-                .filter(keyMapping -> keyMapping.same(getKeyMapping()))
-                .anyMatch(keyMapping -> keyMapping.matches(keyEvent));
-
-        if (!isKeyPressed) {
-            return super.keyPressed(keyEvent);
-        }
-
-        playDownSound(minecraft.getSoundManager());
-        onClick(new MouseButtonEvent(0, 0, new MouseButtonInfo(0, 0)), false);
-
-        return true;
+        return super.keyPressed(keyEvent);
     }
 
     @Override
-    public boolean keyReleased(KeyEvent keyEvent) {
-        if (keyEvent.key() == 340) {
-            setIsShiftKeyDown(false);
-            setTooltip();
-        }
+    public boolean keyReleased(@NotNull KeyEvent keyEvent) {
+        handleShiftKeyEvent(keyEvent);
 
         return super.keyReleased(keyEvent);
     }
 
-    @Override
-    public boolean mouseClicked(@NotNull MouseButtonEvent mouseButtonEvent, boolean bl) {
-        var minecraft = Minecraft.getInstance();
-        var isKeyPressed = Arrays.stream(minecraft.options.keyMappings)
-                .filter(keyMapping -> keyMapping.same(getKeyMapping()))
-                .anyMatch(keyMapping -> keyMapping.matchesMouse(mouseButtonEvent));
-
-        if (!isKeyPressed) {
-            return super.mouseClicked(mouseButtonEvent, bl);
-        }
-
-        playDownSound(minecraft.getSoundManager());
-        onClick(mouseButtonEvent, bl);
-
-        return true;
-    }
-
-    protected abstract KeyMapping getKeyMapping();
-
-    @Override
-    protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (this.isHovered()) {
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, getButtonHoverTexture(), this.getX(), this.getY(), this.getWidth(), this.getHeight());
-        } else {
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, getButtonTexture(), this.getX(), this.getY(), this.getWidth(), this.getHeight());
+    private void handleShiftKeyEvent(KeyEvent keyEvent) {
+        if (keyEvent.key() == GLFW.GLFW_KEY_LEFT_SHIFT || keyEvent.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+            setTooltip();
+            setEndIndex();
         }
     }
 
     @Override
-    public void updateXPosition(int leftPos) {
-        this.setX(leftPos + this.xOffset);
+    protected ResourceLocation getTexture() {
+        return this.isHovered() ? getButtonHoverTexture() : getButtonTexture();
     }
 
     protected abstract ResourceLocation getButtonHoverTexture();
+
     protected abstract ResourceLocation getButtonTexture();
 
-    public void setIsShiftKeyDown(boolean shiftKeyDown) {
-        isShiftKeyDown = shiftKeyDown;
-    }
-
-    public void setTooltip() {
-        if (isButtonShiftable()) {
+    private void setTooltip() {
+        if (shouldIncludeHotbar()) {
             setTooltip(Tooltip.create(shiftButtonName));
         } else {
             setTooltip(Tooltip.create(buttonName));
         }
     }
 
-    //TODO: Use service instead
-    protected int calculateEndIndex() {
-        if (isButtonShiftable()) {
-            return endIndex + 9;
+    private void setEndIndex() {
+        if (shouldIncludeHotbar()) {
+            currentEndIndex = endIndex + 9;
+        } else {
+            currentEndIndex = endIndex;
         }
-
-        return endIndex;
     }
 
-    protected boolean isButtonShiftable() {
-        return isShiftKeyDown && isInventoryButton;
+    private boolean shouldIncludeHotbar() {
+        return Minecraft.getInstance().hasShiftDown() && isInventoryButton;
     }
 
     @Override

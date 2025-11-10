@@ -29,7 +29,7 @@ public class DropAllButton extends AbstractSingleClickButton<DropAllButton> {
     }
 
     @Override
-    public void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean bl) {
+    public void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
         interactWithAllItems(ClickType.THROW, 1);
     }
 
