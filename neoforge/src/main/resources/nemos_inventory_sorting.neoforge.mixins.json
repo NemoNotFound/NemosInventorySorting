@@ -1,9 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.devnemo.nemos.inventory.sorting.mixin",
+  "package": "com.nemonotfound.nemos.inventory.sorting.mixin",
   "compatibilityLevel": "JAVA_21",
-  "plugin": "com.devnemo.nemos.inventory.sorting.mixin.plugins.NeoForgeMixinPlugin",
+  "plugin": "com.nemonotfound.nemos.inventory.sorting.mixin.plugins.NeoForgeMixinPlugin",
   "mixins": [],
   "client": [
     "NeoForgeAbstractRecipeBookScreenMixin",

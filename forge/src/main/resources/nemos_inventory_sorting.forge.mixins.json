@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.devnemo.nemos.inventory.sorting.mixin",
+  "package": "com.nemonotfound.nemos.inventory.sorting.mixin",
   "compatibilityLevel": "JAVA_18",
   "mixins": [],
   "client": [

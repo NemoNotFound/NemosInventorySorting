@@ -16,7 +16,7 @@
     "environment": "*",
     "entrypoints": {
         "client": [
-            "com.devnemo.nemos.inventory.sorting.NemosInventorySortingClientFabric"
+          "com.nemonotfound.nemos.inventory.sorting.NemosInventorySortingClientFabric"
         ]
     },
     "mixins": [
