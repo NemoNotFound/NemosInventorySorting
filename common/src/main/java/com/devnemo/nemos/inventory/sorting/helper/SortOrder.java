@@ -986,6 +986,13 @@ public class SortOrder {
         addItemToList(Items.SUSPICIOUS_SAND);
         addItemToList(Items.SUSPICIOUS_GRAVEL);
         addItemToList(Items.LIGHTNING_ROD);
+        addItemToList(Items.EXPOSED_LIGHTNING_ROD);
+        addItemToList(Items.WEATHERED_LIGHTNING_ROD);
+        addItemToList(Items.OXIDIZED_LIGHTNING_ROD);
+        addItemToList(Items.WAXED_LIGHTNING_ROD);
+        addItemToList(Items.WAXED_EXPOSED_LIGHTNING_ROD);
+        addItemToList(Items.WAXED_WEATHERED_LIGHTNING_ROD);
+        addItemToList(Items.WAXED_OXIDIZED_LIGHTNING_ROD);
         addItemToList(Items.FLOWER_POT);
         addItemToList(Items.DECORATED_POT);
         addItemToList(Items.ARMOR_STAND);

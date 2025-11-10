@@ -1,7 +1,4 @@
-# Changelog v1.14.6
+# Changelog v1.14.7
 
-## Additions
-- Added zh_tw
-
-## Fixes
-- Fixed compatibility issues with Nemo's Backpacks
+## Changes
+- Adapted sort order to sort lightning rod variants correctly
