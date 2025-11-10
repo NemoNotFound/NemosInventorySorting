@@ -16,7 +16,8 @@ import static com.nemonotfound.nemos.inventory.sorting.Constants.IRON_CHEST_MOD_
 public class NeoForgeMixinPlugin implements IMixinConfigPlugin {
 
     private static final Map<String, Supplier<Boolean>> CONDITIONS = ImmutableMap.of(
-            "com.devnemo.nemos.inventory.sorting.mixin.NeoForgeIronChestScreenMixin", () -> FMLLoader.getCurrent().getLoadingModList().getModFileById(IRON_CHEST_MOD_ID) != null
+            "com.devnemo.nemos.inventory.sorting.mixin.NeoForgeIronChestScreenMixin",
+            () -> FMLLoader.getCurrent().getLoadingModList().getModFileById(IRON_CHEST_MOD_ID) != null
     );
 
     @Override

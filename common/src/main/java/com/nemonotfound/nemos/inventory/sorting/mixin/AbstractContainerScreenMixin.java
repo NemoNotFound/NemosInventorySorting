@@ -38,6 +38,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.*;
+import static com.nemonotfound.nemos.inventory.sorting.NemosInventorySortingClientCommon.MOD_LOADER_HELPER;
 import static com.nemonotfound.nemos.inventory.sorting.client.InventorySortingKeyMappings.QUICK_SEARCH;
 import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValues.*;
 
@@ -92,6 +93,12 @@ public abstract class AbstractContainerScreenMixin extends Screen {
         }
 
         nemosInventorySorting$containerSize = nemosInventorySorting$inventoryEndIndex - 27;
+
+        if (MOD_LOADER_HELPER.isModLoaded(NEMOS_BACKPACKS_MOD_ID) && getMenu() instanceof InventoryMenu) {
+            nemosInventorySorting$inventoryEndIndex--;
+            nemosInventorySorting$containerSize--;
+        }
+
         var componentConfigs = nemosInventorySorting$configService.readOrGetDefaultComponentConfigs();
 
         if (nemosInventorySorting$shouldHaveFilter()) {
@@ -292,7 +299,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
     private boolean nemosInventorySorting$shouldHaveStorageContainerButtons() {
         var menu = getMenu();
 
-        if (NemosInventorySortingClientCommon.MOD_LOADER_HELPER.isModLoaded(NEMOS_BACKPACKS_MOD_ID)) {
+        if (MOD_LOADER_HELPER.isModLoaded(NEMOS_BACKPACKS_MOD_ID)) {
             try {
                 var clazz = Class.forName("com.nemonotfound.nemos.backpacks.world.inventory.BackpackMenu");
 
@@ -314,7 +321,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 
     @Unique
     private boolean nemosInventorySorting$isModdedContainerMenu(AbstractContainerMenu menu, String modId, String className) {
-        if (NemosInventorySortingClientCommon.MOD_LOADER_HELPER.isModLoaded(modId)) {
+        if (MOD_LOADER_HELPER.isModLoaded(modId)) {
             try {
                 var clazz = Class.forName(className);
 
