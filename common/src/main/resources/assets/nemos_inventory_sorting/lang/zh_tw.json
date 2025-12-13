@@ -1,12 +1,12 @@
 {
   "nemos_inventory_sorting.gui.sortButton": "整理",
-  "nemos_inventory_sorting.gui.sortButtonShift": "整理 (包含快捷欄)",
   "nemos_inventory_sorting.gui.dropAll": "全部丟棄",
   "nemos_inventory_sorting.gui.dropAllShift": "全部丟棄 (包含快捷欄)",
   "nemos_inventory_sorting.gui.moveSame": "移動相同物品",
   "nemos_inventory_sorting.gui.moveSameShift": "移動相同物品 (包含快捷欄)",
   "nemos_inventory_sorting.gui.moveAll": "全部移動",
   "nemos_inventory_sorting.gui.moveAllShift": "全部移動 (包含快捷欄)",
+  "nemos_inventory_sorting.gui.includeHotbar": "(包含快捷欄)",
   "nemos_inventory_sorting.gui.toggleFilterPersistence": "切換篩選器持續生效",
   "nemos_inventory_sorting.gui.toggleFilterPersistence.toggleOn": "啟用篩選器持續生效",
   "nemos_inventory_sorting.gui.toggleFilterPersistence.toggleOff": "停用篩選器持續生效",

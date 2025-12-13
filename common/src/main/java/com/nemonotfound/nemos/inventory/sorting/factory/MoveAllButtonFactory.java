@@ -1,11 +1,14 @@
 package com.nemonotfound.nemos.inventory.sorting.factory;
 
-import com.nemonotfound.nemos.inventory.sorting.gui.components.buttons.AbstractInventoryButton;
 import com.nemonotfound.nemos.inventory.sorting.gui.components.buttons.MoveAllButton;
+import com.nemonotfound.nemos.inventory.sorting.model.Offset;
+import com.nemonotfound.nemos.inventory.sorting.model.Position;
+import com.nemonotfound.nemos.inventory.sorting.model.Size;
+import com.nemonotfound.nemos.inventory.sorting.model.SlotRange;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-public class MoveAllButtonFactory extends ButtonFactory {
+public class MoveAllButtonFactory extends ButtonFactory<MoveAllButton> {
 
     private static MoveAllButtonFactory INSTANCE;
 
@@ -20,25 +23,10 @@ public class MoveAllButtonFactory extends ButtonFactory {
     }
 
     @Override
-    public AbstractInventoryButton createButton(
-            int startIndex, int endIndex, int leftPos, int topPos, int xOffset, int yOffset, int width,
-            int height, AbstractContainerMenu menu, boolean isInventoryButton
-    ) {
+    public MoveAllButton createButton(SlotRange slotRange, Position position, Offset offset, Size size, AbstractContainerMenu menu) {
         var buttonName = Component.translatable("nemos_inventory_sorting.gui.moveAll");
-        var shiftButtonName = Component.translatable("nemos_inventory_sorting.gui.moveAllShift");
-        var builder = new AbstractInventoryButton.Builder<>(MoveAllButton.class)
-                .startIndex(startIndex)
-                .endIndex(endIndex)
-                .x(getLeftPosWithOffset(leftPos, xOffset))
-                .y(topPos + yOffset)
-                .xOffset(xOffset)
-                .width(width)
-                .height(height)
-                .buttonName(buttonName)
-                .shiftButtonName(shiftButtonName)
-                .menu(menu)
-                .isInventoryButton(isInventoryButton);
+        var positionAfterOffset = new Position(getLeftPosWithOffset(position.x(), offset.x()), position.y() + offset.y());
 
-        return builder.build();
+        return new MoveAllButton(positionAfterOffset, offset.x(), size, slotRange, buttonName, menu);
     }
 }

@@ -1,9 +1,13 @@
 package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 
+import com.nemonotfound.nemos.inventory.sorting.model.Position;
+import com.nemonotfound.nemos.inventory.sorting.model.Size;
+import com.nemonotfound.nemos.inventory.sorting.model.SlotRange;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.Items;
@@ -15,10 +19,10 @@ import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 //TODO: Rename, Refactor and extract logic
-public abstract class AbstractSingleClickButton<T extends AbstractInventoryButton> extends AbstractInventoryButton {
+public abstract class AbstractSingleClickButton extends AbstractContainerButton {
 
-    public AbstractSingleClickButton(Builder<T> builder) {
-        super(builder);
+    public AbstractSingleClickButton(Position position, int xOffset, Size size, SlotRange slotRange, Component buttonName, AbstractContainerMenu menu) {
+        super(position, xOffset, size, slotRange, buttonName, menu);
     }
 
     protected void interactWithAllItems(ClickType clickType, int button) {

@@ -1,6 +1,8 @@
 package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 
 import com.nemonotfound.nemos.inventory.sorting.gui.components.RecipeBookUpdatable;
+import com.nemonotfound.nemos.inventory.sorting.model.Position;
+import com.nemonotfound.nemos.inventory.sorting.model.Size;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -21,6 +23,11 @@ public abstract class AbstractButton extends AbstractWidget implements RecipeBoo
 
     public AbstractButton(int x, int y, int xOffset, int width, int height, Component message) {
         super(x, y, width, height, message);
+        this.xOffset = xOffset;
+    }
+
+    public AbstractButton(Position position, int xOffset, Size size, Component message) {
+        super(position.x(), position.y(), size.width(), size.height(), message);
         this.xOffset = xOffset;
     }
 

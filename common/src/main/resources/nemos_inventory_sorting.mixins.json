@@ -7,7 +7,8 @@
   "mixins": [],
   "client": [
     "AbstractContainerScreenMixin",
-    "AbstractRecipeBookScreenMixin"
+    "AbstractRecipeBookScreenMixin",
+    "ContainerFilterMixin"
   ],
   "server": [],
   "injectors": {

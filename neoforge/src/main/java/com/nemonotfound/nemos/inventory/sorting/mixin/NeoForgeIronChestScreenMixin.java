@@ -3,6 +3,10 @@ package com.nemonotfound.nemos.inventory.sorting.mixin;
 import com.nemonotfound.nemos.inventory.sorting.config.model.ComponentConfig;
 import com.nemonotfound.nemos.inventory.sorting.config.service.ConfigService;
 import com.nemonotfound.nemos.inventory.sorting.factory.*;
+import com.nemonotfound.nemos.inventory.sorting.model.Offset;
+import com.nemonotfound.nemos.inventory.sorting.model.Position;
+import com.nemonotfound.nemos.inventory.sorting.model.Size;
+import com.nemonotfound.nemos.inventory.sorting.model.SlotRange;
 import com.progwml6.ironchest.client.screen.IronChestScreen;
 import com.progwml6.ironchest.common.block.IronChestsTypes;
 import com.progwml6.ironchest.common.inventory.IronChestMenu;
@@ -128,7 +132,7 @@ public abstract class NeoForgeIronChestScreenMixin extends AbstractContainerScre
     }
 
     @Unique
-    private void nemosInventorySorting$createButtonForContainer(List<ComponentConfig> configs, String componentName, ButtonCreator buttonCreator, int defaultYOffset) {
+    private void nemosInventorySorting$createButtonForContainer(List<ComponentConfig> configs, String componentName, ButtonCreator<?> buttonCreator, int defaultYOffset) {
         var optionalComponentConfig = nemosInventorySortingNeoForge$configService.getOrDefaultComponentConfig(configs, componentName);
 
         if (optionalComponentConfig.isEmpty()) {
@@ -146,11 +150,11 @@ public abstract class NeoForgeIronChestScreenMixin extends AbstractContainerScre
         var yOffset = config.yOffset() != null ? config.yOffset() : defaultYOffset;
 
         nemosInventorySorting$latestStorageContainerXOffset = xOffset;
-        nemosInventorySorting$createContainerButton(buttonCreator, xOffset, yOffset, width, config.height());
+        nemosInventorySorting$createContainerButton(buttonCreator, new Offset(xOffset, yOffset), new Size(width, config.height(), BUTTON_SIZE));
     }
 
     @Unique
-    private void nemosInventorySorting$createButtonForInventory(List<ComponentConfig> configs, String componentName, ButtonCreator buttonCreator, int defaultYOffset) {
+    private void nemosInventorySorting$createButtonForInventory(List<ComponentConfig> configs, String componentName, ButtonCreator<?> buttonCreator, int defaultYOffset) {
         var optionalComponentConfig = nemosInventorySortingNeoForge$configService.getOrDefaultComponentConfig(configs, componentName);
 
         if (optionalComponentConfig.isEmpty()) {
@@ -168,22 +172,22 @@ public abstract class NeoForgeIronChestScreenMixin extends AbstractContainerScre
         var yOffset = config.yOffset() != null ? config.yOffset() : defaultYOffset;
 
         nemosInventorySorting$latestInventoryXOffset = xOffset;
-        nemosInventorySorting$createInventoryButton(buttonCreator, xOffset, yOffset, width, config.height());
+        nemosInventorySorting$createInventoryButton(buttonCreator, new Offset(xOffset, yOffset), new Size(width, config.height(), BUTTON_SIZE));
     }
 
     @Unique
-    private void nemosInventorySorting$createContainerButton(ButtonCreator buttonCreator, int xOffset, int yOffset, int width, int height) {
-        nemosInventorySorting$createButton(buttonCreator, 0, nemosInventorySortingNeoForge$containerSize, xOffset, yOffset, width, height, false);
+    private void nemosInventorySorting$createContainerButton(ButtonCreator<?> buttonCreator, Offset offset, Size size) {
+        nemosInventorySorting$createButton(buttonCreator, new SlotRange(0, nemosInventorySortingNeoForge$containerSize), offset, size);
     }
 
     @Unique
-    private void nemosInventorySorting$createInventoryButton(ButtonCreator buttonCreator, int xOffset, int yOffset, int width, int height) {
-        nemosInventorySorting$createButton(buttonCreator, nemosInventorySortingNeoForge$containerSize, nemosInventorySortingNeoForge$inventoryEndIndex, xOffset, yOffset, width, height, true);
+    private void nemosInventorySorting$createInventoryButton(ButtonCreator<?> buttonCreator, Offset offset, Size size) {
+        nemosInventorySorting$createButton(buttonCreator, new SlotRange(nemosInventorySortingNeoForge$containerSize, nemosInventorySortingNeoForge$inventoryEndIndex), offset, size);
     }
 
     @Unique
-    private void nemosInventorySorting$createButton(ButtonCreator buttonCreator, int startIndex, int endIndex, int xOffset, int yOffset, int width, int height, boolean isInventoryButton) {
-        var sortButton = buttonCreator.createButton(startIndex, endIndex, leftPos, topPos, xOffset, yOffset, width, height, getMenu(), isInventoryButton);
+    private void nemosInventorySorting$createButton(ButtonCreator<?> buttonCreator, SlotRange slotRange, Offset offset, Size size) {
+        var sortButton = buttonCreator.createButton(slotRange, new Position(leftPos, topPos), offset, size, getMenu());
         nemosInventorySorting$widgets.add(sortButton);
     }
 }

@@ -1,10 +1,4 @@
-# Changelog v1.14.7
+# Changelog v1.14.8
 
 ## Changes
-- Adapted sort order to sort lightning rod variants correctly
-- Adapted default position of some buttons
-  - Please delete or manually update the config if something is broken
-- Updated icons
-
-## Fixes
-- Sorting wrong slots with Nemo's Backpacks loaded
+- Changed lang files
