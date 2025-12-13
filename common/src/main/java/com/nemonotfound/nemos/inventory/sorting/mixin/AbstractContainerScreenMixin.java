@@ -137,18 +137,6 @@ public abstract class AbstractContainerScreenMixin extends Screen {
     private boolean nemosInventorySorting$shouldHaveStorageContainerButtons() {
         var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
 
-        if (MOD_LOADER_HELPER.isModLoaded(NEMOS_BACKPACKS_MOD_ID)) {
-            try {
-                var clazz = Class.forName("com.nemonotfound.nemos.backpacks.world.inventory.BackpackMenu");
-
-                if (clazz.isInstance(menu)) {
-                    return true;
-                }
-            } catch (ClassNotFoundException ignored) {
-
-            }
-        }
-
         return menu instanceof ChestMenu ||
                 menu instanceof ShulkerBoxMenu ||
                 nemosInventorySorting$isModdedContainerMenu(menu, NEMOS_BACKPACKS_MOD_ID, "com.nemonotfound.nemos.backpacks.world.inventory.BackpackMenu") ||
