@@ -1041,7 +1041,7 @@ public class SortOrder {
         addItemToList(Items.TNT_MINECART);
         addItemToList(Items.TNT);
 
-        // Tools
+        // Swords
         addItemToList(Items.WOODEN_SWORD);
         addItemToList(Items.STONE_SWORD);
         addItemToList(Items.COPPER_SWORD);
@@ -1049,6 +1049,17 @@ public class SortOrder {
         addItemToList(Items.GOLDEN_SWORD);
         addItemToList(Items.DIAMOND_SWORD);
         addItemToList(Items.NETHERITE_SWORD);
+
+        // Spear
+        addItemToList(Items.WOODEN_SPEAR);
+        addItemToList(Items.STONE_SPEAR);
+        addItemToList(Items.COPPER_SPEAR);
+        addItemToList(Items.IRON_SPEAR);
+        addItemToList(Items.GOLDEN_SPEAR);
+        addItemToList(Items.DIAMOND_SPEAR);
+        addItemToList(Items.NETHERITE_SPEAR);
+
+        // Pickaxes
         addItemToList(Items.WOODEN_PICKAXE);
         addItemToList(Items.STONE_PICKAXE);
         addItemToList(Items.COPPER_PICKAXE);
@@ -1056,6 +1067,8 @@ public class SortOrder {
         addItemToList(Items.GOLDEN_PICKAXE);
         addItemToList(Items.DIAMOND_PICKAXE);
         addItemToList(Items.NETHERITE_PICKAXE);
+
+        // Axes
         addItemToList(Items.WOODEN_AXE);
         addItemToList(Items.STONE_AXE);
         addItemToList(Items.COPPER_AXE);
@@ -1063,6 +1076,8 @@ public class SortOrder {
         addItemToList(Items.GOLDEN_AXE);
         addItemToList(Items.DIAMOND_AXE);
         addItemToList(Items.NETHERITE_AXE);
+
+        //Shovels
         addItemToList(Items.WOODEN_SHOVEL);
         addItemToList(Items.STONE_SHOVEL);
         addItemToList(Items.COPPER_SHOVEL);
@@ -1070,6 +1085,8 @@ public class SortOrder {
         addItemToList(Items.GOLDEN_SHOVEL);
         addItemToList(Items.DIAMOND_SHOVEL);
         addItemToList(Items.NETHERITE_SHOVEL);
+
+        // Hoes
         addItemToList(Items.WOODEN_HOE);
         addItemToList(Items.STONE_HOE);
         addItemToList(Items.COPPER_HOE);
@@ -1168,7 +1185,7 @@ public class SortOrder {
         addItemToList(Items.MACE);
         addItemToList(Items.SHIELD);
 
-        // Armor
+        // Helmets
         addItemToList(Items.LEATHER_HELMET);
         addItemToList(Items.CHAINMAIL_HELMET);
         addItemToList(Items.COPPER_HELMET);
@@ -1177,6 +1194,8 @@ public class SortOrder {
         addItemToList(Items.DIAMOND_HELMET);
         addItemToList(Items.NETHERITE_HELMET);
         addItemToList(Items.TURTLE_HELMET);
+
+        // Chestplates
         addItemToList(Items.LEATHER_CHESTPLATE);
         addItemToList(Items.CHAINMAIL_CHESTPLATE);
         addItemToList(Items.COPPER_CHESTPLATE);
@@ -1184,6 +1203,8 @@ public class SortOrder {
         addItemToList(Items.GOLDEN_CHESTPLATE);
         addItemToList(Items.DIAMOND_CHESTPLATE);
         addItemToList(Items.NETHERITE_CHESTPLATE);
+
+        // Leggins
         addItemToList(Items.LEATHER_LEGGINGS);
         addItemToList(Items.CHAINMAIL_LEGGINGS);
         addItemToList(Items.COPPER_LEGGINGS);
@@ -1191,6 +1212,8 @@ public class SortOrder {
         addItemToList(Items.GOLDEN_LEGGINGS);
         addItemToList(Items.DIAMOND_LEGGINGS);
         addItemToList(Items.NETHERITE_LEGGINGS);
+
+        // Boots
         addItemToList(Items.LEATHER_BOOTS);
         addItemToList(Items.CHAINMAIL_BOOTS);
         addItemToList(Items.COPPER_BOOTS);
@@ -1199,12 +1222,22 @@ public class SortOrder {
         addItemToList(Items.DIAMOND_BOOTS);
         addItemToList(Items.NETHERITE_BOOTS);
 
+        // Horse Armor
         addItemToList(Items.LEATHER_HORSE_ARMOR);
         addItemToList(Items.COPPER_HORSE_ARMOR);
         addItemToList(Items.IRON_HORSE_ARMOR);
         addItemToList(Items.GOLDEN_HORSE_ARMOR);
         addItemToList(Items.DIAMOND_HORSE_ARMOR);
+        addItemToList(Items.NETHERITE_HORSE_ARMOR);
+
         addItemToList(Items.WOLF_ARMOR);
+
+        // Nautilus Armor
+        addItemToList(Items.COPPER_NAUTILUS_ARMOR);
+        addItemToList(Items.IRON_NAUTILUS_ARMOR);
+        addItemToList(Items.GOLDEN_NAUTILUS_ARMOR);
+        addItemToList(Items.DIAMOND_NAUTILUS_ARMOR);
+        addItemToList(Items.NETHERITE_NAUTILUS_ARMOR);
 
         addItemToList(Items.TOTEM_OF_UNDYING);
         addItemToList(Items.BOW);
@@ -1469,6 +1502,7 @@ public class SortOrder {
         addItemToList(Items.FROG_SPAWN_EGG);
         addItemToList(Items.GHAST_SPAWN_EGG);
         addItemToList(Items.GLOW_SQUID_SPAWN_EGG);
+        addItemToList(Items.NAUTILUS_SPAWN_EGG);
         addItemToList(Items.GOAT_SPAWN_EGG);
         addItemToList(Items.GUARDIAN_SPAWN_EGG);
         addItemToList(Items.HAPPY_GHAST_SPAWN_EGG);
@@ -1520,6 +1554,7 @@ public class SortOrder {
         addItemToList(Items.ZOGLIN_SPAWN_EGG);
         addItemToList(Items.ZOMBIE_SPAWN_EGG);
         addItemToList(Items.ZOMBIE_HORSE_SPAWN_EGG);
+        addItemToList(Items.ZOMBIE_NAUTILUS_SPAWN_EGG);
         addItemToList(Items.ZOMBIE_VILLAGER_SPAWN_EGG);
         addItemToList(Items.ZOMBIFIED_PIGLIN_SPAWN_EGG);
     }

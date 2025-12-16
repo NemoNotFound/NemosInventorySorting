@@ -2,7 +2,7 @@ package com.nemonotfound.nemos.inventory.sorting.events;
 
 import com.nemonotfound.nemos.inventory.sorting.client.InventorySortingKeyMappings;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
@@ -35,7 +35,7 @@ public class ClientEvents {
     public static void addBuiltInResourcePack(AddPackFindersEvent event) {
         if (event.getPackType() == PackType.CLIENT_RESOURCES) {
             event.addPackFinders(
-                    ResourceLocation.fromNamespaceAndPath(MOD_ID, "resourcepacks/dark_mode"),
+                    Identifier.fromNamespaceAndPath(MOD_ID, "resourcepacks/dark_mode"),
                     PackType.CLIENT_RESOURCES,
                     Component.translatable("nemos_inventory_sorting.resourcePack.darkMode.name"),
                     PackSource.BUILT_IN,

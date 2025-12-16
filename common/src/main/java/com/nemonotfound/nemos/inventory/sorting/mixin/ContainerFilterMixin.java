@@ -16,7 +16,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
@@ -40,11 +40,11 @@ import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValue
 public abstract class ContainerFilterMixin extends Screen {
 
     @Unique
-    private static final ResourceLocation HIGHLIGHTED_SLOT = ResourceLocation.fromNamespaceAndPath(MOD_ID, "container/highlighted_slot");
+    private static final Identifier HIGHLIGHTED_SLOT = Identifier.fromNamespaceAndPath(MOD_ID, "container/highlighted_slot");
     @Unique
-    private static final ResourceLocation HIGHLIGHTED_SLOT_INCLUDED_ITEM = ResourceLocation.fromNamespaceAndPath(MOD_ID, "container/highlighted_slot_included_item");
+    private static final Identifier HIGHLIGHTED_SLOT_INCLUDED_ITEM = Identifier.fromNamespaceAndPath(MOD_ID, "container/highlighted_slot_included_item");
     @Unique
-    private static final ResourceLocation DIMMED_SLOT = ResourceLocation.fromNamespaceAndPath(MOD_ID, "container/dimmed_slot");
+    private static final Identifier DIMMED_SLOT = Identifier.fromNamespaceAndPath(MOD_ID, "container/dimmed_slot");
 
     @Shadow protected int leftPos;
     @Shadow protected int topPos;
@@ -163,7 +163,7 @@ public abstract class ContainerFilterMixin extends Screen {
         return false;
     }
 
-    @Inject(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlots(Lnet/minecraft/client/gui/GuiGraphics;)V"))
+    @Inject(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlots(Lnet/minecraft/client/gui/GuiGraphics;II)V"))
     void renderHighlightedSlot(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         if (!nemosInventorySorting$shouldHaveFilter() || this.nemosInventorySorting$filterBox == null) {
             return;
@@ -268,7 +268,7 @@ public abstract class ContainerFilterMixin extends Screen {
     private void nemosInventorySorting$markSlots(
             List<Slot> slots,
             GuiGraphics guiGraphics,
-            ResourceLocation texture
+            Identifier texture
     ) {
         if (slots == null) {
             return;

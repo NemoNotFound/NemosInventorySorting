@@ -8,7 +8,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
@@ -60,13 +60,13 @@ public abstract class AbstractContainerButton extends AbstractButton {
     }
 
     @Override
-    protected ResourceLocation getTexture() {
+    protected Identifier getTexture() {
         return this.isHovered() ? getButtonHoverTexture() : getButtonTexture();
     }
 
-    protected abstract ResourceLocation getButtonHoverTexture();
+    protected abstract Identifier getButtonHoverTexture();
 
-    protected abstract ResourceLocation getButtonTexture();
+    protected abstract Identifier getButtonTexture();
 
     private void setTooltip() {
         if (shouldIncludeHotbar()) {

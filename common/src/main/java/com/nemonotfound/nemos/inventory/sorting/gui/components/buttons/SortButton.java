@@ -8,7 +8,7 @@ import com.nemonotfound.nemos.inventory.sorting.service.InventoryService;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,8 +16,8 @@ import static com.nemonotfound.nemos.inventory.sorting.Constants.MOD_ID;
 
 public class SortButton extends AbstractContainerButton {
 
-    private final ResourceLocation buttonTexture = ResourceLocation.fromNamespaceAndPath(MOD_ID, "sort_button");
-    private final ResourceLocation buttonHoverTexture = ResourceLocation.fromNamespaceAndPath(MOD_ID, "sort_button_highlighted");
+    private final Identifier buttonTexture = Identifier.fromNamespaceAndPath(MOD_ID, "sort_button");
+    private final Identifier buttonHoverTexture = Identifier.fromNamespaceAndPath(MOD_ID, "sort_button_highlighted");
 
     private final InventoryService inventoryService;
 
@@ -27,12 +27,12 @@ public class SortButton extends AbstractContainerButton {
     }
 
     @Override
-    protected ResourceLocation getButtonHoverTexture() {
+    protected Identifier getButtonHoverTexture() {
         return buttonHoverTexture;
     }
 
     @Override
-    protected ResourceLocation getButtonTexture() {
+    protected Identifier getButtonTexture() {
         return buttonTexture;
     }
 
