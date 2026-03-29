@@ -66,7 +66,7 @@ public class FilterService {
         }
 
         var itemContainerContents = itemStack.get(DataComponents.CONTAINER);
-        var stream = itemContainerContents != null ? itemContainerContents.stream() : Stream.<ItemStack>builder().build();
+        var stream = itemContainerContents != null ? itemContainerContents.nonEmptyItemCopyStream() : Stream.<ItemStack>builder().build();
 
         return contentsMatchFilter(stream, filter);
     }

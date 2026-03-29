@@ -6,7 +6,6 @@
   "plugin": "com.nemonotfound.nemos.inventory.sorting.mixin.plugins.NeoForgeMixinPlugin",
   "mixins": [],
   "client": [
-    "NeoForgeAbstractRecipeBookScreenMixin",
     "NeoForgeIronChestScreenMixin"
   ],
   "server": [],

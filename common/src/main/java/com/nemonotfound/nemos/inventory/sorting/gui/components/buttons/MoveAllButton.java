@@ -9,7 +9,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import org.jetbrains.annotations.NotNull;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.MOD_ID;
@@ -35,7 +35,7 @@ public class MoveAllButton extends AbstractSingleClickButton {
 
     @Override
     public void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
-        interactWithAllItems(ClickType.QUICK_MOVE, 0);
+        interactWithAllItems(ContainerInput.QUICK_MOVE, 0);
     }
 
     @Override

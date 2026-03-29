@@ -10,7 +10,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -44,7 +44,7 @@ public class MoveSameButton extends AbstractSingleClickButton {
 
     @Override
     public void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
-        interactWithAllItems(ClickType.QUICK_MOVE, 0);
+        interactWithAllItems(ContainerInput.QUICK_MOVE, 0);
     }
 
     @Override

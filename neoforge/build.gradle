@@ -17,10 +17,6 @@ neoForge {
     if (at.exists()) {
         accessTransformers.from(at.absolutePath)
     }
-    parchment {
-        minecraftVersion = parchment_minecraft
-        mappingsVersion = parchment_version
-    }
     runs {
         configureEach {
             systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
@@ -78,7 +74,7 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     mainFile.releaseType = 'release'
     mainFile.addModLoader("NeoForge")
     mainFile.addEnvironment("Client")
-    mainFile.addJavaVersion("Java 21")
+    mainFile.addJavaVersion("Java 25")
 }
 
 modrinth {

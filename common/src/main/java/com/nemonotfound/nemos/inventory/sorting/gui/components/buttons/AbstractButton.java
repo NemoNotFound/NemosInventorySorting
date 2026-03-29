@@ -5,7 +5,7 @@ import com.nemonotfound.nemos.inventory.sorting.model.Position;
 import com.nemonotfound.nemos.inventory.sorting.model.Size;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -36,8 +36,8 @@ public abstract class AbstractButton extends AbstractWidget implements RecipeBoo
     protected abstract Identifier getTexture();
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, getTexture(), this.getX(), this.getY(), this.getWidth(), this.getHeight());
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+        guiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, getTexture(), this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
 
     @Override

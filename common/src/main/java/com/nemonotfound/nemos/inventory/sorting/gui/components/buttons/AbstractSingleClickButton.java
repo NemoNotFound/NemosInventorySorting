@@ -9,7 +9,7 @@ import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +25,7 @@ public abstract class AbstractSingleClickButton extends AbstractContainerButton 
         super(position, xOffset, size, slotRange, buttonName, menu);
     }
 
-    protected void interactWithAllItems(ClickType clickType, int button) {
+    protected void interactWithAllItems(ContainerInput containerInput, int button) {
         Minecraft minecraft = Minecraft.getInstance();
         MultiPlayerGameMode gameMode = minecraft.gameMode;
         LocalPlayer player = minecraft.player;
@@ -40,8 +40,8 @@ public abstract class AbstractSingleClickButton extends AbstractContainerButton 
 
         if (gameMode != null) {
             Consumer<Integer> function = isCreativeModeMenu ?
-                    (slotIndex) -> menu.clicked(slotIndex, button, clickType, player) :
-                    (slotIndex) -> gameMode.handleInventoryMouseClick(containerId, slotIndex, button, clickType, player);
+                    (slotIndex) -> menu.clicked(slotIndex, button, containerInput, player) :
+                    (slotIndex) -> gameMode.handleContainerInput(containerId, slotIndex, button, containerInput, player);
 
             triggerClickForAllItems(slotItems, function);
         }

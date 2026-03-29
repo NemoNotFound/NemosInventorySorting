@@ -6,7 +6,7 @@ import com.nemonotfound.nemos.inventory.sorting.config.service.ConfigService;
 import com.nemonotfound.nemos.inventory.sorting.gui.components.FilterBox;
 import com.nemonotfound.nemos.inventory.sorting.gui.components.buttons.ToggleFilterPersistenceButton;
 import com.nemonotfound.nemos.inventory.sorting.model.FilterResult;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -163,8 +163,8 @@ public abstract class ContainerFilterMixin extends Screen {
         return false;
     }
 
-    @Inject(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlots(Lnet/minecraft/client/gui/GuiGraphics;II)V"))
-    void renderHighlightedSlot(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+    @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlots(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"))
+    void renderHighlightedSlot(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         if (!nemosInventorySorting$shouldHaveFilter() || this.nemosInventorySorting$filterBox == null) {
             return;
         }
@@ -174,13 +174,13 @@ public abstract class ContainerFilterMixin extends Screen {
         if (!filter.isEmpty()) {
             var filteredSlotMap = this.nemosInventorySorting$filterBox.filterSlots(nemosInventorySorting$getThis().getMenu().slots, filter);
 
-            nemosInventorySorting$markSlots(filteredSlotMap.get(FilterResult.INCLUDED), guiGraphics, HIGHLIGHTED_SLOT);
-            nemosInventorySorting$markSlots(filteredSlotMap.get(FilterResult.HAS_INCLUDED_ITEM), guiGraphics, HIGHLIGHTED_SLOT_INCLUDED_ITEM);
+            nemosInventorySorting$markSlots(filteredSlotMap.get(FilterResult.INCLUDED), guiGraphicsExtractor, HIGHLIGHTED_SLOT);
+            nemosInventorySorting$markSlots(filteredSlotMap.get(FilterResult.HAS_INCLUDED_ITEM), guiGraphicsExtractor, HIGHLIGHTED_SLOT_INCLUDED_ITEM);
         }
     }
 
-    @Inject(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphics;)V", shift = At.Shift.AFTER))
-    void renderDimmedSlot(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+    @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", shift = At.Shift.AFTER))
+    void renderDimmedSlot(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         if (!nemosInventorySorting$shouldHaveFilter() || this.nemosInventorySorting$filterBox == null) {
             return;
         }
@@ -190,7 +190,7 @@ public abstract class ContainerFilterMixin extends Screen {
         if (!filter.isEmpty()) {
             var filteredSlotMap = this.nemosInventorySorting$filterBox.filterSlots(nemosInventorySorting$getThis().getMenu().slots, filter);
 
-            nemosInventorySorting$markSlots(filteredSlotMap.get(FilterResult.EXCLUDED), guiGraphics, DIMMED_SLOT);
+            nemosInventorySorting$markSlots(filteredSlotMap.get(FilterResult.EXCLUDED), guiGraphicsExtractor, DIMMED_SLOT);
         }
     }
 
@@ -267,7 +267,7 @@ public abstract class ContainerFilterMixin extends Screen {
     @Unique
     private void nemosInventorySorting$markSlots(
             List<Slot> slots,
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphicsExtractor,
             Identifier texture
     ) {
         if (slots == null) {
@@ -275,7 +275,7 @@ public abstract class ContainerFilterMixin extends Screen {
         }
 
         for (Slot slot : slots) {
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, slot.x, slot.y, 16, 16);
+            guiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, texture, slot.x, slot.y, 16, 16);
         }
     }
 

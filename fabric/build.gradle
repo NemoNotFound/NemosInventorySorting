@@ -2,7 +2,7 @@ import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 plugins {
     id 'multiloader-loader'
-    id 'fabric-loom'
+    id 'net.fabricmc.fabric-loom'
     id("com.modrinth.minotaur")
 }
 
@@ -22,13 +22,9 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
-    }
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    modCompileOnly("maven.modrinth:nemos-backpacks:${nemos_backpacks_version}")
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    compileOnly("maven.modrinth:nemos-backpacks:${nemos_backpacks_version}")
 }
 
 base {
@@ -62,17 +58,17 @@ loom {
 sourceSets.main.resources { srcDir project.project(':common').file('src/generated/resources/').getAbsolutePath() }
 
 tasks.register('publishCurseForge', TaskPublishCurseForge) {
-    dependsOn(tasks.remapJar)
+    dependsOn(tasks.jar)
     apiToken = System.getenv("CURSEFORGE_TOKEN")
 
     def projectId = findProperty('curseforge_project_id')
 
-    def mainFile = upload(projectId, tasks.remapJar.archiveFile)
+    def mainFile = upload(projectId, tasks.jar.archiveFile)
     mainFile.changelog = file('../changelog.md')
     mainFile.displayName = findProperty('mod_name') + ' Fabric ' + findProperty('version')
     mainFile.releaseType = 'release'
     mainFile.addEnvironment("Client")
-    mainFile.addJavaVersion("Java 21")
+    mainFile.addJavaVersion("Java 25")
     mainFile.addRequirement("fabric-api")
 }
 
@@ -82,9 +78,9 @@ modrinth {
     changelog.set(file('../changelog.md').text)
     versionName.set(findProperty('mod_name') + ' Fabric ' + findProperty('version'))
     versionType.set("release")
-    uploadFile.set(tasks.remapJar)
+    uploadFile.set(tasks.jar)
     dependencies {
         required.project("fabric-api")
     }
 }
-tasks.modrinth.dependsOn(tasks.remapJar)
+tasks.modrinth.dependsOn(tasks.jar)
