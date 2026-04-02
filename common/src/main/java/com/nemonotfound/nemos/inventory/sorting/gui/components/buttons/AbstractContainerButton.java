@@ -12,6 +12,8 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.ShulkerBoxMenu;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
@@ -80,16 +82,31 @@ public abstract class AbstractContainerButton extends AbstractButton {
         var screen = minecraft.screen;
         
         if (screen instanceof AbstractContainerScreen<?> containerScreen) {
-            Slot hoveredSlot = ((AbstractContainerScreenAccessor) containerScreen).getHoveredSlot();
+            AbstractContainerMenu menu = containerScreen.getMenu();
             
+            if (!hasSortableTopContainer(menu)) {
+                return this.isInventoryButton;
+            }
+            
+            Slot hoveredSlot = ((AbstractContainerScreenAccessor) containerScreen).getHoveredSlot();
             if (hoveredSlot != null && minecraft.player != null) {
                 boolean isHoveringPlayerInventory = hoveredSlot.container == minecraft.player.getInventory();
-
+                
                 return this.isInventoryButton == isHoveringPlayerInventory;
             }
         }
         
         return !this.isInventoryButton;
+    }
+
+    private boolean hasSortableTopContainer(AbstractContainerMenu menu) {
+        if (menu instanceof ChestMenu || menu instanceof ShulkerBoxMenu) {
+            return true;
+        }
+        
+        String className = menu.getClass().getName();
+        return className.equals("com.nemonotfound.nemos.backpacks.world.inventory.BackpackMenu") ||
+               className.equals("atonkish.reinfcore.screen.ReinforcedStorageScreenHandler");
     }
 
     @Override
@@ -123,5 +140,6 @@ public abstract class AbstractContainerButton extends AbstractButton {
 
     @Override
     protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
+
     }
 }
