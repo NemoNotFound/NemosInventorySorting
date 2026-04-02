@@ -1,17 +1,22 @@
 package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 
+import com.nemonotfound.nemos.inventory.sorting.mixin.AbstractContainerScreenAccessor;
 import com.nemonotfound.nemos.inventory.sorting.model.Position;
 import com.nemonotfound.nemos.inventory.sorting.model.Size;
 import com.nemonotfound.nemos.inventory.sorting.model.SlotRange;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.Arrays;
 
 public abstract class AbstractContainerButton extends AbstractButton {
 
@@ -42,6 +47,17 @@ public abstract class AbstractContainerButton extends AbstractButton {
     public boolean keyPressed(@NotNull KeyEvent keyEvent) {
         handleShiftKeyEvent(keyEvent);
 
+        var minecraft = Minecraft.getInstance();
+        var isKeyPressed = Arrays.stream(minecraft.options.keyMappings)
+                .filter(keyMapping -> keyMapping.same(getKeyMapping()))
+                .anyMatch(keyMapping -> keyMapping.matches(keyEvent));
+
+        if (isKeyPressed) {
+            if (!shouldHandleKeyPressContextually()) {
+                return false;
+            }
+        }
+
         return super.keyPressed(keyEvent);
     }
 
@@ -57,6 +73,23 @@ public abstract class AbstractContainerButton extends AbstractButton {
             setTooltip();
             setEndIndex();
         }
+    }
+
+    private boolean shouldHandleKeyPressContextually() {
+        var minecraft = Minecraft.getInstance();
+        var screen = minecraft.screen;
+        
+        if (screen instanceof AbstractContainerScreen<?> containerScreen) {
+            Slot hoveredSlot = ((AbstractContainerScreenAccessor) containerScreen).getHoveredSlot();
+            
+            if (hoveredSlot != null && minecraft.player != null) {
+                boolean isHoveringPlayerInventory = hoveredSlot.container == minecraft.player.getInventory();
+
+                return this.isInventoryButton == isHoveringPlayerInventory;
+            }
+        }
+        
+        return !this.isInventoryButton;
     }
 
     @Override
@@ -90,6 +123,5 @@ public abstract class AbstractContainerButton extends AbstractButton {
 
     @Override
     protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
-
     }
 }

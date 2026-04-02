@@ -16,13 +16,9 @@
   "nemos_inventory_sorting.resourcePack.darkMode.description": "Dark buttons",
   "key.category.nemos_inventory_sorting.nemos_inventory_sorting": "Nemo's Inventory Sorting",
   "nemos_inventory_sorting.key.dropAll": "Drop All",
-  "nemos_inventory_sorting.key.dropAllInventory": "Drop All (Inventory)",
   "nemos_inventory_sorting.key.moveAll": "Move All",
-  "nemos_inventory_sorting.key.moveAllInventory": "Move All (Inventory)",
   "nemos_inventory_sorting.key.moveSame": "Move Same",
-  "nemos_inventory_sorting.key.moveSameInventory": "Move Same (Inventory)",
   "nemos_inventory_sorting.key.sort": "Sort",
-  "nemos_inventory_sorting.key.sortInventory": "Sort (Inventory)",
   "nemos_inventory_sorting.key.toggleFilterPersistence": "Toggle Filter Persistence",
   "nemos_inventory_sorting.key.quickSearch": "Quick Search (Ctrl/Command + Key Bind)"
 }
