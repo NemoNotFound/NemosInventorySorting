@@ -177,7 +177,12 @@ public abstract class AbstractContainerScreenMixin extends Screen {
                 menu instanceof CraftingMenu ||
                 menu instanceof CrafterMenu ||
                 menu instanceof GrindstoneMenu ||
-                menu instanceof BrewingStandMenu;
+                menu instanceof MerchantMenu ||
+                menu instanceof AnvilMenu ||
+                menu instanceof HopperMenu ||
+                menu instanceof DispenserMenu ||
+                menu instanceof CartographyTableMenu ||
+                menu instanceof StonecutterMenu;
     }
 
     @Unique
@@ -196,7 +201,6 @@ public abstract class AbstractContainerScreenMixin extends Screen {
                 new ButtonTypeMapping(DROP_ALL_STORAGE_CONTAINER_INVENTORY, DropAllButtonFactory.getInstance(), defaultInventoryYOffset, true)
         );
     }
-
 
     @Unique
     private void nemosInventorySorting$initInventoryButtons(List<ComponentConfig> componentConfigs) {
@@ -220,6 +224,8 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 
     @Unique
     private void nemosInventorySorting$createButtons(List<ComponentConfig> configs, ButtonTypeMapping... mappings) {
+        var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
+
         for (ButtonTypeMapping mapping : mappings) {
             var optionalConfig = nemosInventorySorting$configService.getOrDefaultComponentConfig(configs, mapping.componentName());
 
@@ -234,7 +240,30 @@ public abstract class AbstractContainerScreenMixin extends Screen {
             }
 
             var yOffset = config.yOffset() != null ? config.yOffset() : mapping.defaultYOffset();
-            var xOffset = config.xOffset() != null ? config.xOffset() : imageWidth + config.rightXOffset();
+
+            int rightmostSlotX = 0;
+            try {
+                if (mapping.isInventoryButton()) {
+                    for (int i = nemosInventorySorting$containerSize; i < menu.slots.size(); i++) {
+                        rightmostSlotX = Math.max(rightmostSlotX, menu.slots.get(i).x);
+                    }
+                } else {
+                    for (int i = 0; i < nemosInventorySorting$containerSize; i++) {
+                        rightmostSlotX = Math.max(rightmostSlotX, menu.slots.get(i).x);
+                    }
+                }
+            } catch (Exception ignored) {}
+
+            int xOffset;
+            if (rightmostSlotX > 0) {
+                if (config.xOffset() != null) {
+                    xOffset = config.xOffset() + (rightmostSlotX - 152);
+                } else {
+                    xOffset = rightmostSlotX + 24 + config.rightXOffset();
+                }
+            } else {
+                xOffset = config.xOffset() != null ? config.xOffset() : this.imageWidth + config.rightXOffset();
+            }
 
             nemosInventorySorting$createButton(mapping.factory(), mapping.isInventoryButton(), new Offset(xOffset, yOffset), new Size(config.width(), config.height(), BUTTON_SIZE));
         }

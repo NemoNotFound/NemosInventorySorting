@@ -20,13 +20,9 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(InventorySortingKeyMappings.SORT.get());
-        event.register(InventorySortingKeyMappings.SORT_INVENTORY.get());
         event.register(InventorySortingKeyMappings.MOVE_SAME.get());
-        event.register(InventorySortingKeyMappings.MOVE_SAME_INVENTORY.get());
         event.register(InventorySortingKeyMappings.MOVE_ALL.get());
-        event.register(InventorySortingKeyMappings.MOVE_ALL_INVENTORY.get());
         event.register(InventorySortingKeyMappings.DROP_ALL.get());
-        event.register(InventorySortingKeyMappings.DROP_ALL_INVENTORY.get());
         event.register(InventorySortingKeyMappings.TOGGLE_FILTER_PERSISTENCE.get());
         event.register(InventorySortingKeyMappings.QUICK_SEARCH.get());
     }

@@ -16,18 +16,8 @@ public class InventorySortingKeyMappings {
             GLFW.GLFW_KEY_UNKNOWN,
             NEMOS_INVENTORY_SORTING
     ));
-    public static Supplier<KeyMapping> SORT_INVENTORY = registerKeyMapping(new KeyMapping(
-            String.format("%s.key.sortInventory", MOD_ID),
-            GLFW.GLFW_KEY_UNKNOWN,
-            NEMOS_INVENTORY_SORTING
-    ));
     public static Supplier<KeyMapping> MOVE_SAME = registerKeyMapping(new KeyMapping(
             String.format("%s.key.moveSame", MOD_ID),
-            GLFW.GLFW_KEY_UNKNOWN,
-            NEMOS_INVENTORY_SORTING
-    ));
-    public static Supplier<KeyMapping> MOVE_SAME_INVENTORY = registerKeyMapping(new KeyMapping(
-            String.format("%s.key.moveSameInventory", MOD_ID),
             GLFW.GLFW_KEY_UNKNOWN,
             NEMOS_INVENTORY_SORTING
     ));
@@ -36,18 +26,8 @@ public class InventorySortingKeyMappings {
             GLFW.GLFW_KEY_UNKNOWN,
             NEMOS_INVENTORY_SORTING
     ));
-    public static Supplier<KeyMapping> MOVE_ALL_INVENTORY = registerKeyMapping(new KeyMapping(
-            String.format("%s.key.moveAllInventory", MOD_ID),
-            GLFW.GLFW_KEY_UNKNOWN,
-            NEMOS_INVENTORY_SORTING
-    ));
     public static Supplier<KeyMapping> DROP_ALL = registerKeyMapping(new KeyMapping(
             String.format("%s.key.dropAll", MOD_ID),
-            GLFW.GLFW_KEY_UNKNOWN,
-            NEMOS_INVENTORY_SORTING
-    ));
-    public static Supplier<KeyMapping> DROP_ALL_INVENTORY = registerKeyMapping(new KeyMapping(
-            String.format("%s.key.dropAllInventory", MOD_ID),
             GLFW.GLFW_KEY_UNKNOWN,
             NEMOS_INVENTORY_SORTING
     ));

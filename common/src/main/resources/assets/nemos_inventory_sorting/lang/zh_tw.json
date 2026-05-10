@@ -16,13 +16,9 @@
   "nemos_inventory_sorting.resourcePack.darkMode.description": "深色按鈕",
   "key.category.nemos_inventory_sorting.nemos_inventory_sorting": "Nemo's Inventory Sorting",
   "nemos_inventory_sorting.key.dropAll": "全部丟棄",
-  "nemos_inventory_sorting.key.dropAllInventory": "全部丟棄 (物品欄)",
   "nemos_inventory_sorting.key.moveAll": "全部移動",
-  "nemos_inventory_sorting.key.moveAllInventory": "全部移動 (物品欄)",
   "nemos_inventory_sorting.key.moveSame": "移動相同物品",
-  "nemos_inventory_sorting.key.moveSameInventory": "移動相同物品 (物品欄)",
   "nemos_inventory_sorting.key.sort": "整理",
-  "nemos_inventory_sorting.key.sortInventory": "整理 (物品欄)",
   "nemos_inventory_sorting.key.toggleFilterPersistence": "切換篩選器持續生效",
   "nemos_inventory_sorting.key.quickSearch": "快速搜尋（Ctrl/Command + 快捷鍵）"
 }

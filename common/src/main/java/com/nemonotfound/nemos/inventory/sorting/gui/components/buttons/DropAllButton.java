@@ -40,10 +40,6 @@ public class DropAllButton extends AbstractSingleClickButton {
 
     @Override
     protected KeyMapping getKeyMapping() {
-        if (isInventoryButton) {
-            return InventorySortingKeyMappings.DROP_ALL_INVENTORY.get();
-        }
-
         return InventorySortingKeyMappings.DROP_ALL.get();
     }
 }

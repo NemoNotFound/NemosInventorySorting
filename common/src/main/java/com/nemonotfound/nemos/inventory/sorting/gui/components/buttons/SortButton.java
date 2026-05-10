@@ -43,10 +43,6 @@ public class SortButton extends AbstractContainerButton {
 
     @Override
     protected KeyMapping getKeyMapping() {
-        if (isInventoryButton) {
-            return InventorySortingKeyMappings.SORT_INVENTORY.get();
-        }
-
         return InventorySortingKeyMappings.SORT.get();
     }
 }

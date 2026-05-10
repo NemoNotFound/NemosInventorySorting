@@ -49,10 +49,6 @@ public class MoveSameButton extends AbstractSingleClickButton {
 
     @Override
     protected KeyMapping getKeyMapping() {
-        if (isInventoryButton) {
-            return InventorySortingKeyMappings.MOVE_SAME_INVENTORY.get();
-        }
-
         return InventorySortingKeyMappings.MOVE_SAME.get();
     }
 
