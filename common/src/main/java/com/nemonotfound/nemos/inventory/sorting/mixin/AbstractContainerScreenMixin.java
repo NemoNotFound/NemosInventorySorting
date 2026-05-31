@@ -161,7 +161,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Unique
     private void nemosInventorySorting$initStorageContainerButtons(List<ComponentConfig> componentConfigs) {
-        var defaultInventoryYOffset = ((AbstractContainerScreen<?>) (Object) this).getMenu() instanceof ShulkerBoxMenu ? inventoryLabelY - 1 : inventoryLabelY - 2;
+        var defaultInventoryYOffset = inventoryLabelY - 2;
 
         nemosInventorySorting$createButtons(
                 componentConfigs,
