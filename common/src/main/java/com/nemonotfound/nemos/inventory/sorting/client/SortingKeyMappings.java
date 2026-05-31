@@ -1,15 +1,15 @@
 package com.nemonotfound.nemos.inventory.sorting.client;
 
-import com.nemonotfound.nemos.inventory.sorting.NemosInventorySortingClientCommon;
+import com.nemonotfound.nemos.inventory.sorting.SortingCommonClient;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Supplier;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.MOD_ID;
-import static com.nemonotfound.nemos.inventory.sorting.client.InventorySortingCategories.NEMOS_INVENTORY_SORTING;
+import static com.nemonotfound.nemos.inventory.sorting.client.SortingKeymappingCategories.NEMOS_INVENTORY_SORTING;
 
-public class InventorySortingKeyMappings {
+public class SortingKeyMappings {
 
     public static Supplier<KeyMapping> SORT = registerKeyMapping(new KeyMapping(
             String.format("%s.key.sort", MOD_ID),
@@ -63,7 +63,7 @@ public class InventorySortingKeyMappings {
     ));
 
     private static Supplier<KeyMapping> registerKeyMapping(KeyMapping keyMapping) {
-        return NemosInventorySortingClientCommon.REGISTRY_HELPER.registerKeyMapping(keyMapping);
+        return SortingCommonClient.REGISTRY_HELPER.registerKeyMapping(keyMapping);
     }
 
     public static void init() {}

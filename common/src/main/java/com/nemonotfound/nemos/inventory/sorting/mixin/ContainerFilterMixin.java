@@ -33,7 +33,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.MOD_ID;
-import static com.nemonotfound.nemos.inventory.sorting.client.InventorySortingKeyMappings.QUICK_SEARCH;
+import static com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings.QUICK_SEARCH;
 import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValues.*;
 
 @Mixin(AbstractContainerScreen.class)

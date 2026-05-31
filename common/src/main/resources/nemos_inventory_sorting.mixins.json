@@ -7,7 +7,8 @@
   "client": [
     "AbstractContainerScreenMixin",
     "AbstractRecipeBookScreenMixin",
-    "ContainerFilterMixin"
+    "ContainerFilterMixin",
+    "InventoryMenuMixin"
   ],
   "server": [],
   "injectors": {
