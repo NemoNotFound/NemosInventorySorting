@@ -15,7 +15,7 @@ public class TooltipService {
 
     private final Minecraft minecraft;
 
-    public TooltipService(Minecraft minecraft) {
+    private TooltipService(Minecraft minecraft) {
         this.minecraft = minecraft;
     }
 

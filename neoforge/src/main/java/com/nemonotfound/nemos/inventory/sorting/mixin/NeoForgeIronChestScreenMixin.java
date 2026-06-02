@@ -1,12 +1,13 @@
 package com.nemonotfound.nemos.inventory.sorting.mixin;
 
-import com.nemonotfound.nemos.inventory.sorting.config.model.ComponentConfig;
-import com.nemonotfound.nemos.inventory.sorting.config.service.ConfigService;
+import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
+import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
+import com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId;
 import com.nemonotfound.nemos.inventory.sorting.factory.*;
-import com.nemonotfound.nemos.inventory.sorting.model.Offset;
-import com.nemonotfound.nemos.inventory.sorting.model.Position;
-import com.nemonotfound.nemos.inventory.sorting.model.Size;
-import com.nemonotfound.nemos.inventory.sorting.model.SlotRange;
+import com.nemonotfound.nemos.inventory.sorting.models.Offset;
+import com.nemonotfound.nemos.inventory.sorting.models.Position;
+import com.nemonotfound.nemos.inventory.sorting.models.Size;
+import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
 import com.progwml6.ironchest.client.screen.IronChestScreen;
 import com.progwml6.ironchest.common.block.IronChestsTypes;
 import com.progwml6.ironchest.common.inventory.IronChestMenu;
@@ -24,10 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValues.*;
+import static com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId.*;
 
 //TODO: Refactor
 @Mixin(IronChestScreen.class)
-public abstract class NeoForgeIronChestScreenMixin extends AbstractContainerScreen<IronChestMenu> {
+public abstract class NeoForgeIronChestScreenMixin extends AbstractContainerScreen<@NotNull IronChestMenu> {
 
     @Unique
     private int nemosInventorySortingNeoForge$inventoryEndIndex;
@@ -39,7 +41,7 @@ public abstract class NeoForgeIronChestScreenMixin extends AbstractContainerScre
     private int nemosInventorySorting$latestStorageContainerXOffset = 0;
 
     @Unique
-    private final ConfigService nemosInventorySortingNeoForge$configService = ConfigService.getInstance();
+    private final ConfigService nemosInventorySortingNeoForge$configService = ConfigService.INSTANCE;
     @Unique
     private final List<AbstractWidget> nemosInventorySorting$widgets = new ArrayList<>();
 
@@ -132,8 +134,8 @@ public abstract class NeoForgeIronChestScreenMixin extends AbstractContainerScre
     }
 
     @Unique
-    private void nemosInventorySorting$createButtonForContainer(List<ComponentConfig> configs, String componentName, ButtonCreator<?> buttonCreator, int defaultYOffset) {
-        var optionalComponentConfig = nemosInventorySortingNeoForge$configService.getOrDefaultComponentConfig(configs, componentName);
+    private void nemosInventorySorting$createButtonForContainer(List<ComponentConfig> configs, ConfigId configId, ButtonCreator<?> buttonCreator, int defaultYOffset) {
+        var optionalComponentConfig = nemosInventorySortingNeoForge$configService.getOrDefault(configs, configId);
 
         if (optionalComponentConfig.isEmpty()) {
             return;
@@ -154,8 +156,8 @@ public abstract class NeoForgeIronChestScreenMixin extends AbstractContainerScre
     }
 
     @Unique
-    private void nemosInventorySorting$createButtonForInventory(List<ComponentConfig> configs, String componentName, ButtonCreator<?> buttonCreator, int defaultYOffset) {
-        var optionalComponentConfig = nemosInventorySortingNeoForge$configService.getOrDefaultComponentConfig(configs, componentName);
+    private void nemosInventorySorting$createButtonForInventory(List<ComponentConfig> configs, ConfigId configId, ButtonCreator<?> buttonCreator, int defaultYOffset) {
+        var optionalComponentConfig = nemosInventorySortingNeoForge$configService.getOrDefault(configs, configId);
 
         if (optionalComponentConfig.isEmpty()) {
             return;

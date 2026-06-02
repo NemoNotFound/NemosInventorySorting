@@ -1,9 +1,9 @@
 package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 
 import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
-import com.nemonotfound.nemos.inventory.sorting.model.Position;
-import com.nemonotfound.nemos.inventory.sorting.model.Size;
-import com.nemonotfound.nemos.inventory.sorting.model.SlotRange;
+import com.nemonotfound.nemos.inventory.sorting.models.Position;
+import com.nemonotfound.nemos.inventory.sorting.models.Size;
+import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
 import com.nemonotfound.nemos.inventory.sorting.service.InventoryService;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.input.MouseButtonEvent;

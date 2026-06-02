@@ -1,6 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
-import com.nemonotfound.nemos.inventory.sorting.model.FilterResult;
+import com.nemonotfound.nemos.inventory.sorting.enums.FilterResult;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -26,7 +26,7 @@ public class FilterService {
         return INSTANCE;
     }
 
-    public FilterService(TooltipService tooltipService) {
+    private FilterService(TooltipService tooltipService) {
         this.tooltipService = tooltipService;
     }
 

@@ -4,29 +4,10 @@ public class DefaultConfigValues {
 
     private DefaultConfigValues() {}
 
-    public static final String CONFIG_DIRECTORY_PATH = "config/nemos-inventory-sorting/";
+    public static final String CONFIG_DIRECTORY_PATH = "config/nemos-inventory-sorting/"; //TODO: Put into enum?
     public static final String COMPONENT_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "config.json";
     public static final String FILTER_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "filter-config.json";
     public static final String IRON_CHEST_COMPONENT_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "iron-chest-config.json";
-
-    public static String SORT_STORAGE_CONTAINER = "sort_storage_container";
-    public static String MOVE_SAME_STORAGE_CONTAINER = "move_same_storage_container";
-    public static String MOVE_ALL_STORAGE_CONTAINER = "move_all_storage_container";
-    public static String DROP_ALL_STORAGE_CONTAINER = "drop_all_storage_container";
-
-    public static String SORT_STORAGE_CONTAINER_INVENTORY = "sort_storage_container_inventory";
-    public static String MOVE_SAME_STORAGE_CONTAINER_INVENTORY = "move_same_storage_container_inventory";
-    public static String MOVE_ALL_STORAGE_CONTAINER_INVENTORY = "move_all_storage_container_inventory";
-    public static String DROP_ALL_STORAGE_CONTAINER_INVENTORY = "drop_all_storage_container_inventory";
-
-    public static String SORT_INVENTORY = "sort_inventory";
-    public static String DROP_ALL_INVENTORY = "drop_all_inventory";
-
-    public static String SORT_CONTAINER_INVENTORY = "sort_container_inventory";
-    public static String DROP_ALL_CONTAINER_INVENTORY = "drop_all_container_inventory";
-
-    public static String ITEM_FILTER = "item_filter";
-    public static String FILTER_PERSISTENCE_TOGGLE = "filter_persistence_toggle";
 
     public static int RIGHT_X_OFFSET_SORT_STORAGE_CONTAINER = -61;
     public static int RIGHT_X_OFFSET_MOVE_SAME_STORAGE_CONTAINER = -47;

@@ -1,8 +1,8 @@
 package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 
-import com.nemonotfound.nemos.inventory.sorting.model.Position;
-import com.nemonotfound.nemos.inventory.sorting.model.Size;
-import com.nemonotfound.nemos.inventory.sorting.model.SlotRange;
+import com.nemonotfound.nemos.inventory.sorting.models.Position;
+import com.nemonotfound.nemos.inventory.sorting.models.Size;
+import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;

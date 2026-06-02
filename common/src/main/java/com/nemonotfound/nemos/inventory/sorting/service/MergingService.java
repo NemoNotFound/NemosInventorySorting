@@ -1,7 +1,7 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
 import com.nemonotfound.nemos.inventory.sorting.Constants;
-import com.nemonotfound.nemos.inventory.sorting.model.SlotItem;
+import com.nemonotfound.nemos.inventory.sorting.models.SlotItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +34,7 @@ public class MergingService {
         var groupedItemMap = sortedSlotItems.stream()
                 .collect(groupingBy(slotItem -> slotItem.itemStack().getComponents()));
 
-        groupedItemMap.forEach((key, slotItems) -> mergeItems(menu, slotItems, containerId));
+        groupedItemMap.forEach((_, slotItems) -> mergeItems(menu, slotItems, containerId));
     }
 
     private void mergeItems(AbstractContainerMenu menu, List<SlotItem> slotItems, int containerId) {
@@ -72,7 +72,7 @@ public class MergingService {
         }
 
         if (remainingCycles <= 0) {
-            Constants.LOG.warn("Merging items exceeded cycle limit. Please report this.");
+            Constants.LOGGER.warn("Merging items exceeded cycle limit. Please report this.");
         }
     }
 

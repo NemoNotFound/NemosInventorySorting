@@ -1,11 +1,12 @@
 package com.nemonotfound.nemos.inventory.sorting.mixin;
 
-import com.nemonotfound.nemos.inventory.sorting.config.model.ComponentConfig;
-import com.nemonotfound.nemos.inventory.sorting.config.model.FilterConfig;
-import com.nemonotfound.nemos.inventory.sorting.config.service.ConfigService;
+import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
+import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
+import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
+import com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId;
 import com.nemonotfound.nemos.inventory.sorting.gui.components.FilterBox;
 import com.nemonotfound.nemos.inventory.sorting.gui.components.buttons.ToggleFilterPersistenceButton;
-import com.nemonotfound.nemos.inventory.sorting.model.FilterResult;
+import com.nemonotfound.nemos.inventory.sorting.enums.FilterResult;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -35,6 +36,8 @@ import java.util.function.Function;
 import static com.nemonotfound.nemos.inventory.sorting.Constants.MOD_ID;
 import static com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings.QUICK_SEARCH;
 import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValues.*;
+import static com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId.FILTER_PERSISTENCE_TOGGLE;
+import static com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId.ITEM_FILTER;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class ContainerFilterMixin extends Screen {
@@ -51,12 +54,10 @@ public abstract class ContainerFilterMixin extends Screen {
     @Unique
     private FilterBox nemosInventorySorting$filterBox;
     @Unique
-    private FilterConfig nemosInventorySorting$filterConfig;
-    @Unique
     private int nemosInventorySorting$filterBoxWidth = 0;
 
     @Unique
-    private final ConfigService nemosInventorySorting$configService = ConfigService.getInstance();
+    private final ConfigService nemosInventorySorting$configService = ConfigService.INSTANCE;
 
     protected ContainerFilterMixin(Component title) {
         super(title);
@@ -67,7 +68,6 @@ public abstract class ContainerFilterMixin extends Screen {
         var componentConfigs = nemosInventorySorting$configService.readOrGetDefaultComponentConfigs();
 
         if (nemosInventorySorting$shouldHaveFilter()) {
-            nemosInventorySorting$filterConfig = nemosInventorySorting$configService.readOrGetDefaultFilterConfig();
 
             nemosInventorySorting$initFilter(componentConfigs);
         }
@@ -79,7 +79,7 @@ public abstract class ContainerFilterMixin extends Screen {
             return;
         }
 
-        nemosInventorySorting$filterBox.updateAndSaveFilter(nemosInventorySorting$filterConfig);
+        nemosInventorySorting$filterBox.updateAndSaveFilter();
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
@@ -196,7 +196,7 @@ public abstract class ContainerFilterMixin extends Screen {
 
     @Unique
     private void nemosInventorySorting$initFilter(List<ComponentConfig> configs) {
-        var optionalComponentConfig = nemosInventorySorting$configService.getOrDefaultComponentConfig(configs, ITEM_FILTER);
+        var optionalComponentConfig = nemosInventorySorting$configService.getOrDefault(configs, ITEM_FILTER);
 
         if (optionalComponentConfig.isEmpty()) {
             return;
@@ -212,12 +212,12 @@ public abstract class ContainerFilterMixin extends Screen {
         var xOffset = config.xOffset() != null ? config.xOffset() : 1;
         var yOffset = config.yOffset() != null ? config.yOffset() : Y_OFFSET_ITEM_FILTER;
 
-        nemosInventorySorting$createSearchBox(xOffset, yOffset, nemosInventorySorting$filterBoxWidth, config.height(), nemosInventorySorting$filterConfig.getFilter());
+        nemosInventorySorting$createSearchBox(xOffset, yOffset, nemosInventorySorting$filterBoxWidth, config.height());
         nemosInventorySorting$createButton(configs, FILTER_PERSISTENCE_TOGGLE);
     }
 
     @Unique
-    private void nemosInventorySorting$createSearchBox(int xOffset, int yOffset, int width, int height, String filter) {
+    private void nemosInventorySorting$createSearchBox(int xOffset, int yOffset, int width, int height) {
         nemosInventorySorting$filterBox = new FilterBox(
                 font,
                 leftPos,
@@ -230,12 +230,12 @@ public abstract class ContainerFilterMixin extends Screen {
         );
 
         this.addRenderableWidget(nemosInventorySorting$filterBox);
-        nemosInventorySorting$filterBox.setValue(filter);
+        nemosInventorySorting$filterBox.setValue(FilterConfig.INSTANCE.getFilter());
     }
 
     @Unique
-    private void nemosInventorySorting$createButton(List<ComponentConfig> configs, String componentName) {
-        var optionalComponentConfig = nemosInventorySorting$configService.getOrDefaultComponentConfig(configs, componentName);
+    private void nemosInventorySorting$createButton(List<ComponentConfig> configs, ConfigId configId) {
+        var optionalComponentConfig = nemosInventorySorting$configService.getOrDefault(configs, configId);
 
         if (optionalComponentConfig.isEmpty()) {
             return;
@@ -257,8 +257,7 @@ public abstract class ContainerFilterMixin extends Screen {
                 xOffset,
                 width,
                 config.height(),
-                buttonName,
-                nemosInventorySorting$filterConfig
+                buttonName
         );
 
         this.addRenderableWidget(button);

@@ -2,7 +2,7 @@ package com.nemonotfound.nemos.inventory.sorting.service;
 
 import com.nemonotfound.nemos.inventory.sorting.Constants;
 import com.nemonotfound.nemos.inventory.sorting.helper.SortOrder;
-import com.nemonotfound.nemos.inventory.sorting.model.SlotItem;
+import com.nemonotfound.nemos.inventory.sorting.models.SlotItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.NotNull;
@@ -142,7 +142,7 @@ public class SortingService {
         }
 
         if (remainingCyles <= 0) {
-            Constants.LOG.warn("Slot swap cycle limit reached. Please report this");
+            Constants.LOGGER.warn("Slot swap cycle limit reached. Please report this");
         }
     }
 }

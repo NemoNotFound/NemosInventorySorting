@@ -1,8 +1,8 @@
 package com.nemonotfound.nemos.inventory.sorting.gui.components;
 
-import com.nemonotfound.nemos.inventory.sorting.config.model.FilterConfig;
-import com.nemonotfound.nemos.inventory.sorting.config.service.ConfigService;
-import com.nemonotfound.nemos.inventory.sorting.model.FilterResult;
+import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
+import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
+import com.nemonotfound.nemos.inventory.sorting.enums.FilterResult;
 import com.nemonotfound.nemos.inventory.sorting.service.FilterService;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -30,7 +30,7 @@ public class FilterBox extends EditBox implements RecipeBookUpdatable {
         super(font, x + xOffset, y + yOffset, width, height, message);
 
         this.filterService = FilterService.getInstance();
-        this.configService = ConfigService.getInstance();
+        this.configService = ConfigService.INSTANCE;
         this.xOffset = xOffset;
 
         this.setTextColor(-1);
@@ -50,7 +50,8 @@ public class FilterBox extends EditBox implements RecipeBookUpdatable {
         return filterService.filterSlots(slots, filter);
     }
 
-    public void updateAndSaveFilter(FilterConfig filterConfig) {
+    public void updateAndSaveFilter() {
+        FilterConfig filterConfig = FilterConfig.INSTANCE;
         var filter = filterConfig.isFilterPersistent() ? getValue() : "";
 
         filterConfig.setFilter(filter);

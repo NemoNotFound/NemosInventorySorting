@@ -1,9 +1,14 @@
-package com.nemonotfound.nemos.inventory.sorting.config.model;
+package com.nemonotfound.nemos.inventory.sorting.models.config;
 
 public class FilterConfig {
 
+    public static FilterConfig INSTANCE = new FilterConfig();
+
     private boolean isFilterPersistent = false;
     private String filter = "";
+
+    private FilterConfig() {
+    }
 
     public boolean isFilterPersistent() {
         return isFilterPersistent;

@@ -1,14 +1,14 @@
 package com.nemonotfound.nemos.inventory.sorting.mixin;
 
-import com.nemonotfound.nemos.inventory.sorting.config.model.ComponentConfig;
-import com.nemonotfound.nemos.inventory.sorting.config.service.ConfigService;
+import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
+import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
 import com.nemonotfound.nemos.inventory.sorting.factory.*;
 import com.nemonotfound.nemos.inventory.sorting.helper.ButtonTypeMapping;
 import com.nemonotfound.nemos.inventory.sorting.helper.SortingWidgetGetter;
-import com.nemonotfound.nemos.inventory.sorting.model.Offset;
-import com.nemonotfound.nemos.inventory.sorting.model.Position;
-import com.nemonotfound.nemos.inventory.sorting.model.Size;
-import com.nemonotfound.nemos.inventory.sorting.model.SlotRange;
+import com.nemonotfound.nemos.inventory.sorting.models.Offset;
+import com.nemonotfound.nemos.inventory.sorting.models.Position;
+import com.nemonotfound.nemos.inventory.sorting.models.Size;
+import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -32,6 +32,7 @@ import java.util.function.Function;
 import static com.nemonotfound.nemos.inventory.sorting.Constants.*;
 import static com.nemonotfound.nemos.inventory.sorting.SortingCommonClient.MOD_LOADER_HELPER;
 import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValues.*;
+import static com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId.*;
 
 //TODO: Refactor
 @Mixin(AbstractContainerScreen.class)
@@ -45,13 +46,14 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     protected int inventoryLabelY;
     @Shadow
     protected int imageWidth;
+
     @Unique
     private int nemosInventorySorting$inventoryEndIndex;
     @Unique
     private int nemosInventorySorting$containerSize;
 
     @Unique
-    private final ConfigService nemosInventorySorting$configService = ConfigService.getInstance();
+    private final ConfigService nemosInventorySorting$configService = ConfigService.INSTANCE;
     @Unique
     private final List<AbstractWidget> nemosInventorySorting$widgets = new ArrayList<>();
 
@@ -63,7 +65,6 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     public void init(CallbackInfo ci) {
         var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
         nemosInventorySorting$inventoryEndIndex = menu.slots.size() - 9;
-
         nemosInventorySorting$containerSize = nemosInventorySorting$inventoryEndIndex - 27;
 
         var componentConfigs = nemosInventorySorting$configService.readOrGetDefaultComponentConfigs();
@@ -190,7 +191,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     @Unique
     private void nemosInventorySorting$createButtons(List<ComponentConfig> configs, ButtonTypeMapping... mappings) {
         for (ButtonTypeMapping mapping : mappings) {
-            var optionalConfig = nemosInventorySorting$configService.getOrDefaultComponentConfig(configs, mapping.componentName());
+            var optionalConfig = nemosInventorySorting$configService.getOrDefault(configs, mapping.configId());
 
             if (optionalConfig.isEmpty()) {
                 continue;

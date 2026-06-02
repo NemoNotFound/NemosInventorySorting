@@ -1,4 +1,4 @@
-package com.nemonotfound.nemos.inventory.sorting.model;
+package com.nemonotfound.nemos.inventory.sorting.models;
 
 import com.nemonotfound.nemos.inventory.sorting.Constants;
 
@@ -8,7 +8,7 @@ public record Size(int width, int height, int defaultSize) {
         int minSize = 1;
 
         if (width < minSize || height < minSize) {
-            Constants.LOG.warn(
+            Constants.LOGGER.warn(
                     "Invalid button dimensions: width={}, height={}. Minimum is: {}. Falling back to default size: {}. Please update the configuration.",
                     width,
                     height,

@@ -1,17 +1,17 @@
 package com.nemonotfound.nemos.inventory.sorting.config;
 
-import com.nemonotfound.nemos.inventory.sorting.config.model.ComponentConfig;
-import com.nemonotfound.nemos.inventory.sorting.config.model.FilterConfig;
+import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
+import com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValues.*;
+import static com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId.*;
 
 public class DefaultConfigs {
 
     public static final List<ComponentConfig> DEFAULT_COMPONENT_CONFIGS = new ArrayList<>();
-    public static final FilterConfig DEFAULT_FILTER_CONFIG = new FilterConfig();
     public static final List<ComponentConfig> DEFAULT_IRON_CHEST_COMPONENT_CONFIGS = new ArrayList<>();
 
     private DefaultConfigs() {}
@@ -192,14 +192,14 @@ public class DefaultConfigs {
         );
     }
 
-    private static void createAndAddComponentConfig(String name, Integer xOffset, Integer rightXOffset, Integer yOffset, int width, int height) {
-        var config = new ComponentConfig(name, true, xOffset, rightXOffset, yOffset, width, height);
+    private static void createAndAddComponentConfig(ConfigId configId, Integer xOffset, Integer rightXOffset, Integer yOffset, int width, int height) {
+        var config = new ComponentConfig(configId.getId(), true, xOffset, rightXOffset, yOffset, width, height);
 
         DEFAULT_COMPONENT_CONFIGS.add(config);
     }
 
-    private static void createAndAddIronChestComponentConfig(String name, Integer yOffset, int width, int height) {
-        var config = new ComponentConfig(name, true, null, null, yOffset, width, height);
+    private static void createAndAddIronChestComponentConfig(ConfigId configId, Integer yOffset, int width, int height) {
+        var config = new ComponentConfig(configId.getId(), true, null, null, yOffset, width, height);
 
         DEFAULT_IRON_CHEST_COMPONENT_CONFIGS.add(config);
     }

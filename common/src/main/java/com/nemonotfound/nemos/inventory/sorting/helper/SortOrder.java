@@ -1565,7 +1565,7 @@ public class SortOrder {
 
     private static void addItemToList(Item item) {
         if (TYPE_SORT_ORDER.contains(item)) {
-            Constants.LOG.warn("Following item was already added to the types order: {}", item);
+            Constants.LOGGER.warn("Following item was already added to the types order: {}", item);
             return;
         }
 

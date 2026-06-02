@@ -1,8 +1,8 @@
 package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 
 import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
-import com.nemonotfound.nemos.inventory.sorting.config.model.FilterConfig;
-import com.nemonotfound.nemos.inventory.sorting.config.service.ConfigService;
+import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
+import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -24,12 +24,10 @@ public class ToggleFilterPersistenceButton extends AbstractButton {
     private final Component toggleOffComponent = Component.translatable("nemos_inventory_sorting.gui.toggleFilterPersistence.toggleOff");
 
     private final ConfigService configService;
-    private final FilterConfig filterConfig;
 
-    public ToggleFilterPersistenceButton(int x, int y, int xOffset, int width, int height, Component buttonName, FilterConfig filterConfig) {
+    public ToggleFilterPersistenceButton(int x, int y, int xOffset, int width, int height, Component buttonName) {
         super(x, y, xOffset, width, height, buttonName);
-        configService = ConfigService.getInstance();
-        this.filterConfig = filterConfig;
+        configService = ConfigService.INSTANCE;
         setTooltip();
     }
 
@@ -51,22 +49,22 @@ public class ToggleFilterPersistenceButton extends AbstractButton {
 
     @Override
     protected Identifier getTexture() {
-        return filterConfig.isFilterPersistent()
+        return FilterConfig.INSTANCE.isFilterPersistent()
                 ? this.isHovered() ? getToggleOnHoverTexture() : getToggleOnTexture()
                 : this.isHovered() ? getToggleOffHoverTexture() : getToggleOffTexture();
     }
 
     private void setTooltip() {
-        var tooltipComponent = filterConfig.isFilterPersistent() ? toggleOffComponent : toggleOnComponent;
+        var tooltipComponent = FilterConfig.INSTANCE.isFilterPersistent() ? toggleOffComponent : toggleOnComponent;
 
         setTooltip(Tooltip.create(tooltipComponent));
     }
 
     @Override
     public void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
-        filterConfig.toggleFilterPersistence();
+        FilterConfig.INSTANCE.toggleFilterPersistence();
 
-        configService.writeConfig(true, FILTER_CONFIG_PATH, filterConfig);
+        configService.writeConfig(true, FILTER_CONFIG_PATH, FilterConfig.INSTANCE);
         setTooltip();
     }
 

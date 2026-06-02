@@ -3,7 +3,8 @@ package com.nemonotfound.nemos.inventory.sorting;
 import com.nemonotfound.nemos.inventory.sorting.client.SortingKeymappingCategories;
 import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
 import com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigs;
-import com.nemonotfound.nemos.inventory.sorting.config.service.ConfigService;
+import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
+import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
 import com.nemonotfound.nemos.inventory.sorting.helper.SortOrder;
 import com.nemonotfound.nemos.inventory.sorting.platform.IModLoaderHelper;
 import com.nemonotfound.nemos.inventory.sorting.platform.IRegistryHelper;
@@ -19,18 +20,19 @@ public class SortingCommonClient {
     public static final IModLoaderHelper MOD_LOADER_HELPER = ServiceLoader.load(IModLoaderHelper.class).findFirst().orElseThrow();
 
     public static void init() {
-        Constants.LOG.info("Thank you for using Nemo's Inventory Sorting!");
+        Constants.LOGGER.info("Thank you for using Nemo's Inventory Sorting!");
         SortingKeymappingCategories.init();
         SortingKeyMappings.init();
         DefaultConfigs.setupDefaultConfigs();
 
-        ConfigService.getInstance().writeConfig(false, COMPONENT_CONFIG_PATH, DEFAULT_COMPONENT_CONFIGS);
-        ConfigService.getInstance().writeConfig(false, FILTER_CONFIG_PATH, DEFAULT_FILTER_CONFIG);
+        ConfigService.INSTANCE.writeConfig(false, COMPONENT_CONFIG_PATH, DEFAULT_COMPONENT_CONFIGS);
+        ConfigService.INSTANCE.writeConfig(false, FILTER_CONFIG_PATH, FilterConfig.INSTANCE);
 
         if (MOD_LOADER_HELPER.isModLoaded("ironchest")) {
-            ConfigService.getInstance().writeConfig(false, IRON_CHEST_COMPONENT_CONFIG_PATH, DEFAULT_IRON_CHEST_COMPONENT_CONFIGS);
+            ConfigService.INSTANCE.writeConfig(false, IRON_CHEST_COMPONENT_CONFIG_PATH, DEFAULT_IRON_CHEST_COMPONENT_CONFIGS);
         }
 
         SortOrder.init();
+        ConfigService.loadFilterConfig();
     }
 }

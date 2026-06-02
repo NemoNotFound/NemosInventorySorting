@@ -1,4 +1,4 @@
-package com.nemonotfound.nemos.inventory.sorting.model;
+package com.nemonotfound.nemos.inventory.sorting.enums;
 
 public enum FilterResult {
 

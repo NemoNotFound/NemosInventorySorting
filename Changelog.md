@@ -1,4 +1,4 @@
-# Changelog v1.14.9
+# Changelog v1.14.10
 
-## Fixes
-- Fixed hotbar being sorted when specific mods are installed
+## Changes
+- Small performance improvements

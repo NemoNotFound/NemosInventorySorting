@@ -1,4 +1,4 @@
-package com.nemonotfound.nemos.inventory.sorting.model;
+package com.nemonotfound.nemos.inventory.sorting.models;
 
 public record SlotRange(int startIndex, int endIndex) {
 
