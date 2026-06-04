@@ -2,6 +2,7 @@ package com.nemonotfound.nemos.inventory.sorting.mixin;
 
 import com.nemonotfound.nemos.inventory.sorting.gui.components.FilterBox;
 import com.nemonotfound.nemos.inventory.sorting.gui.components.RecipeBookUpdatable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.input.KeyEvent;
@@ -40,11 +41,13 @@ public abstract class AbstractRecipeBookScreenMixin<T extends RecipeBookMenu> ex
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void keyPressed(KeyEvent keyEvent, CallbackInfoReturnable<Boolean> cir) {
-        var optionalFilterBox = children().stream()
+        var isFilterBoxFocused = children().stream()
                 .filter(widget -> widget instanceof FilterBox)
-                .findFirst();
+                .findFirst()
+                .map(GuiEventListener::isFocused)
+                .orElse(false);
 
-        if (optionalFilterBox.isPresent() && optionalFilterBox.get().isFocused()) {
+        if (isFilterBoxFocused) {
             cir.setReturnValue(super.keyPressed(keyEvent));
         }
     }

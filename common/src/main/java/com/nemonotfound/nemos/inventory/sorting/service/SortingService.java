@@ -64,7 +64,9 @@ public class SortingService {
         var player = this.minecraft.player;
         var level = player.level();
         var hasPermissions = player.canUseGameMasterBlocks() && this.minecraft.options.operatorItemsTab().get();
-        CreativeModeTabs.tryRebuildTabContents(level.enabledFeatures(), hasPermissions, level.registryAccess());
+        var parameters = new CreativeModeTab.ItemDisplayParameters(level.enabledFeatures(), hasPermissions, level.registryAccess());
+
+        CreativeModeTabs.buildAllTabContents(parameters);
 
         return BuiltInRegistries.CREATIVE_MODE_TAB.stream()
                 .filter(tab -> tab.getType() == CreativeModeTab.Type.SEARCH)

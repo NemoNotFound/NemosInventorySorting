@@ -1,5 +1,7 @@
-# Changelog v1.15
+# Changelog v1.15.1
+
+## Fixes
+- Fixed sorting causing creative mode search not to work
 
 ## Changes
-- Sort order is based on the "Search Items" creative mode tab
-- Small performance improvements
+- Quick search is done with Command + F instead of Control + F on macOS

@@ -36,7 +36,6 @@ import java.util.function.Function;
 import static com.nemonotfound.nemos.inventory.sorting.Constants.MOD_ID;
 import static com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings.QUICK_SEARCH;
 import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValues.*;
-import static com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId.FILTER_PERSISTENCE_TOGGLE;
 import static com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId.ITEM_FILTER;
 
 @Mixin(AbstractContainerScreen.class)
@@ -68,7 +67,6 @@ public abstract class ContainerFilterMixin extends Screen {
         var componentConfigs = nemosInventorySorting$configService.readOrGetDefaultComponentConfigs();
 
         if (nemosInventorySorting$shouldHaveFilter()) {
-
             nemosInventorySorting$initFilter(componentConfigs);
         }
     }
@@ -90,7 +88,7 @@ public abstract class ContainerFilterMixin extends Screen {
                 return;
             }
 
-            if (!this.nemosInventorySorting$filterBox.isFocused() && keyEvent.hasControlDown() && QUICK_SEARCH.get().matches(keyEvent)) {
+            if (!this.nemosInventorySorting$filterBox.isFocused() && keyEvent.hasControlDownWithQuirk() && QUICK_SEARCH.get().matches(keyEvent)) {
                 nemosInventorySorting$handleQuickSearch(cir);
 
                 return;
@@ -213,7 +211,7 @@ public abstract class ContainerFilterMixin extends Screen {
         var yOffset = config.yOffset() != null ? config.yOffset() : Y_OFFSET_ITEM_FILTER;
 
         nemosInventorySorting$createSearchBox(xOffset, yOffset, nemosInventorySorting$filterBoxWidth, config.height());
-        nemosInventorySorting$createButton(configs, FILTER_PERSISTENCE_TOGGLE);
+        nemosInventorySorting$createButton(configs);
     }
 
     @Unique
@@ -234,8 +232,8 @@ public abstract class ContainerFilterMixin extends Screen {
     }
 
     @Unique
-    private void nemosInventorySorting$createButton(List<ComponentConfig> configs, ConfigId configId) {
-        var optionalComponentConfig = nemosInventorySorting$configService.getOrDefault(configs, configId);
+    private void nemosInventorySorting$createButton(List<ComponentConfig> configs) {
+        var optionalComponentConfig = nemosInventorySorting$configService.getOrDefault(configs, ConfigId.FILTER_PERSISTENCE_TOGGLE);
 
         if (optionalComponentConfig.isEmpty()) {
             return;
