@@ -3,6 +3,7 @@ package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 import com.nemonotfound.nemos.inventory.sorting.models.Position;
 import com.nemonotfound.nemos.inventory.sorting.models.Size;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
+import com.nemonotfound.nemos.inventory.sorting.service.LockedSlotService;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -57,6 +58,7 @@ public abstract class AbstractSingleClickButton extends AbstractContainerButton 
         var slots = menu.slots;
 
         return IntStream.range(startIndex, currentEndIndex)
+                .filter(index -> !LockedSlotService.INSTANCE.isLockedSLot(index, startIndex))
                 .mapToObj(slotIndex -> Map.entry(slotIndex, slots.get(slotIndex).getItem()))
                 .filter(itemStackEntry -> !itemStackEntry.getValue().is(Items.AIR))
                 .map(Map.Entry::getKey)

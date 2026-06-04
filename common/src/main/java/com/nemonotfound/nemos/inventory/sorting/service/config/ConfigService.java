@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
 import com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId;
+import com.nemonotfound.nemos.inventory.sorting.models.config.LockedSlotsConfig;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -27,6 +28,7 @@ public class ConfigService {
 
     private static final TypeToken<List<ComponentConfig>> COMPONENT_CONFIG_TYPE = new TypeToken<>() {};
     private static final TypeToken<FilterConfig> FILTER_CONFIG_TYPE_TOKEN = new TypeToken<>() {};
+    private static final TypeToken<LockedSlotsConfig> LOCKED_SLOTS_CONFIG_TYPE_TOKEN = new TypeToken<>() {};
 
     public <T> void writeConfig(boolean update, String filePath, T config) {
         if (!update && Files.exists(Paths.get(filePath))) {
@@ -52,6 +54,10 @@ public class ConfigService {
 
     public static void loadFilterConfig() {
         FilterConfig.INSTANCE = readOrDefault(FILTER_CONFIG_PATH, FILTER_CONFIG_TYPE_TOKEN, FilterConfig.INSTANCE);
+    }
+
+    public static void loadLockedSlotsConfig() {
+        LockedSlotsConfig.INSTANCE = readOrDefault(LOCKED_SLOTS_CONFIG_PATH, LOCKED_SLOTS_CONFIG_TYPE_TOKEN, LockedSlotsConfig.INSTANCE);
     }
 
     public List<ComponentConfig> readOrGetDefaultIronChestComponentConfigs() {

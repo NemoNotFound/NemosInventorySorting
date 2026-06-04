@@ -11,7 +11,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.MAX_SORTING_CYCLES;
@@ -110,11 +113,15 @@ public class SortingService {
         Map<Integer, Integer> slotSwapMap = new LinkedHashMap<>();
 
         for (int i = 0; i < slotItems.size(); i++) {
-            int newSlot = i + startIndex;
-            int currentSlot = slotItems.get(i).slotIndex();
+            int newIndex = i + startIndex;
+            int index = slotItems.get(i).slotIndex();
 
-            if (currentSlot != newSlot) {
-                slotSwapMap.put(currentSlot, newSlot);
+            if (LockedSlotService.INSTANCE.isLockedSLot(index, startIndex)) {
+                continue;
+            }
+
+            if (index != newIndex) {
+                slotSwapMap.put(index, newIndex);
             }
         }
 

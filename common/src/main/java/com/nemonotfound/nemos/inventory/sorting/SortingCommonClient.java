@@ -4,6 +4,7 @@ import com.nemonotfound.nemos.inventory.sorting.client.SortingKeymappingCategori
 import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
 import com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigs;
 import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
+import com.nemonotfound.nemos.inventory.sorting.models.config.LockedSlotsConfig;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
 import com.nemonotfound.nemos.inventory.sorting.platform.IModLoaderHelper;
 import com.nemonotfound.nemos.inventory.sorting.platform.IRegistryHelper;
@@ -19,18 +20,21 @@ public class SortingCommonClient {
     public static final IModLoaderHelper MOD_LOADER_HELPER = ServiceLoader.load(IModLoaderHelper.class).findFirst().orElseThrow();
 
     public static void init() {
-        Constants.LOGGER.info("Thank you for using Nemo's Inventory Sorting!");
+        Constants.LOGGER.info("I guess your chests are just as messy as mine, huh?");
+
         SortingKeymappingCategories.init();
         SortingKeyMappings.init();
         DefaultConfigs.setupDefaultConfigs();
 
         ConfigService.INSTANCE.writeConfig(false, COMPONENT_CONFIG_PATH, DEFAULT_COMPONENT_CONFIGS);
         ConfigService.INSTANCE.writeConfig(false, FILTER_CONFIG_PATH, FilterConfig.INSTANCE);
+        ConfigService.INSTANCE.writeConfig(false, LOCKED_SLOTS_CONFIG_PATH, LockedSlotsConfig.INSTANCE);
 
         if (MOD_LOADER_HELPER.isModLoaded("ironchest")) {
             ConfigService.INSTANCE.writeConfig(false, IRON_CHEST_COMPONENT_CONFIG_PATH, DEFAULT_IRON_CHEST_COMPONENT_CONFIGS);
         }
 
         ConfigService.loadFilterConfig();
+        ConfigService.loadLockedSlotsConfig();
     }
 }

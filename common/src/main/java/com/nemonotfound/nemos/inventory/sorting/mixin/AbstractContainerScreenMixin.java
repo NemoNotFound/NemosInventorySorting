@@ -1,22 +1,25 @@
 package com.nemonotfound.nemos.inventory.sorting.mixin;
 
+import com.nemonotfound.nemos.inventory.sorting.models.*;
+import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
 import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
+import com.nemonotfound.nemos.inventory.sorting.models.config.LockedSlotsConfig;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
 import com.nemonotfound.nemos.inventory.sorting.factory.*;
 import com.nemonotfound.nemos.inventory.sorting.helper.ButtonTypeMapping;
 import com.nemonotfound.nemos.inventory.sorting.helper.SortingWidgetGetter;
-import com.nemonotfound.nemos.inventory.sorting.models.Offset;
-import com.nemonotfound.nemos.inventory.sorting.models.Position;
-import com.nemonotfound.nemos.inventory.sorting.models.Size;
-import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.*;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -39,6 +42,9 @@ import static com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId.*;
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen implements SortingWidgetGetter {
 
+    @Unique
+    private static final Identifier LOCKED_SLOT = Identifier.fromNamespaceAndPath(MOD_ID, "container/locked_slot");
+
     @Shadow
     protected int leftPos;
     @Shadow
@@ -49,6 +55,10 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     @Shadow
     protected int imageWidth;
 
+    @Shadow
+    @Nullable
+    protected Slot hoveredSlot;
+
     @Unique
     private int nemosInventorySorting$inventoryEndIndex;
     @Unique
@@ -58,6 +68,10 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     private final ConfigService nemosInventorySorting$configService = ConfigService.INSTANCE;
     @Unique
     private final List<AbstractWidget> nemosInventorySorting$widgets = new ArrayList<>();
+
+    @Unique
+    private boolean nemosInventorySorting$displayLockedSlots = false;
+
 
     protected AbstractContainerScreenMixin(Component component) {
         super(component);
@@ -91,12 +105,20 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
         if (nemosInventorySorting$triggerActionOnWidget(widget -> widget.keyPressed(keyEvent))) {
             cir.setReturnValue(true);
         }
+
+        if (keyEvent.hasAltDown()) {
+            nemosInventorySorting$displayLockedSlots = true;
+        }
     }
 
     @Override
     public boolean keyReleased(@NotNull KeyEvent keyEvent) {
         if (nemosInventorySorting$triggerActionOnWidget(widget -> widget.keyReleased(keyEvent))) {
             return true;
+        }
+
+        if (!keyEvent.hasAltDown()) {
+            nemosInventorySorting$displayLockedSlots = false;
         }
 
         return super.keyReleased(keyEvent);
@@ -107,6 +129,57 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
         if (nemosInventorySorting$triggerActionOnWidget(widget -> widget.mouseClicked(mouseButtonEvent, bl))) {
             cir.setReturnValue(true);
         }
+
+        if (mouseButtonEvent.hasAltDown()) {
+            nemosInventorySorting$handleLockedSlot();
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Unique
+    private void nemosInventorySorting$handleLockedSlot() {
+        if (hoveredSlot == null || !nemosInventorySorting$isLockableSlot(hoveredSlot.index)) {
+            return;
+        }
+
+        var index = hoveredSlot.index - nemosInventorySorting$getInventoryStartIndex();
+        var lockedSlot = new LockedSlot(index);
+
+        if (!LockedSlotsConfig.INSTANCE.remove(lockedSlot)) {
+            LockedSlotsConfig.INSTANCE.add(lockedSlot);
+        }
+
+        ConfigService.INSTANCE.writeConfig(true, LOCKED_SLOTS_CONFIG_PATH, LockedSlotsConfig.INSTANCE);
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$isLockableSlot(int index) {
+        var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
+        var isInventoryMenu = menu instanceof InventoryMenu;
+        var isLockableInventoryIndex = index >= InventoryMenu.INV_SLOT_START && index < InventoryMenu.USE_ROW_SLOT_END;
+        var isLockableContainerInventoryIndex = index >= nemosInventorySorting$containerSize;
+
+        return (isInventoryMenu && isLockableInventoryIndex) || (!isInventoryMenu && isLockableContainerInventoryIndex);
+    }
+
+    @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlots(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"))
+    void renderHighlightedSlot(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+        if (!nemosInventorySorting$displayLockedSlots) {
+            return;
+        }
+
+        for (LockedSlot lockedSlot : LockedSlotsConfig.INSTANCE.getLockedSlots()) {
+            var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
+            var slot = menu.getSlot(lockedSlot.index() + nemosInventorySorting$getInventoryStartIndex());
+
+            guiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, LOCKED_SLOT, slot.x, slot.y, 16, 16);
+        }
+    }
+
+    @Unique
+    private int nemosInventorySorting$getInventoryStartIndex() {
+        return ((AbstractContainerScreen<?>) (Object) this).getMenu() instanceof InventoryMenu ?
+                InventoryMenu.INV_SLOT_START : nemosInventorySorting$containerSize;
     }
 
     @Unique

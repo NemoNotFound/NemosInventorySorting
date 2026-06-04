@@ -75,6 +75,6 @@ public class ToggleFilterPersistenceButton extends AbstractButton {
 
     @Override
     protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
-
+        this.defaultButtonNarrationText(narrationElementOutput);
     }
 }

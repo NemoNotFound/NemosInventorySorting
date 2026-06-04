@@ -1,7 +1,6 @@
-# Changelog v1.15.1
+# Changelog v1.16
 
-## Fixes
-- Fixed sorting causing creative mode search not to work
-
-## Changes
-- Quick search is done with Command + F instead of Control + F on macOS
+## Additions
+- Added locked slots
+  - Lock slots with alt (option on macOS) + mouse click
+  - Highlight locked slots when pressing alt (option on macOS)

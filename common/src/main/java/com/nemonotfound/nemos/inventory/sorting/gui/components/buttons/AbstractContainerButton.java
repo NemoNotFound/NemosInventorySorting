@@ -90,6 +90,6 @@ public abstract class AbstractContainerButton extends AbstractButton {
 
     @Override
     protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
-
+        this.defaultButtonNarrationText(narrationElementOutput);
     }
 }
