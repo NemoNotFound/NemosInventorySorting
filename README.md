@@ -28,6 +28,7 @@ Use at your own risk — or check with the server admins beforehand.
 
 Nemo's Inventory Sorting is compatible with:
 - **Iron Chests** *(since version 1.11)*
+- **Nemo's Backpacks** *(since version 1.13)*
 - **Better Chests, Barrels & Shulker Boxes** *(since version 1.14)*
 
 # Downloads

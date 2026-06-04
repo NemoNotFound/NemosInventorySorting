@@ -1,16 +1,17 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
 import com.nemonotfound.nemos.inventory.sorting.Constants;
-import com.nemonotfound.nemos.inventory.sorting.helper.SortOrder;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.MAX_SORTING_CYCLES;
@@ -47,7 +48,7 @@ public class SortingService {
     }
 
     protected Comparator<SlotItem> comparatorByItemOrder() {
-        var sortOrder = SortOrder.getSortOrder();
+        List<Item> sortOrder = getSearchTabItems();
 
         Comparator<SlotItem> comparator = Comparator.comparingInt(
                 slotItem -> IntStream.range(0, sortOrder.size())
@@ -57,6 +58,20 @@ public class SortingService {
         );
 
         return comparatorByName(comparator);
+    }
+
+    private List<Item> getSearchTabItems() {
+        var player = this.minecraft.player;
+        var level = player.level();
+        var hasPermissions = player.canUseGameMasterBlocks() && this.minecraft.options.operatorItemsTab().get();
+        CreativeModeTabs.tryRebuildTabContents(level.enabledFeatures(), hasPermissions, level.registryAccess());
+
+        return BuiltInRegistries.CREATIVE_MODE_TAB.stream()
+                .filter(tab -> tab.getType() == CreativeModeTab.Type.SEARCH)
+                .flatMap(tab -> tab.getSearchTabDisplayItems().stream())
+                .map(ItemStack::getItem)
+                .distinct()
+                .toList();
     }
 
     protected Comparator<SlotItem> comparatorByName(Comparator<SlotItem> comparator) {

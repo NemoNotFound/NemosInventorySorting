@@ -5,7 +5,6 @@ import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
 import com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigs;
 import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
-import com.nemonotfound.nemos.inventory.sorting.helper.SortOrder;
 import com.nemonotfound.nemos.inventory.sorting.platform.IModLoaderHelper;
 import com.nemonotfound.nemos.inventory.sorting.platform.IRegistryHelper;
 
@@ -32,7 +31,6 @@ public class SortingCommonClient {
             ConfigService.INSTANCE.writeConfig(false, IRON_CHEST_COMPONENT_CONFIG_PATH, DEFAULT_IRON_CHEST_COMPONENT_CONFIGS);
         }
 
-        SortOrder.init();
         ConfigService.loadFilterConfig();
     }
 }
