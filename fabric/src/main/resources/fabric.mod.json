@@ -32,6 +32,7 @@
     },
     "suggests": {
         "another-mod": "*"
-    }
+    },
+    "accessWidener": "nemos_inventory_sorting.accesswidener"
 }
   
