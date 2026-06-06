@@ -1,4 +1,4 @@
-# Changelog v1.16.1
+# Changelog v1.17
 
-## Fixes
-- Fixed broken sorting
+## Additions
+- Slots can be locked by holding **Alt** (**Option** on macOS) and dragging across the slots

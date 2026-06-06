@@ -16,8 +16,8 @@ For more information and to see how to configure the components check the [wiki]
 
 To sort, drop or move items, simply click the buttons or use your custom keybinds.   
 In the player inventory, clicking the buttons does not include the hotbar. To include it, use **Shift + Click** (or **Shift + keybind**).    
-To search for an item, click the search bar or press **Ctrl + [keybind]** (or **Command + [keybind]** on macOS), then start typing.
-To lock slots from sorting, use **Alt + Click** (or **Option + Click** on macOS).
+To search for an item, click the search bar or press **Ctrl + [keybind]** (or **Command + [keybind]** on macOS), then start typing.     
+To lock slots from sorting, use **Alt + Click/Drag** (or **Option + Click/Drag** on macOS).       
 To display locked slots, hold **Alt** (or **Option** on macOS).
 
 ### ⚠ Disclaimer   

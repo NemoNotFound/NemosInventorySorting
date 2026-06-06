@@ -30,7 +30,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.*;
@@ -58,6 +60,9 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     @Shadow
     @Nullable
     protected Slot hoveredSlot;
+
+    @Unique
+    private final Set<Slot> nemosInventorySorting$previousHoveredSlots = new HashSet<>();
 
     @Unique
     private int nemosInventorySorting$inventoryEndIndex;
@@ -125,15 +130,28 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void mouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl, CallbackInfoReturnable<Boolean> cir) {
-        if (nemosInventorySorting$triggerActionOnWidget(widget -> widget.mouseClicked(mouseButtonEvent, bl))) {
+    private void mouseClicked(MouseButtonEvent event, boolean bl, CallbackInfoReturnable<Boolean> cir) {
+        if (nemosInventorySorting$triggerActionOnWidget(widget -> widget.mouseClicked(event, bl))) {
             cir.setReturnValue(true);
         }
 
-        if (mouseButtonEvent.hasAltDown()) {
+        if (event.hasAltDown()) {
             nemosInventorySorting$handleLockedSlot();
             cir.setReturnValue(true);
         }
+    }
+
+    @Inject(method = "mouseDragged", at = @At("HEAD"), cancellable = true)
+    private void mouseDragged(MouseButtonEvent event, double dx, double dy, CallbackInfoReturnable<Boolean> cir) {
+        if (event.hasAltDown() && !nemosInventorySorting$previousHoveredSlots.contains(hoveredSlot)) {
+            nemosInventorySorting$handleLockedSlot();
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Inject(method = "mouseReleased", at = @At("HEAD"))
+    private void mouseReleased(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
+        nemosInventorySorting$previousHoveredSlots.clear();
     }
 
     @Unique
@@ -150,6 +168,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
         }
 
         ConfigService.INSTANCE.writeConfig(true, LOCKED_SLOTS_CONFIG_PATH, LockedSlotsConfig.INSTANCE);
+        nemosInventorySorting$previousHoveredSlots.add(hoveredSlot);
     }
 
     @Unique
