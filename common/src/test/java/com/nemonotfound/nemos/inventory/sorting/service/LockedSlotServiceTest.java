@@ -41,7 +41,7 @@ class LockedSlotServiceTest {
         assertThat(actual).doesNotContain(5);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "lockedIndex={0}, index={1}, startIndex={2}, expected={3}")
     @MethodSource
     @DisplayName("isLocked")
     void isLocked(int lockedIndex, int index, int startIndex, boolean expected) {
