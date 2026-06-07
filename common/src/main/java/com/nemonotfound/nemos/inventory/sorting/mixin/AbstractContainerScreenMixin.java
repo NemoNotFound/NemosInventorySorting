@@ -155,7 +155,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     }
 
     @Unique
-    private void nemosInventorySorting$handleLockedSlot() {
+    private void nemosInventorySorting$handleLockedSlot() { //TODO: Put into LockedService
         if (hoveredSlot == null || !nemosInventorySorting$isLockableSlot(hoveredSlot.index)) {
             return;
         }
@@ -172,7 +172,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     }
 
     @Unique
-    private boolean nemosInventorySorting$isLockableSlot(int index) {
+    private boolean nemosInventorySorting$isLockableSlot(int index) { //TODO: Put into LockedService
         var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
         var isInventoryMenu = menu instanceof InventoryMenu;
         var isLockableInventoryIndex = index >= InventoryMenu.INV_SLOT_START && index < InventoryMenu.USE_ROW_SLOT_END;

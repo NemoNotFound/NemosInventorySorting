@@ -35,7 +35,7 @@ public class SortingService {
 
 
     public static SortingService getInstance() {
-        if(INSTANCE == null) {
+        if (INSTANCE == null) {
             INSTANCE = new SortingService(SlotSwappingService.getInstance(), TooltipService.getInstance(), Minecraft.getInstance());
         }
 
@@ -44,7 +44,8 @@ public class SortingService {
 
     public @NotNull List<SlotItem> sortSlotItems(AbstractContainerMenu menu, int startIndex, int endIndex) {
         return IntStream.range(startIndex, endIndex)
-                .mapToObj(slotIndex -> new SlotItem(slotIndex, menu.slots.get(slotIndex).getItem()))
+                .filter(index -> !LockedSlotService.INSTANCE.isLocked(index, startIndex))
+                .mapToObj(index -> new SlotItem(index, menu.slots.get(index).getItem()))
                 .filter(slotItem -> !slotItem.itemStack().isEmpty())
                 .sorted(comparatorByItemOrder())
                 .toList();
@@ -109,16 +110,13 @@ public class SortingService {
         });
     }
 
-    public Map<Integer, Integer> retrieveSlotSwapMap(List<SlotItem> slotItems, int startIndex) {
+    public Map<Integer, Integer> retrieveSlotSwapMap(List<SlotItem> slotItems, int startIndex, int endIndex) {
         Map<Integer, Integer> slotSwapMap = new LinkedHashMap<>();
+        List<Integer> unlockedSlots = LockedSlotService.INSTANCE.getUnlockedSlots(startIndex, endIndex);
 
         for (int i = 0; i < slotItems.size(); i++) {
-            int newIndex = i + startIndex;
+            int newIndex = unlockedSlots.get(i);
             int index = slotItems.get(i).slotIndex();
-
-            if (LockedSlotService.INSTANCE.isLockedSLot(index, startIndex)) {
-                continue;
-            }
 
             if (index != newIndex) {
                 slotSwapMap.put(index, newIndex);

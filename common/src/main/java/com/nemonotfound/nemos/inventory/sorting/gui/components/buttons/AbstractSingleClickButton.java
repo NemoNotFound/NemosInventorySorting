@@ -58,7 +58,7 @@ public abstract class AbstractSingleClickButton extends AbstractContainerButton 
         var slots = menu.slots;
 
         return IntStream.range(startIndex, currentEndIndex)
-                .filter(index -> !LockedSlotService.INSTANCE.isLockedSLot(index, startIndex))
+                .filter(index -> !LockedSlotService.INSTANCE.isLocked(index, startIndex))
                 .mapToObj(slotIndex -> Map.entry(slotIndex, slots.get(slotIndex).getItem()))
                 .filter(itemStackEntry -> !itemStackEntry.getValue().is(Items.AIR))
                 .map(Map.Entry::getKey)

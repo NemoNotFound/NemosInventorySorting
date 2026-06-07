@@ -63,7 +63,7 @@ public class MoveSameButton extends AbstractSingleClickButton {
         var itemsOutOfIndexRange = getItemsOutOfIndexRange(slots, startIndex, currentEndIndex);
 
         return IntStream.range(startIndex, currentEndIndex)
-                .filter(index -> !LockedSlotService.INSTANCE.isLockedSLot(index, startIndex))
+                .filter(index -> !LockedSlotService.INSTANCE.isLocked(index, startIndex))
                 .mapToObj(slotIndex -> Map.entry(slotIndex, slots.get(slotIndex).getItem()))
                 .filter(itemStackEntry -> isItemInOtherContainer(itemStackEntry.getValue(), itemsOutOfIndexRange))
                 .map(Map.Entry::getKey)

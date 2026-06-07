@@ -1,4 +1,4 @@
-# Changelog v1.17
+# Changelog v1.17.1
 
-## Additions
-- Slots can be locked by holding **Alt** (**Option** on macOS) and dragging across the slots
+## Fixes
+- Fixed issues with locking slots
