@@ -7,9 +7,13 @@ import java.util.stream.IntStream;
 
 public class LockedSlotService {
 
-    public static LockedSlotService INSTANCE = new LockedSlotService();
+    public static LockedSlotService INSTANCE = new LockedSlotService(LockedSlotsConfig.INSTANCE);
 
-    private LockedSlotService() {}
+    private final LockedSlotsConfig lockedSlotsConfig;
+
+    private LockedSlotService(LockedSlotsConfig lockedSlotsConfig) {
+        this.lockedSlotsConfig = lockedSlotsConfig;
+    }
 
     public List<Integer> getUnlockedSlots(int startIndex, int endIndex) {
         return IntStream.range(startIndex, endIndex)
@@ -19,7 +23,7 @@ public class LockedSlotService {
     }
 
     public boolean isLocked(int index, int startIndex) {
-        return startIndex != 0 && LockedSlotsConfig.INSTANCE.getLockedSlots().stream()
+        return startIndex != 0 && lockedSlotsConfig.getLockedSlots().stream()
                 .anyMatch(slot -> slot.index() + startIndex == index);
     }
 }

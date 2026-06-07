@@ -17,6 +17,22 @@ dependencies {
     // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
     compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation("org.mockito:mockito-core:5.23.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
+    testImplementation("org.assertj:assertj-core:4.0.0-M1")
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+
+    maxHeapSize = '1G'
+
+    testLogging {
+        events "passed"
+    }
 }
 
 configurations {
