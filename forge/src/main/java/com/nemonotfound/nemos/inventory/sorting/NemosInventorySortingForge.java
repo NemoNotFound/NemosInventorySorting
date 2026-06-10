@@ -1,6 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting;
 
-import com.nemonotfound.nemos.inventory.sorting.client.InventorySortingKeyMappings;
+import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackSelectionConfig;
@@ -23,7 +23,7 @@ public class NemosInventorySortingForge {
 
     public NemosInventorySortingForge() {
         if (FMLEnvironment.dist.isClient()) {
-            NemosInventorySortingClientCommon.init();
+            SortingCommonClient.init();
         }
 
         AddPackFindersEvent.BUS.addListener(this::addBuiltInResourcePack);
@@ -50,15 +50,15 @@ public class NemosInventorySortingForge {
     }
 
     private void registerKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(InventorySortingKeyMappings.SORT.get());
-        event.register(InventorySortingKeyMappings.SORT_INVENTORY.get());
-        event.register(InventorySortingKeyMappings.MOVE_SAME.get());
-        event.register(InventorySortingKeyMappings.MOVE_SAME_INVENTORY.get());
-        event.register(InventorySortingKeyMappings.MOVE_ALL.get());
-        event.register(InventorySortingKeyMappings.MOVE_ALL_INVENTORY.get());
-        event.register(InventorySortingKeyMappings.DROP_ALL.get());
-        event.register(InventorySortingKeyMappings.DROP_ALL_INVENTORY.get());
-        event.register(InventorySortingKeyMappings.TOGGLE_FILTER_PERSISTENCE.get());
-        event.register(InventorySortingKeyMappings.QUICK_SEARCH.get());
+        event.register(SortingKeyMappings.SORT.get());
+        event.register(SortingKeyMappings.SORT_INVENTORY.get());
+        event.register(SortingKeyMappings.MOVE_SAME.get());
+        event.register(SortingKeyMappings.MOVE_SAME_INVENTORY.get());
+        event.register(SortingKeyMappings.MOVE_ALL.get());
+        event.register(SortingKeyMappings.MOVE_ALL_INVENTORY.get());
+        event.register(SortingKeyMappings.DROP_ALL.get());
+        event.register(SortingKeyMappings.DROP_ALL_INVENTORY.get());
+        event.register(SortingKeyMappings.TOGGLE_FILTER_PERSISTENCE.get());
+        event.register(SortingKeyMappings.QUICK_SEARCH.get());
     }
 }
