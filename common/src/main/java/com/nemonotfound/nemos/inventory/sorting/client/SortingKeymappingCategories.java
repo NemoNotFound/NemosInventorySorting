@@ -6,7 +6,7 @@ import net.minecraft.resources.Identifier;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.MOD_ID;
 
-public class InventorySortingCategories {
+public class SortingKeymappingCategories {
 
     public static final KeyMapping.Category NEMOS_INVENTORY_SORTING = registerCategory();
 

@@ -1,6 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.events;
 
-import com.nemonotfound.nemos.inventory.sorting.client.InventorySortingKeyMappings;
+import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
@@ -19,16 +19,16 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(InventorySortingKeyMappings.SORT.get());
-        event.register(InventorySortingKeyMappings.SORT_INVENTORY.get());
-        event.register(InventorySortingKeyMappings.MOVE_SAME.get());
-        event.register(InventorySortingKeyMappings.MOVE_SAME_INVENTORY.get());
-        event.register(InventorySortingKeyMappings.MOVE_ALL.get());
-        event.register(InventorySortingKeyMappings.MOVE_ALL_INVENTORY.get());
-        event.register(InventorySortingKeyMappings.DROP_ALL.get());
-        event.register(InventorySortingKeyMappings.DROP_ALL_INVENTORY.get());
-        event.register(InventorySortingKeyMappings.TOGGLE_FILTER_PERSISTENCE.get());
-        event.register(InventorySortingKeyMappings.QUICK_SEARCH.get());
+        event.register(SortingKeyMappings.SORT.get());
+        event.register(SortingKeyMappings.SORT_INVENTORY.get());
+        event.register(SortingKeyMappings.MOVE_SAME.get());
+        event.register(SortingKeyMappings.MOVE_SAME_INVENTORY.get());
+        event.register(SortingKeyMappings.MOVE_ALL.get());
+        event.register(SortingKeyMappings.MOVE_ALL_INVENTORY.get());
+        event.register(SortingKeyMappings.DROP_ALL.get());
+        event.register(SortingKeyMappings.DROP_ALL_INVENTORY.get());
+        event.register(SortingKeyMappings.TOGGLE_FILTER_PERSISTENCE.get());
+        event.register(SortingKeyMappings.QUICK_SEARCH.get());
     }
 
     @SubscribeEvent

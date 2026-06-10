@@ -1,6 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
-import com.nemonotfound.nemos.inventory.sorting.NemosInventorySortingClientCommon;
+import com.nemonotfound.nemos.inventory.sorting.SortingCommonClient;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.tags.ItemTags;
@@ -49,7 +49,7 @@ public class SlotSwappingService {
     }
 
     private boolean isBackpack(ItemStack itemStack) {
-        if (!NemosInventorySortingClientCommon.MOD_LOADER_HELPER.isModLoaded(NEMOS_BACKPACKS_MOD_ID)) {
+        if (!SortingCommonClient.MOD_LOADER_HELPER.isModLoaded(NEMOS_BACKPACKS_MOD_ID)) {
             return false;
         }
 

@@ -1,6 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 
-import com.nemonotfound.nemos.inventory.sorting.client.InventorySortingKeyMappings;
+import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
 import com.nemonotfound.nemos.inventory.sorting.config.model.FilterConfig;
 import com.nemonotfound.nemos.inventory.sorting.config.service.ConfigService;
 import net.minecraft.client.KeyMapping;
@@ -72,7 +72,7 @@ public class ToggleFilterPersistenceButton extends AbstractButton {
 
     @Override
     protected KeyMapping getKeyMapping() {
-        return InventorySortingKeyMappings.TOGGLE_FILTER_PERSISTENCE.get();
+        return SortingKeyMappings.TOGGLE_FILTER_PERSISTENCE.get();
     }
 
     @Override

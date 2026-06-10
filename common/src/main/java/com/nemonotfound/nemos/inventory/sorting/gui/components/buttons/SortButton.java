@@ -1,6 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 
-import com.nemonotfound.nemos.inventory.sorting.client.InventorySortingKeyMappings;
+import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
 import com.nemonotfound.nemos.inventory.sorting.model.Position;
 import com.nemonotfound.nemos.inventory.sorting.model.Size;
 import com.nemonotfound.nemos.inventory.sorting.model.SlotRange;
@@ -44,9 +44,9 @@ public class SortButton extends AbstractContainerButton {
     @Override
     protected KeyMapping getKeyMapping() {
         if (isInventoryButton) {
-            return InventorySortingKeyMappings.SORT_INVENTORY.get();
+            return SortingKeyMappings.SORT_INVENTORY.get();
         }
 
-        return InventorySortingKeyMappings.SORT.get();
+        return SortingKeyMappings.SORT.get();
     }
 }

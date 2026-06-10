@@ -1,6 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 
-import com.nemonotfound.nemos.inventory.sorting.client.InventorySortingKeyMappings;
+import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
 import com.nemonotfound.nemos.inventory.sorting.model.Position;
 import com.nemonotfound.nemos.inventory.sorting.model.Size;
 import com.nemonotfound.nemos.inventory.sorting.model.SlotRange;
@@ -41,9 +41,9 @@ public class DropAllButton extends AbstractSingleClickButton {
     @Override
     protected KeyMapping getKeyMapping() {
         if (isInventoryButton) {
-            return InventorySortingKeyMappings.DROP_ALL_INVENTORY.get();
+            return SortingKeyMappings.DROP_ALL_INVENTORY.get();
         }
 
-        return InventorySortingKeyMappings.DROP_ALL.get();
+        return SortingKeyMappings.DROP_ALL.get();
     }
 }

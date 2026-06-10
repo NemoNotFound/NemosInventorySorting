@@ -1,4 +1,4 @@
-# Changelog v1.14.8
+# Changelog v1.14.9
 
-## Changes
-- Changed lang files
+## Fixes
+- Fixed hotbar being sorted when specific mods are installed

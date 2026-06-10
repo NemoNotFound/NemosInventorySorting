@@ -9,12 +9,12 @@ import net.minecraft.resources.Identifier;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.MOD_ID;
 
-public class NemosInventorySortingClientFabric implements ClientModInitializer {
+public class SortingClientFabric implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
         registerBuiltInResourcePack();
-        NemosInventorySortingClientCommon.init();
+        SortingCommonClient.init();
     }
 
     private void registerBuiltInResourcePack() {

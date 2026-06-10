@@ -1,6 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 
-import com.nemonotfound.nemos.inventory.sorting.client.InventorySortingKeyMappings;
+import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
 import com.nemonotfound.nemos.inventory.sorting.model.Position;
 import com.nemonotfound.nemos.inventory.sorting.model.Size;
 import com.nemonotfound.nemos.inventory.sorting.model.SlotRange;
@@ -50,10 +50,10 @@ public class MoveSameButton extends AbstractSingleClickButton {
     @Override
     protected KeyMapping getKeyMapping() {
         if (isInventoryButton) {
-            return InventorySortingKeyMappings.MOVE_SAME_INVENTORY.get();
+            return SortingKeyMappings.MOVE_SAME_INVENTORY.get();
         }
 
-        return InventorySortingKeyMappings.MOVE_SAME.get();
+        return SortingKeyMappings.MOVE_SAME.get();
     }
 
     @Override

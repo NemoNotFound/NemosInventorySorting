@@ -4,6 +4,7 @@ import com.nemonotfound.nemos.inventory.sorting.config.model.ComponentConfig;
 import com.nemonotfound.nemos.inventory.sorting.config.service.ConfigService;
 import com.nemonotfound.nemos.inventory.sorting.factory.*;
 import com.nemonotfound.nemos.inventory.sorting.helper.ButtonTypeMapping;
+import com.nemonotfound.nemos.inventory.sorting.helper.SortingWidgetGetter;
 import com.nemonotfound.nemos.inventory.sorting.model.Offset;
 import com.nemonotfound.nemos.inventory.sorting.model.Position;
 import com.nemonotfound.nemos.inventory.sorting.model.Size;
@@ -29,12 +30,12 @@ import java.util.List;
 import java.util.function.Function;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.*;
-import static com.nemonotfound.nemos.inventory.sorting.NemosInventorySortingClientCommon.MOD_LOADER_HELPER;
+import static com.nemonotfound.nemos.inventory.sorting.SortingCommonClient.MOD_LOADER_HELPER;
 import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValues.*;
 
 //TODO: Refactor
 @Mixin(AbstractContainerScreen.class)
-public abstract class AbstractContainerScreenMixin extends Screen {
+public abstract class AbstractContainerScreenMixin extends Screen implements SortingWidgetGetter {
 
     @Shadow
     protected int leftPos;
@@ -63,16 +64,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
         var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
         nemosInventorySorting$inventoryEndIndex = menu.slots.size() - 9;
 
-        if (menu instanceof InventoryMenu) {
-            nemosInventorySorting$inventoryEndIndex--;
-        }
-
         nemosInventorySorting$containerSize = nemosInventorySorting$inventoryEndIndex - 27;
-
-        if (MOD_LOADER_HELPER.isModLoaded(NEMOS_BACKPACKS_MOD_ID) && menu instanceof InventoryMenu) {
-            nemosInventorySorting$inventoryEndIndex--;
-            nemosInventorySorting$containerSize--;
-        }
 
         var componentConfigs = nemosInventorySorting$configService.readOrGetDefaultComponentConfigs();
 
@@ -80,16 +72,8 @@ public abstract class AbstractContainerScreenMixin extends Screen {
             nemosInventorySorting$initStorageContainerButtons(componentConfigs);
         }
 
-        if (nemosInventorySorting$shouldHaveInventoryButtons()) {
-            nemosInventorySorting$initInventoryButtons(componentConfigs);
-        }
-
         if (nemosInventorySorting$shouldHaveContainerInventorySortingButtons()) {
             nemosInventorySorting$initContainerInventoryButtons(componentConfigs);
-        }
-
-        for (AbstractWidget widget : nemosInventorySorting$widgets) {
-            this.addRenderableWidget(widget);
         }
     }
 
@@ -162,11 +146,6 @@ public abstract class AbstractContainerScreenMixin extends Screen {
     }
 
     @Unique
-    private boolean nemosInventorySorting$shouldHaveInventoryButtons() {
-        return ((AbstractContainerScreen<?>) (Object) this).getMenu() instanceof InventoryMenu;
-    }
-
-    @Unique
     private boolean nemosInventorySorting$shouldHaveContainerInventorySortingButtons() {
         var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
 
@@ -194,16 +173,6 @@ public abstract class AbstractContainerScreenMixin extends Screen {
                 new ButtonTypeMapping(MOVE_SAME_STORAGE_CONTAINER_INVENTORY, MoveSameButtonFactory.getInstance(), defaultInventoryYOffset, true),
                 new ButtonTypeMapping(MOVE_ALL_STORAGE_CONTAINER_INVENTORY, MoveAllButtonFactory.getInstance(), defaultInventoryYOffset, true),
                 new ButtonTypeMapping(DROP_ALL_STORAGE_CONTAINER_INVENTORY, DropAllButtonFactory.getInstance(), defaultInventoryYOffset, true)
-        );
-    }
-
-
-    @Unique
-    private void nemosInventorySorting$initInventoryButtons(List<ComponentConfig> componentConfigs) {
-        nemosInventorySorting$createButtons(
-                componentConfigs,
-                new ButtonTypeMapping(SORT_INVENTORY, SortButtonFactory.getInstance(), Y_OFFSET_INVENTORY, true),
-                new ButtonTypeMapping(DROP_ALL_INVENTORY, DropAllButtonFactory.getInstance(), Y_OFFSET_INVENTORY, true)
         );
     }
 
@@ -253,6 +222,12 @@ public abstract class AbstractContainerScreenMixin extends Screen {
     private void nemosInventorySorting$createButton(ButtonCreator<?> buttonCreator, SlotRange slotRange, Offset offset, Size size) {
         var position = new Position(leftPos, topPos);
         var sortButton = buttonCreator.createButton(slotRange, position, offset, size, ((AbstractContainerScreen<?>) (Object) this).getMenu());
-        nemosInventorySorting$widgets.add(sortButton);
+        nemosInventorySorting$addSortingWidget(sortButton);
+    }
+
+    @Override
+    public void nemosInventorySorting$addSortingWidget(AbstractWidget sortingWidget) {
+        nemosInventorySorting$widgets.add(sortingWidget);
+        this.addRenderableWidget(sortingWidget);
     }
 }
