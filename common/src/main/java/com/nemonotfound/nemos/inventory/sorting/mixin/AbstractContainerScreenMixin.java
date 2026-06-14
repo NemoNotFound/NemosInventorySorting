@@ -1,17 +1,18 @@
 package com.nemonotfound.nemos.inventory.sorting.mixin;
 
+import com.nemonotfound.nemos.inventory.sorting.factory.*;
+import com.nemonotfound.nemos.inventory.sorting.helper.ButtonTypeMapping;
+import com.nemonotfound.nemos.inventory.sorting.helper.SortingWidgetGetter;
 import com.nemonotfound.nemos.inventory.sorting.models.*;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
 import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.LockedSlotsConfig;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
-import com.nemonotfound.nemos.inventory.sorting.factory.*;
-import com.nemonotfound.nemos.inventory.sorting.helper.ButtonTypeMapping;
-import com.nemonotfound.nemos.inventory.sorting.helper.SortingWidgetGetter;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -111,7 +112,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
             cir.setReturnValue(true);
         }
 
-        if (keyEvent.hasAltDown()) {
+        if (keyEvent.hasAltDown() && !((Screen) this instanceof CreativeModeInventoryScreen)) {
             nemosInventorySorting$displayLockedSlots = true;
         }
     }

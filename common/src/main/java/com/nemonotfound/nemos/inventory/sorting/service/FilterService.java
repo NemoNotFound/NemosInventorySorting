@@ -20,7 +20,7 @@ public class FilterService {
 
     public static FilterService getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new FilterService(TooltipService.getInstance());
+            INSTANCE = new FilterService(TooltipService.INSTANCE);
         }
 
         return INSTANCE;

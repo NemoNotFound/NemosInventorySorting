@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class TooltipService {
 
-    private static TooltipService INSTANCE;
+    public static final TooltipService INSTANCE = new TooltipService(Minecraft.getInstance());
 
     private final Minecraft minecraft;
 
@@ -20,10 +20,6 @@ public class TooltipService {
     }
 
     public static TooltipService getInstance() {
-        if(INSTANCE == null) {
-            INSTANCE = new TooltipService(Minecraft.getInstance());
-        }
-
         return INSTANCE;
     }
 

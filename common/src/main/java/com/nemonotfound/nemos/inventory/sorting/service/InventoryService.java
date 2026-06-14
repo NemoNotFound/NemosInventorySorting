@@ -22,20 +22,14 @@ public class InventoryService {
         return INSTANCE;
     }
 
-    public void handleSorting(AbstractContainerMenu menu, int startIndex, int endIndex) {
+    public void handleSorting(AbstractContainerMenu menu, int startIndex, int endIndex) { //TODO: Improve efficiency
         var containerId = menu.containerId;
 
-        handleMerging(menu, startIndex, endIndex, containerId);
+        var slotItemsToMerge = sortingService.sortSlotItems(menu, startIndex, endIndex);
+        mergeService.mergeAllItems(menu, slotItemsToMerge, containerId);
 
         var slotItemsToSort = sortingService.sortSlotItems(menu, startIndex, endIndex);
         var slotSwapMap = sortingService.retrieveSlotSwapMap(slotItemsToSort, startIndex, endIndex);
         sortingService.sortItemsInInventory(menu, slotSwapMap, containerId);
-
-        handleMerging(menu, startIndex, endIndex, containerId);
-    }
-
-    private void handleMerging(AbstractContainerMenu menu, int startIndex, int endIndex, int containerId) {
-        var slotItemsToMerge = sortingService.sortSlotItems(menu, startIndex, endIndex);
-        mergeService.mergeAllItems(menu, slotItemsToMerge, containerId);
     }
 }
