@@ -12,19 +12,35 @@ For more information and to see how to configure the components check the [wiki]
 
 > 💡 **Tip:** If you're a dark mode enthusiast, you can use the built-in dark mode resource pack.
 
-### How to Use
+### Features
 
-To sort, drop or move items, simply click the buttons or use your custom keybinds.   
-In the player inventory, clicking the buttons does not include the hotbar. To include it, use **Shift + Click** (or **Shift + keybind**).    
-To search for an item, click the search bar or press **Ctrl + [keybind]** (or **Command + [keybind]** on macOS), then start typing.     
-To lock slots from sorting, use **Alt + Click/Drag** (or **Option + Click/Drag** on macOS).       
-To display locked slots, hold **Alt** (or **Option** on macOS).
+- Sort inventories
+- Move matching items between inventories
+- Move all items between inventories
+- Drop all items from an inventory
+- Lock slots to prevent sorting, moving and dropping
+- Search & highlight items
+- Quick move items with **Shift + Drag**
 
-### ⚠ Disclaimer   
+### ⚠ Disclaimer
 
 This is a **client-only mod**, which means it can give you an advantage over other players.  
 Using it on public servers *may* get you banned depending on the server’s rules.  
 Use at your own risk — or check with the server admins beforehand.
+
+### How to Use
+
+#### Sort, Drop or Move Items
+
+Simply click the buttons or use your custom keybinds.
+In the player inventory, clicking the buttons does not include the hotbar. To include it, use **Shift + Click** (or **Shift + keybind**).    
+
+#### Search Items
+Click the search bar or press **Ctrl + [keybind]** (or **Command + [keybind]** on macOS), then start typing.   
+
+#### Lock Slots from Sorting
+To lock slots from sorting, use **Alt + Click/Drag** (or **Option + Click/Drag** on macOS).       
+To display locked slots, hold **Alt** (or **Option** on macOS).
 
 ### Compatibility
 

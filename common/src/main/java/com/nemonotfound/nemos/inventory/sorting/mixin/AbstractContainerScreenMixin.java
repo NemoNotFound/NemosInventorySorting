@@ -64,6 +64,8 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Unique
     private final Set<Slot> nemosInventorySorting$previousHoveredSlots = new HashSet<>();
+    @Unique
+    private Slot nemosInventorySorting$previousHoveredSlot = null;
 
     @Unique
     private int nemosInventorySorting$inventoryEndIndex;
@@ -77,7 +79,8 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Unique
     private boolean nemosInventorySorting$displayLockedSlots = false;
-
+    @Unique
+    private boolean nemosInventorySorting$displayTooltip = true;
 
     protected AbstractContainerScreenMixin(Component component) {
         super(component);
@@ -148,11 +151,42 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
             nemosInventorySorting$handleLockedSlot();
             cir.setReturnValue(true);
         }
+
+        if (event.hasShiftDown() && hoveredSlot != null && nemosInventorySorting$previousHoveredSlot != hoveredSlot) {
+            nemosInventorySorting$handleDraggingQuickMove(event.input(), hoveredSlot);
+        }
+    }
+
+    @Unique
+    private void nemosInventorySorting$handleDraggingQuickMove(int mouseInput, Slot hoveredSlot) {
+        var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
+        var player = minecraft.player;
+
+        if (player == null || minecraft.gameMode == null) {
+            return;
+        }
+
+        if (menu instanceof CreativeModeInventoryScreen.ItemPickerMenu) {
+            menu.clicked(hoveredSlot.index, mouseInput, ContainerInput.QUICK_MOVE, player);
+        } else {
+            minecraft.gameMode.handleContainerInput(menu.containerId, hoveredSlot.index, mouseInput, ContainerInput.QUICK_MOVE, player);
+        }
+
+        nemosInventorySorting$previousHoveredSlot = hoveredSlot;
+        nemosInventorySorting$displayTooltip = false;
     }
 
     @Inject(method = "mouseReleased", at = @At("HEAD"))
     private void mouseReleased(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
         nemosInventorySorting$previousHoveredSlots.clear();
+        nemosInventorySorting$displayTooltip = true;
+    }
+
+    @Inject(method = "extractTooltip", at = @At("HEAD"), cancellable = true)
+    private void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY, CallbackInfo ci) {
+        if (!nemosInventorySorting$displayTooltip) {
+            ci.cancel();
+        }
     }
 
     @Unique

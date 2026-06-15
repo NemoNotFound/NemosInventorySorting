@@ -1,5 +1,4 @@
-# Changelog v1.17.2
+# Changelog v1.18
 
-## Changes
-- Slightly improved sorting efficiency (more relevant for lower end hardware, I hope I didn't break anything)
-- Removed locked slots display from creative inventory
+## Additions
+- Quick move items with **Shift + Drag**
