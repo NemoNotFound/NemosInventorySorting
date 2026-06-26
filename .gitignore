@@ -22,5 +22,6 @@ build
 eclipse
 run
 runs
+logs
 
 .cache

@@ -3,11 +3,15 @@ package com.nemonotfound.nemos.inventory.sorting.service;
 import com.nemonotfound.nemos.inventory.sorting.enums.FilterResult;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,7 +50,7 @@ public class FilterService {
             return FilterResult.HAS_INCLUDED_ITEM;
         }
 
-        return matchesFilter(slotItem, filter) ? FilterResult.INCLUDED : FilterResult.EXCLUDED;
+        return matchesFilters(slotItem, filter) ? FilterResult.INCLUDED : FilterResult.EXCLUDED;
     }
 
     private boolean bundleContentsMatchFilter(ItemStack itemStack, String filter) {
@@ -72,15 +76,37 @@ public class FilterService {
     }
 
     private boolean contentsMatchFilter(Stream<ItemStack> stream, String filter) {
-        return stream.anyMatch(itemStack -> matchesFilter(itemStack, filter) || bundleContentsMatchFilter(itemStack, filter));
+        return stream.anyMatch(itemStack -> matchesFilters(itemStack, filter) || bundleContentsMatchFilter(itemStack, filter));
+    }
+
+    private boolean matchesFilters(ItemStack itemStack, String filter) {
+        return Arrays.stream(filter.split(","))
+                .map(String::trim)
+                .anyMatch(f -> matchesFilter(itemStack, f));
     }
 
     private boolean matchesFilter(ItemStack itemStack, String filter) {
+        if (filter.startsWith("#")) {
+            return matchesTagFilter(itemStack, filter);
+        }
+
         var itemNameMatchesFilter = componentMatchesFilter(itemStack.getItemName(), filter);
         var itemDisplayNameMatchesFilter = componentMatchesFilter(itemStack.getDisplayName(), filter);
         var tooltipMatchesFilter = tooltipMatchesFilter(itemStack, filter);
 
         return itemNameMatchesFilter || itemDisplayNameMatchesFilter || tooltipMatchesFilter;
+    }
+
+    private boolean matchesTagFilter(ItemStack itemStack, String filter) {
+        var tagId = Identifier.tryParse(filter.substring(1));
+
+        if (tagId == null) {
+            return false;
+        }
+
+        var tag = TagKey.create(Registries.ITEM, tagId);
+
+        return itemStack.is(tag);
     }
 
     private boolean tooltipMatchesFilter(ItemStack itemStack, String filter) {

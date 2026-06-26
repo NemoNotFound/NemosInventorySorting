@@ -12,7 +12,7 @@ For more information and to see how to configure the components check the [wiki]
 
 > 💡 **Tip:** If you're a dark mode enthusiast, you can use the built-in dark mode resource pack.
 
-### Features
+## Features
 
 - Sort inventories
 - Move matching items between inventories
@@ -22,34 +22,53 @@ For more information and to see how to configure the components check the [wiki]
 - Search & highlight items
 - Quick move items with **Shift + Drag**
 
-### ⚠ Disclaimer
+## ⚠ Disclaimer
 
 This is a **client-only mod**, which means it can give you an advantage over other players.  
 Using it on public servers *may* get you banned depending on the server’s rules.  
 Use at your own risk — or check with the server admins beforehand.
 
-### How to Use
+## How to Use
 
-#### Sort, Drop or Move Items
+### Sort, Drop or Move Items
 
 Simply click the buttons or use your custom keybinds.
 In the player inventory, clicking the buttons does not include the hotbar. To include it, use **Shift + Click** (or **Shift + keybind**).    
 
-#### Search Items
-Click the search bar or press **Ctrl + [keybind]** (or **Command + [keybind]** on macOS), then start typing.   
+### Search Items
+Click the search bar or press **Ctrl + [keybind]** (or **Command + [keybind]** on macOS), then start typing.    
 
-#### Lock Slots from Sorting
+#### Filter by (Custom) Name
+- `Golden`      
+- `Diamond Sword`     
+- `Super Cool Sword`
+
+#### Filter by Tooltip (Enchantment, Music Disc Song, Potions)
+- `Sharpness`
+- `Efficiency V`
+- `Hyper Potions - Lava Chicken`
+- `Lava Chicken`
+- `Invisibility`
+
+#### Filter by Item Tag
+- `#minecraft:planks`
+- `#nemos:planks`
+
+#### Filter for multiple items
+- `Stick,#minecraft:planks`
+
+### Lock Slots from Sorting
 To lock slots from sorting, use **Alt + Click/Drag** (or **Option + Click/Drag** on macOS).       
 To display locked slots, hold **Alt** (or **Option** on macOS).
 
-### Compatibility
+## Compatibility
 
 Nemo's Inventory Sorting is compatible with:
 - **Iron Chests** *(since version 1.11)*
 - **Nemo's Backpacks** *(since version 1.13)*
 - **Better Chests, Barrels & Shulker Boxes** *(since version 1.14)*
 
-# Downloads
+## Downloads
 - [CurseForge](https://curseforge.com/minecraft/mc-mods/nemos-inventory-sorting)
 - [Modrinth](https://modrinth.com/mod/nemos-inventory-sorting)
 

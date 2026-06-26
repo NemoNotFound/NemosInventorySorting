@@ -1,4 +1,5 @@
-# Changelog v1.18
+# Changelog v1.19
 
-## Additions
-- Quick move items with **Shift + Drag**
+## Changes
+- Filter
+  - Items can now be filtered by tags (e.g. #minecraft:planks)
