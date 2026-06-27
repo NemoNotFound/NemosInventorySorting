@@ -8,15 +8,24 @@ public class InventoryService {
 
     private final SortingService sortingService;
     private final MergingService mergeService;
+    private final SplitQuickMoveService splitQuickMoveService;
+    private final ScrollTransferService scrollTransferService;
 
-    private InventoryService(MergingService mergeService, SortingService sortingService) {
+    private InventoryService(MergingService mergeService, SortingService sortingService, SplitQuickMoveService splitQuickMoveService, ScrollTransferService scrollTransferService) {
         this.mergeService = mergeService;
         this.sortingService = sortingService;
+        this.splitQuickMoveService = splitQuickMoveService;
+        this.scrollTransferService = scrollTransferService;
     }
 
     public static InventoryService getInstance() {
-        if(INSTANCE == null) {
-            INSTANCE = new InventoryService(MergingService.getInstance(), SortingService.getInstance());
+        if (INSTANCE == null) {
+            INSTANCE = new InventoryService(
+                    MergingService.getInstance(),
+                    SortingService.getInstance(),
+                    SplitQuickMoveService.getInstance(),
+                    ScrollTransferService.getInstance()
+            );
         }
 
         return INSTANCE;
@@ -31,5 +40,13 @@ public class InventoryService {
         var slotItemsToSort = sortingService.sortSlotItems(menu, startIndex, endIndex);
         var slotSwapMap = sortingService.retrieveSlotSwapMap(slotItemsToSort, startIndex, endIndex);
         sortingService.sortItemsInInventory(menu, slotSwapMap, containerId);
+    }
+
+    public void handleSplitQuickMove(AbstractContainerMenu menu, int slot) {
+        splitQuickMoveService.handleSplitQuickMove(menu, slot);
+    }
+
+    public boolean handleSingleItemScrollMove(AbstractContainerMenu menu, int slot, double scrollDelta) {
+        return scrollTransferService.handleSingleItemScrollMove(menu, slot, scrollDelta);
     }
 }

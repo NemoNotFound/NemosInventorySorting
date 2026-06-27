@@ -5,6 +5,7 @@ import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
 import com.nemonotfound.nemos.inventory.sorting.enums.FilterResult;
 import com.nemonotfound.nemos.inventory.sorting.service.FilterService;
+import net.minecraft.client.Minecraft;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
@@ -21,6 +22,9 @@ import static com.nemonotfound.nemos.inventory.sorting.Constants.MOD_ID;
 import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValues.FILTER_CONFIG_PATH;
 
 public class FilterBox extends EditBox implements RecipeBookUpdatable, WidgetSpritesGetter {
+
+    private static final int DEFAULT_TEXT_COLOR = -12566464;
+    private static final int DARK_MODE_TEXT_COLOR = -1;
 
     private static final WidgetSprites SPRITES = new WidgetSprites(
             Identifier.fromNamespaceAndPath(MOD_ID, "widget/filter_box_unfocused"),
@@ -42,7 +46,7 @@ public class FilterBox extends EditBox implements RecipeBookUpdatable, WidgetSpr
         this.configService = ConfigService.INSTANCE;
         this.xOffset = xOffset;
 
-        this.setTextColor(-12566464);
+        this.setTextColor(getTextColor());
         this.setTextShadow(false);
         this.setVisible(true);
         this.setMaxLength(50);
@@ -76,5 +80,14 @@ public class FilterBox extends EditBox implements RecipeBookUpdatable, WidgetSpr
     @Override
     public Identifier nemosInventorySorting$getHoveredTexture() {
         return HOVERED_TEXTURE;
+    }
+
+    private int getTextColor() {
+        return isDarkModeResourcePackEnabled() ? DARK_MODE_TEXT_COLOR : DEFAULT_TEXT_COLOR;
+    }
+
+    private boolean isDarkModeResourcePackEnabled() {
+        return Minecraft.getInstance().getResourcePackRepository().getSelectedIds().stream()
+                .anyMatch(packId -> packId.contains(MOD_ID) && packId.contains("dark_mode"));
     }
 }

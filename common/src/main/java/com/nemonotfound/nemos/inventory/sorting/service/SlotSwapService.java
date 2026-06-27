@@ -6,20 +6,25 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.NEMOS_BACKPACKS_MOD_ID;
 
-public class SlotSwappingService {
+public class SlotSwapService {
 
-    private static SlotSwappingService INSTANCE;
+    private static SlotSwapService INSTANCE;
 
-    public static SlotSwappingService getInstance() {
-        if(INSTANCE == null) {
-            INSTANCE = new SlotSwappingService();
+    private final ContainerInputService containerInputService;
+
+    private SlotSwapService(ContainerInputService containerInputService) {
+        this.containerInputService = containerInputService;
+    }
+
+    public static SlotSwapService getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new SlotSwapService(ContainerInputService.getInstance());
         }
 
         return INSTANCE;
@@ -41,7 +46,7 @@ public class SlotSwappingService {
             mouseButton = 1;
         }
 
-        gameMode.handleContainerInput(containerId, slot, mouseButton, ContainerInput.PICKUP, player);
+        containerInputService.performPickup(containerId, slot, mouseButton, gameMode, player);
     }
 
     private boolean canBeFilledWithPrimaryClick(ItemStack itemStack) {

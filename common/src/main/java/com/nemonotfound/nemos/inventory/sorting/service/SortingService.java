@@ -17,12 +17,12 @@ public class SortingService {
 
     private static SortingService INSTANCE;
 
-    private final SlotSwappingService slotSwappingService;
+    private final SlotSwapService slotSwapService;
     private final ComparingService comparingService;
     private final Minecraft minecraft;
 
-    private SortingService(SlotSwappingService slotSwappingService, ComparingService comparingService, Minecraft minecraft) {
-        this.slotSwappingService = slotSwappingService;
+    private SortingService(SlotSwapService slotSwapService, ComparingService comparingService, Minecraft minecraft) {
+        this.slotSwapService = slotSwapService;
         this.comparingService = comparingService;
         this.minecraft = minecraft;
     }
@@ -30,7 +30,7 @@ public class SortingService {
 
     public static SortingService getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new SortingService(SlotSwappingService.getInstance(), ComparingService.INSTANCE, Minecraft.getInstance());
+            INSTANCE = new SortingService(SlotSwapService.getInstance(), ComparingService.INSTANCE, Minecraft.getInstance());
         }
 
         return INSTANCE;
@@ -80,7 +80,7 @@ public class SortingService {
                 continue;
             }
 
-            slotSwappingService.performSlotSwap(
+            slotSwapService.performSlotSwap(
                     menu,
                     minecraft.gameMode,
                     containerId,

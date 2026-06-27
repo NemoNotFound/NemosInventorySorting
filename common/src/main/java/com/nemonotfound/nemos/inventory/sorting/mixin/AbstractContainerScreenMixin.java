@@ -7,6 +7,7 @@ import com.nemonotfound.nemos.inventory.sorting.models.*;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
 import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.LockedSlotsConfig;
+import com.nemonotfound.nemos.inventory.sorting.service.InventoryService;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -81,6 +82,8 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     private boolean nemosInventorySorting$displayLockedSlots = false;
     @Unique
     private boolean nemosInventorySorting$displayTooltip = true;
+    @Unique
+    private boolean nemosInventorySorting$splitQuickMoveHandled = false;
 
     protected AbstractContainerScreenMixin(Component component) {
         super(component);
@@ -139,6 +142,14 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
             cir.setReturnValue(true);
         }
 
+        if (event.hasShiftDown() && event.button() == 1 && hoveredSlot != null) {
+            InventoryService.getInstance().handleSplitQuickMove(((AbstractContainerScreen<?>) (Object) this).getMenu(), hoveredSlot.index);
+            nemosInventorySorting$previousHoveredSlots.add(hoveredSlot);
+            nemosInventorySorting$previousHoveredSlot = hoveredSlot;
+            nemosInventorySorting$splitQuickMoveHandled = true;
+            cir.setReturnValue(true);
+        }
+
         if (event.hasAltDown()) {
             nemosInventorySorting$handleLockedSlot();
             cir.setReturnValue(true);
@@ -152,8 +163,26 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
             cir.setReturnValue(true);
         }
 
-        if (event.hasShiftDown() && hoveredSlot != null && nemosInventorySorting$previousHoveredSlot != hoveredSlot) {
+        if (event.hasShiftDown() && event.button() == 0 && hoveredSlot != null && nemosInventorySorting$previousHoveredSlot != hoveredSlot) {
             nemosInventorySorting$handleDraggingQuickMove(event.input(), hoveredSlot);
+        }
+
+        if (event.hasShiftDown() && event.button() == 1 && hoveredSlot != null && nemosInventorySorting$previousHoveredSlot != hoveredSlot) {
+            nemosInventorySorting$handleDraggingSplitQuickMove(hoveredSlot);
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
+    private void mouseScrolled(double x, double y, double scrollX, double scrollY, CallbackInfoReturnable<Boolean> cir) {
+        if (hoveredSlot == null) {
+            return;
+        }
+
+        var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
+
+        if (InventoryService.getInstance().handleSingleItemScrollMove(menu, hoveredSlot.index, scrollY)) {
+            cir.setReturnValue(true);
         }
     }
 
@@ -176,10 +205,27 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
         nemosInventorySorting$displayTooltip = false;
     }
 
-    @Inject(method = "mouseReleased", at = @At("HEAD"))
+    @Unique
+    private void nemosInventorySorting$handleDraggingSplitQuickMove(Slot hoveredSlot) {
+        var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
+
+        InventoryService.getInstance().handleSplitQuickMove(menu, hoveredSlot.index);
+
+        nemosInventorySorting$previousHoveredSlot = hoveredSlot;
+        nemosInventorySorting$splitQuickMoveHandled = true;
+        nemosInventorySorting$displayTooltip = false;
+    }
+
+    @Inject(method = "mouseReleased", at = @At("HEAD"), cancellable = true)
     private void mouseReleased(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
         nemosInventorySorting$previousHoveredSlots.clear();
+        nemosInventorySorting$previousHoveredSlot = null;
         nemosInventorySorting$displayTooltip = true;
+
+        if (nemosInventorySorting$splitQuickMoveHandled && event.button() == 1) {
+            nemosInventorySorting$splitQuickMoveHandled = false;
+            cir.setReturnValue(true);
+        }
     }
 
     @Inject(method = "extractTooltip", at = @At("HEAD"), cancellable = true)

@@ -14,17 +14,17 @@ import static java.util.stream.Collectors.groupingBy;
 public class MergingService {
 
     private static MergingService INSTANCE;
-    private final SlotSwappingService inventorySwapService;
+    private final SlotSwapService inventorySwapService;
     private final Minecraft minecraft;
 
-    private MergingService(SlotSwappingService inventorySwapService, Minecraft minecraft) {
+    private MergingService(SlotSwapService inventorySwapService, Minecraft minecraft) {
         this.inventorySwapService = inventorySwapService;
         this.minecraft = minecraft;
     }
 
     public static MergingService getInstance() {
         if(INSTANCE == null) {
-            INSTANCE = new MergingService(SlotSwappingService.getInstance(), Minecraft.getInstance());
+            INSTANCE = new MergingService(SlotSwapService.getInstance(), Minecraft.getInstance());
         }
 
         return INSTANCE;

@@ -1,4 +1,9 @@
-# Changelog v1.20.1
+# Changelog v1.21
+
+## Additions
+- Split quick-move: shift + right-click / drag
+- Scroll transfer: inventory <-> container, inventory <-> hotbar
+- Dark mode: filter box textures
 
 ## Changes
-- Added hover texture to filter box
+- Slightly changed filter box texture

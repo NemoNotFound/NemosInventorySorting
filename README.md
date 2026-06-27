@@ -1,8 +1,10 @@
 # Nemo's Inventory Sorting
 
 ## Description
+
 **Nemo's Inventory Sorting** is a _client-side_ mod that adds buttons to your inventory GUI.  
 Sort your inventory, move all matching or all items, or drop everything at once — all with a single click.
+It also improves quick moving with drag, split-stack, and single-item scroll transfer.
 
 You can even filter and highlight items in containers by typing part of their name!
 Quickly filter items by pressing **Ctrl + F** (or **Command + F** on macOS).    
@@ -10,7 +12,7 @@ You can change the key binding in the settings.
 
 For more information and to see how to configure the components check the [wiki](https://wiki.nemonotfound.com/projects/minecraft-mods/nemos-inventory-sorting/general).
 
-> 💡 **Tip:** If you're a dark mode enthusiast, you can use the built-in dark mode resource pack.
+> **Tip:** If you're a dark mode enthusiast, you can use the built-in dark mode resource pack.
 
 ## Features
 
@@ -21,6 +23,9 @@ For more information and to see how to configure the components check the [wiki]
 - Lock slots to prevent sorting, moving and dropping
 - Search & highlight items
 - Quick move items with **Shift + Drag**
+- Quick move half items with **Shift + Right-Click/Drag**
+- Scroll transfer items between inventory/container or inventory/hotbar
+- Built-in dark mode resource pack
 
 ## ⚠ Disclaimer
 
@@ -34,6 +39,14 @@ Use at your own risk — or check with the server admins beforehand.
 
 Simply click the buttons or use your custom keybinds.
 In the player inventory, clicking the buttons does not include the hotbar. To include it, use **Shift + Click** (or **Shift + keybind**).    
+
+### Quick Move Items
+
+- **Shift + Drag**: quick-move hovered items
+- **Shift + Right-Click/Drag**: quick-move half items
+- **Scroll Up/Down**: move one item between inventory/container or inventory/hotbar
+
+> **Note:** Split and scroll actions keep at least one item in the source slot.
 
 ### Search Items
 Click the search bar or press **Ctrl + [keybind]** (or **Command + [keybind]** on macOS), then start typing.    
@@ -60,6 +73,10 @@ Click the search bar or press **Ctrl + [keybind]** (or **Command + [keybind]** o
 ### Lock Slots from Sorting
 To lock slots from sorting, use **Alt + Click/Drag** (or **Option + Click/Drag** on macOS).       
 To display locked slots, hold **Alt** (or **Option** on macOS).
+
+### Dark Mode
+
+Enable the built-in **Nemo's Inventory Sorting Dark Mode** resource pack in Minecraft's resource pack menu.
 
 ## Compatibility
 
