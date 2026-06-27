@@ -25,11 +25,18 @@ public abstract class EditBoxMixin extends AbstractWidget implements WidgetSprit
 
     @ModifyVariable(method = "extractWidgetRenderState", at = @At(value = "STORE"), name = "sprite")
     private Identifier getWidgetSpriteIdentifier(Identifier sprite) {
-        return nemosInventorySorting$getWidgetSprites().get(this.isActive(), this.isFocused());
+        return this.isHovered()  && !this.isFocused()
+                ? nemosInventorySorting$getHoveredTexture()
+                : nemosInventorySorting$getWidgetSprites().get(this.isActive(), this.isFocused());
     }
 
     @Override
     public WidgetSprites nemosInventorySorting$getWidgetSprites() {
         return SPRITES;
+    }
+
+    @Override
+    public Identifier nemosInventorySorting$getHoveredTexture() {
+        return nemosInventorySorting$getWidgetSprites().get(this.isActive(), this.isFocused());
     }
 }

@@ -22,7 +22,11 @@ import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValue
 
 public class FilterBox extends EditBox implements RecipeBookUpdatable, WidgetSpritesGetter {
 
-    private static final WidgetSprites SPRITES = new WidgetSprites(Identifier.fromNamespaceAndPath(MOD_ID, "widget/filter_box_unfocused"), Identifier.fromNamespaceAndPath(MOD_ID, "widget/filter_box"));
+    private static final WidgetSprites SPRITES = new WidgetSprites(
+            Identifier.fromNamespaceAndPath(MOD_ID, "widget/filter_box_unfocused"),
+            Identifier.fromNamespaceAndPath(MOD_ID, "widget/filter_box")
+    );
+    private static final Identifier HOVERED_TEXTURE = Identifier.fromNamespaceAndPath(MOD_ID, "widget/filter_box_hovered");
     private static final Component FILTER_HINT = Component.translatable("nemos_inventory_sorting.gui.inventory.itemFilter")
             .withStyle(ChatFormatting.ITALIC)
             .withStyle(ChatFormatting.WHITE);
@@ -67,5 +71,10 @@ public class FilterBox extends EditBox implements RecipeBookUpdatable, WidgetSpr
     @Override
     public WidgetSprites nemosInventorySorting$getWidgetSprites() {
         return SPRITES;
+    }
+
+    @Override
+    public Identifier nemosInventorySorting$getHoveredTexture() {
+        return HOVERED_TEXTURE;
     }
 }
