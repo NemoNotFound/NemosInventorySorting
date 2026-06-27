@@ -33,7 +33,10 @@ public class SlotSwapService {
     public void performSlotSwap(AbstractContainerMenu menu, MultiPlayerGameMode gameMode, int containerId, int slot, int targetSlot, LocalPlayer player) {
         pickUpItem(menu, gameMode, containerId, slot, player);
         pickUpItem(menu, gameMode, containerId, targetSlot, player);
-        pickUpItem(menu, gameMode, containerId, slot, player);
+
+        if (!player.containerMenu.getCarried().is(Items.AIR)) {
+            pickUpItem(menu, gameMode, containerId, slot, player);
+        }
     }
 
     private void pickUpItem(AbstractContainerMenu menu, MultiPlayerGameMode gameMode, int containerId, int slot, LocalPlayer player) {

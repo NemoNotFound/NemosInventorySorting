@@ -1,5 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
+import com.nemonotfound.nemos.inventory.sorting.models.ContainerInputContext;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -41,7 +42,7 @@ public class ScrollTransferService {
                 .orElse(false);
     }
 
-    private boolean handleSingleItemScrollMove(AbstractContainerMenu menu, int hoveredSlot, double scrollDelta, ContainerInputService.ContainerInputContext context) {
+    private boolean handleSingleItemScrollMove(AbstractContainerMenu menu, int hoveredSlot, double scrollDelta, ContainerInputContext context) {
         var sourceSlot = getSourceSlot(menu, hoveredSlot, scrollDelta);
 
         if (sourceSlot.isEmpty() || !canMoveFromSource(sourceSlot.get().getItem())) {
@@ -159,7 +160,7 @@ public class ScrollTransferService {
                 && targetSlot.getItem().is(Items.AIR);
     }
 
-    private boolean moveSingleItem(AbstractContainerMenu menu, ContainerInputService.ContainerInputContext context, int sourceSlot, int targetSlot) {
+    private boolean moveSingleItem(AbstractContainerMenu menu, ContainerInputContext context, int sourceSlot, int targetSlot) {
         var temporaryCarriedSlot = getTemporaryCarriedSlot(menu, menu.getCarried(), sourceSlot, targetSlot);
 
         if (!menu.getCarried().is(Items.AIR) && temporaryCarriedSlot.isEmpty()) {
@@ -194,7 +195,7 @@ public class ScrollTransferService {
                 .or(() -> getFirstEmptyTarget(menu, carriedStack, sourceSlot, excludedSlots, quickMoveTargetResolver.getAllSlots(menu)));
     }
 
-    private void returnCarriedStackToSource(AbstractContainerMenu menu, ContainerInputService.ContainerInputContext context, int sourceSlot) {
+    private void returnCarriedStackToSource(AbstractContainerMenu menu, ContainerInputContext context, int sourceSlot) {
         if (!menu.getCarried().is(Items.AIR)) {
             containerInputService.performClick(menu, context, sourceSlot);
         }

@@ -1,5 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
+import com.nemonotfound.nemos.inventory.sorting.models.ContainerInputContext;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
@@ -38,7 +39,7 @@ public class SplitQuickMoveService {
         containerInputService.getContext().ifPresent(context -> handleSplitQuickMove(menu, slot, context));
     }
 
-    private void handleSplitQuickMove(AbstractContainerMenu menu, int sourceSlot, ContainerInputService.ContainerInputContext context) {
+    private void handleSplitQuickMove(AbstractContainerMenu menu, int sourceSlot, ContainerInputContext context) {
         var sourceStack = menu.getSlot(sourceSlot).getItem();
 
         if (!canSplitSourceStack(sourceStack)) {
@@ -57,7 +58,7 @@ public class SplitQuickMoveService {
         return !sourceStack.is(Items.AIR) && sourceStack.getCount() > 1;
     }
 
-    private void handleSplitQuickMoveWithEmptyCarriedItem(AbstractContainerMenu menu, ContainerInputService.ContainerInputContext context, int sourceSlot, ItemStack sourceStack) {
+    private void handleSplitQuickMoveWithEmptyCarriedItem(AbstractContainerMenu menu, ContainerInputContext context, int sourceSlot, ItemStack sourceStack) {
         if (sourceStack.getMaxStackSize() == 1) {
             return;
         }
@@ -67,7 +68,7 @@ public class SplitQuickMoveService {
         returnCarriedStackToSource(menu, context, sourceSlot);
     }
 
-    private void handleSplitQuickMoveWithTemporarilyStoredCarriedItem(AbstractContainerMenu menu, ContainerInputService.ContainerInputContext context, int sourceSlot) {
+    private void handleSplitQuickMoveWithTemporarilyStoredCarriedItem(AbstractContainerMenu menu, ContainerInputContext context, int sourceSlot) {
         var targetSlots = quickMoveTargetResolver.getQuickMoveTargetSlots(menu, sourceSlot);
         var temporaryCarriedSlot = getTemporaryCarriedSlot(menu, menu.getCarried(), sourceSlot, targetSlots);
 
@@ -100,7 +101,7 @@ public class SplitQuickMoveService {
         return getFirstEmptySlot(menu, carriedStack, sourceSlot, Set.of());
     }
 
-    private void distributeCarriedStackToQuickMoveTarget(AbstractContainerMenu menu, ContainerInputService.ContainerInputContext context, int sourceSlot, Set<Integer> excludedSlots) {
+    private void distributeCarriedStackToQuickMoveTarget(AbstractContainerMenu menu, ContainerInputContext context, int sourceSlot, Set<Integer> excludedSlots) {
         var targetSlots = quickMoveTargetResolver.getQuickMoveTargetSlots(menu, sourceSlot);
 
         fillMatchingSlots(menu, context, sourceSlot, excludedSlots, targetSlots);
@@ -111,7 +112,7 @@ public class SplitQuickMoveService {
         }
     }
 
-    private void fillMatchingSlots(AbstractContainerMenu menu, ContainerInputService.ContainerInputContext context, int sourceSlot, Set<Integer> excludedSlots, List<Integer> targetSlots) {
+    private void fillMatchingSlots(AbstractContainerMenu menu, ContainerInputContext context, int sourceSlot, Set<Integer> excludedSlots, List<Integer> targetSlots) {
         for (var fillableSlot : getFillableMatchingSlots(menu, menu.getCarried(), sourceSlot, excludedSlots, targetSlots)) {
             if (menu.getCarried().is(Items.AIR)) {
                 return;
@@ -121,7 +122,7 @@ public class SplitQuickMoveService {
         }
     }
 
-    private void returnCarriedStackToSource(AbstractContainerMenu menu, ContainerInputService.ContainerInputContext context, int sourceSlot) {
+    private void returnCarriedStackToSource(AbstractContainerMenu menu, ContainerInputContext context, int sourceSlot) {
         if (!menu.getCarried().is(Items.AIR)) {
             containerInputService.performClick(menu, context, sourceSlot);
         }

@@ -1,5 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
+import com.nemonotfound.nemos.inventory.sorting.models.ContainerInputContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
@@ -49,8 +50,5 @@ public class ContainerInputService {
 
     private void performContainerInput(AbstractContainerMenu menu, ContainerInputContext context, int slot, int mouseButton, ContainerInput containerInput) {
         context.gameMode().handleContainerInput(menu.containerId, slot, mouseButton, containerInput, context.player());
-    }
-
-    public record ContainerInputContext(MultiPlayerGameMode gameMode, LocalPlayer player) {
     }
 }

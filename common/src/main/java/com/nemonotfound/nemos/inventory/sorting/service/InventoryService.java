@@ -35,9 +35,9 @@ public class InventoryService {
         var containerId = menu.containerId;
 
         var slotItemsToMerge = sortingService.sortSlotItems(menu, startIndex, endIndex);
-        mergeService.mergeAllItems(menu, slotItemsToMerge, containerId);
+        var mergedItems = mergeService.mergeAllItems(menu, slotItemsToMerge, containerId);
 
-        var slotItemsToSort = sortingService.sortSlotItems(menu, startIndex, endIndex);
+        var slotItemsToSort = mergedItems ? sortingService.sortSlotItems(menu, startIndex, endIndex) : slotItemsToMerge;
         var slotSwapMap = sortingService.retrieveSlotSwapMap(slotItemsToSort, startIndex, endIndex);
         sortingService.sortItemsInInventory(menu, slotSwapMap, containerId);
     }

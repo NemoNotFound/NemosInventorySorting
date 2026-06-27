@@ -1,6 +1,7 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
 import com.nemonotfound.nemos.inventory.sorting.Constants;
+import com.nemonotfound.nemos.inventory.sorting.models.MergeGroup;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -30,18 +31,21 @@ public class MergingService {
         return INSTANCE;
     }
 
-    public void mergeAllItems(AbstractContainerMenu menu, List<SlotItem> sortedSlotItems, int containerId) {
+    public boolean mergeAllItems(AbstractContainerMenu menu, List<SlotItem> sortedSlotItems, int containerId) {
         var groupedItemMap = sortedSlotItems.stream()
-                .collect(groupingBy(slotItem -> slotItem.itemStack().getComponents()));
+                .collect(groupingBy(slotItem -> new MergeGroup(slotItem.itemStack().getItem(), slotItem.itemStack().getComponents())));
 
-        groupedItemMap.forEach((_, slotItems) -> mergeItems(menu, slotItems, containerId));
+        return groupedItemMap.values().stream()
+                .map(slotItems -> mergeItems(menu, slotItems, containerId))
+                .reduce(false, Boolean::logicalOr);
     }
 
-    private void mergeItems(AbstractContainerMenu menu, List<SlotItem> slotItems, int containerId) {
+    private boolean mergeItems(AbstractContainerMenu menu, List<SlotItem> slotItems, int containerId) {
         if (slotItems.size() <= 1) {
-            return;
+            return false;
         }
 
+        var mergedItems = false;
         var leftSlotIndex = 0;
         var rightSlotIndex = slotItems.size() - 1;
         var remainingCycles = MAX_MERGING_CYCLES;
@@ -62,6 +66,7 @@ public class MergingService {
                         leftSlotItem.slotIndex(),
                         minecraft.player
                 );
+                mergedItems = true;
             } else {
                 leftSlotIndex++;
             }
@@ -74,6 +79,8 @@ public class MergingService {
         if (remainingCycles <= 0) {
             Constants.LOGGER.warn("Merging items exceeded cycle limit. Please report this.");
         }
+
+        return mergedItems;
     }
 
     private boolean isFullStack(ItemStack itemStack) {
