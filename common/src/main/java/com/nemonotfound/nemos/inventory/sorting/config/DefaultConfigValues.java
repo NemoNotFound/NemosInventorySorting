@@ -23,10 +23,10 @@ public class DefaultConfigValues {
     public static int X_OFFSET_SORT_CONTAINER_INVENTORY = 136;
     public static int X_OFFSET_DROP_ALL_CONTAINER_INVENTORY = 154;
 
-    public static int Y_OFFSET_ITEM_FILTER = -16;
-    public static int Y_OFFSET_FILTER_PERSISTENCE_TOGGLE = -15;
-    public static int ITEM_FILTER_WIDTH = 77;
-    public static int ITEM_FILTER_HEIGHT = 15;
+    public static int Y_OFFSET_ITEM_FILTER = -15;
+    public static int Y_OFFSET_FILTER_PERSISTENCE_TOGGLE = -14;
+    public static int ITEM_FILTER_WIDTH = 78;
+    public static int ITEM_FILTER_HEIGHT = 14;
 
     public static int BUTTON_SIZE = 11;
     public static int FILTER_BUTTON_SIZE = 13;

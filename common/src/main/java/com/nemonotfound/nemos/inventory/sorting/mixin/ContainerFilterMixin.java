@@ -218,7 +218,7 @@ public abstract class ContainerFilterMixin extends Screen {
     private void nemosInventorySorting$createSearchBox(int xOffset, int yOffset, int width, int height) {
         nemosInventorySorting$filterBox = new FilterBox(
                 font,
-                leftPos,
+                leftPos - 1,
                 topPos,
                 xOffset,
                 yOffset,
@@ -246,8 +246,8 @@ public abstract class ContainerFilterMixin extends Screen {
         }
 
         var width = config.width();
-        var xOffset = config.xOffset() != null ? config.xOffset() : nemosInventorySorting$filterBoxWidth + 3;
-        var yOffset = config.yOffset() != null ? config.yOffset() : Y_OFFSET_ITEM_FILTER;
+        var xOffset = config.xOffset() != null ? config.xOffset() : nemosInventorySorting$filterBoxWidth - 1 + 3;
+        var yOffset = config.yOffset() != null ? config.yOffset() : Y_OFFSET_FILTER_PERSISTENCE_TOGGLE;
         var buttonName = Component.translatable("nemos_inventory_sorting.gui.toggleFilterPersistence");
         var button = new ToggleFilterPersistenceButton(
                 leftPos + xOffset,

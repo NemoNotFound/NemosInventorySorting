@@ -8,6 +8,7 @@
     "AbstractContainerScreenMixin",
     "AbstractRecipeBookScreenMixin",
     "ContainerFilterMixin",
+    "EditBoxMixin",
     "InventoryScreenMixin"
   ],
   "server": [],
