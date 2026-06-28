@@ -63,7 +63,7 @@ public class SplitQuickMoveService {
             return;
         }
 
-        containerInputService.performRightClick(menu, context, sourceSlot);
+        containerInputService.rightCLickPickup(menu, context, sourceSlot);
         distributeCarriedStackToQuickMoveTarget(menu, context, sourceSlot, Set.of());
         returnCarriedStackToSource(menu, context, sourceSlot);
     }
@@ -78,13 +78,13 @@ public class SplitQuickMoveService {
 
         var temporaryCarriedSlotIndex = temporaryCarriedSlot.get().index;
 
-        containerInputService.performClick(menu, context, temporaryCarriedSlotIndex);
-        containerInputService.performRightClick(menu, context, sourceSlot);
+        containerInputService.leftClickPickup(menu, context, temporaryCarriedSlotIndex);
+        containerInputService.rightCLickPickup(menu, context, sourceSlot);
         distributeCarriedStackToQuickMoveTarget(menu, context, sourceSlot, Set.of(temporaryCarriedSlotIndex));
         returnCarriedStackToSource(menu, context, sourceSlot);
 
         if (menu.getCarried().is(Items.AIR)) {
-            containerInputService.performClick(menu, context, temporaryCarriedSlotIndex);
+            containerInputService.leftClickPickup(menu, context, temporaryCarriedSlotIndex);
         }
     }
 
@@ -108,7 +108,7 @@ public class SplitQuickMoveService {
 
         if (!menu.getCarried().is(Items.AIR)) {
             getFirstEmptySlot(menu, menu.getCarried(), sourceSlot, excludedSlots, targetSlots)
-                    .ifPresent(slot -> containerInputService.performClick(menu, context, slot.index));
+                    .ifPresent(slot -> containerInputService.leftClickPickup(menu, context, slot.index));
         }
     }
 
@@ -118,13 +118,13 @@ public class SplitQuickMoveService {
                 return;
             }
 
-            containerInputService.performClick(menu, context, fillableSlot.index);
+            containerInputService.leftClickPickup(menu, context, fillableSlot.index);
         }
     }
 
     private void returnCarriedStackToSource(AbstractContainerMenu menu, ContainerInputContext context, int sourceSlot) {
         if (!menu.getCarried().is(Items.AIR)) {
-            containerInputService.performClick(menu, context, sourceSlot);
+            containerInputService.leftClickPickup(menu, context, sourceSlot);
         }
     }
 

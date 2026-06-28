@@ -45,7 +45,7 @@ public class SortingService {
                 .toList();
     }
 
-    public Map<Integer, Integer> retrieveSlotSwapMap(List<SlotItem> slotItems, int startIndex, int endIndex) { //TODO: Improve efficiency
+    public Map<Integer, Integer> retrieveSlotSwaps(List<SlotItem> slotItems, int startIndex, int endIndex) {
         Map<Integer, Integer> slotSwapMap = new LinkedHashMap<>();
         List<Integer> unlockedSlots = LockedSlotService.INSTANCE.getUnlockedSlots(startIndex, endIndex);
 
@@ -61,7 +61,7 @@ public class SortingService {
         return slotSwapMap;
     }
 
-    public void sortItemsInInventory(AbstractContainerMenu menu, Map<Integer, Integer> slotSwapMap, int containerId) {
+    public void sortItemsInInventory(AbstractContainerMenu menu, Map<Integer, Integer> slotSwapMap) {
         int remainingCyles = MAX_SORTING_CYCLES;
 
         while (!slotSwapMap.isEmpty() && remainingCyles-- > 0) {
@@ -82,8 +82,6 @@ public class SortingService {
 
             slotSwapService.performSlotSwap(
                     menu,
-                    minecraft.gameMode,
-                    containerId,
                     currentSlot,
                     targetSlot,
                     minecraft.player

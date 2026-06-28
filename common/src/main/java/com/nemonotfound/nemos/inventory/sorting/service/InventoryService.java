@@ -32,14 +32,12 @@ public class InventoryService {
     }
 
     public void handleSorting(AbstractContainerMenu menu, int startIndex, int endIndex) { //TODO: Improve efficiency
-        var containerId = menu.containerId;
-
         var slotItemsToMerge = sortingService.sortSlotItems(menu, startIndex, endIndex);
-        var mergedItems = mergeService.mergeAllItems(menu, slotItemsToMerge, containerId);
+        var mergedItems = mergeService.mergeAllItems(menu, slotItemsToMerge);
 
         var slotItemsToSort = mergedItems ? sortingService.sortSlotItems(menu, startIndex, endIndex) : slotItemsToMerge;
-        var slotSwapMap = sortingService.retrieveSlotSwapMap(slotItemsToSort, startIndex, endIndex);
-        sortingService.sortItemsInInventory(menu, slotSwapMap, containerId);
+        var slotSwapMap = sortingService.retrieveSlotSwaps(slotItemsToSort, startIndex, endIndex);
+        sortingService.sortItemsInInventory(menu, slotSwapMap);
     }
 
     public void handleSplitQuickMove(AbstractContainerMenu menu, int slot) {

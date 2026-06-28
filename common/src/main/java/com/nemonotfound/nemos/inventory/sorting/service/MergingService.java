@@ -1,7 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
 import com.nemonotfound.nemos.inventory.sorting.Constants;
-import com.nemonotfound.nemos.inventory.sorting.models.MergeGroup;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -31,20 +30,18 @@ public class MergingService {
         return INSTANCE;
     }
 
-    public boolean mergeAllItems(AbstractContainerMenu menu, List<SlotItem> sortedSlotItems, int containerId) {
+    public boolean mergeAllItems(AbstractContainerMenu menu, List<SlotItem> sortedSlotItems) {
         var groupedItemMap = sortedSlotItems.stream()
-                .collect(groupingBy(slotItem -> new MergeGroup(slotItem.itemStack().getItem(), slotItem.itemStack().getComponents())));
+                .filter(slotItem -> slotItem.itemStack().getMaxStackSize() > 1)
+                .collect(groupingBy(slotItem -> slotItem.itemStack().getComponents()));
 
         return groupedItemMap.values().stream()
-                .map(slotItems -> mergeItems(menu, slotItems, containerId))
+                .filter(slotItems -> slotItems.size() > 1)
+                .map(slotItems -> mergeItems(menu, slotItems))
                 .reduce(false, Boolean::logicalOr);
     }
 
-    private boolean mergeItems(AbstractContainerMenu menu, List<SlotItem> slotItems, int containerId) {
-        if (slotItems.size() <= 1) {
-            return false;
-        }
-
+    private boolean mergeItems(AbstractContainerMenu menu, List<SlotItem> slotItems) {
         var mergedItems = false;
         var leftSlotIndex = 0;
         var rightSlotIndex = slotItems.size() - 1;
@@ -60,8 +57,6 @@ public class MergingService {
             if (!isFullStack(leftItem)) {
                 inventorySwapService.performSlotSwap(
                         menu,
-                        minecraft.gameMode,
-                        containerId,
                         rightSlotItem.slotIndex(),
                         leftSlotItem.slotIndex(),
                         minecraft.player

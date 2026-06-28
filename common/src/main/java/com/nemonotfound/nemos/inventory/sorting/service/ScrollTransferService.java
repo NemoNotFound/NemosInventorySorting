@@ -167,15 +167,15 @@ public class ScrollTransferService {
             return false;
         }
 
-        temporaryCarriedSlot.ifPresent(slot -> containerInputService.performClick(menu, context, slot.index));
+        temporaryCarriedSlot.ifPresent(slot -> containerInputService.leftClickPickup(menu, context, slot.index));
 
-        containerInputService.performRightClick(menu, context, sourceSlot);
-        containerInputService.performRightClick(menu, context, targetSlot);
+        containerInputService.rightCLickPickup(menu, context, sourceSlot);
+        containerInputService.rightCLickPickup(menu, context, targetSlot);
         returnCarriedStackToSource(menu, context, sourceSlot);
 
         temporaryCarriedSlot
                 .filter(_ -> menu.getCarried().is(Items.AIR))
-                .ifPresent(slot -> containerInputService.performClick(menu, context, slot.index));
+                .ifPresent(slot -> containerInputService.leftClickPickup(menu, context, slot.index));
 
         return true;
     }
@@ -197,7 +197,7 @@ public class ScrollTransferService {
 
     private void returnCarriedStackToSource(AbstractContainerMenu menu, ContainerInputContext context, int sourceSlot) {
         if (!menu.getCarried().is(Items.AIR)) {
-            containerInputService.performClick(menu, context, sourceSlot);
+            containerInputService.leftClickPickup(menu, context, sourceSlot);
         }
     }
 

@@ -2,6 +2,7 @@ package com.nemonotfound.nemos.inventory.sorting.mixin;
 
 import com.nemonotfound.nemos.inventory.sorting.gui.components.FilterBox;
 import com.nemonotfound.nemos.inventory.sorting.gui.components.RecipeBookUpdatable;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -31,6 +32,20 @@ public abstract class AbstractRecipeBookScreenMixin<T extends RecipeBookMenu> ex
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void updateXPosition(CallbackInfo ci) {
+        children().stream()
+                .filter(widget -> widget instanceof RecipeBookUpdatable)
+                .forEach(widget -> ((RecipeBookUpdatable) widget).updateXPosition(this.leftPos));
+    }
+
+    /**
+     * Updates the X position of all child widgets that implement {@link RecipeBookUpdatable}
+     * when the recipe book is opened/closed.
+     * <p>
+     * This ensures that custom widgets are correctly aligned with the final value of {@link #leftPos},
+     * when the recipe book is toggled.
+     */
+    @Inject(method = "lambda$initButton$0", at = @At(value = "TAIL"))
+    private void updateXPosition(Button button, CallbackInfo ci) {
         children().stream()
                 .filter(widget -> widget instanceof RecipeBookUpdatable)
                 .forEach(widget -> ((RecipeBookUpdatable) widget).updateXPosition(this.leftPos));

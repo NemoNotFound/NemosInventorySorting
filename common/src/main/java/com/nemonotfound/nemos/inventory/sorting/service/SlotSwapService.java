@@ -1,16 +1,18 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
 import com.nemonotfound.nemos.inventory.sorting.SortingCommonClient;
-import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.NEMOS_BACKPACKS_MOD_ID;
+import static com.nemonotfound.nemos.inventory.sorting.service.ContainerInputService.PRIMARY_MOUSE_BUTTON;
+import static com.nemonotfound.nemos.inventory.sorting.service.ContainerInputService.SECONDARY_MOUSE_BUTTON;
 
 public class SlotSwapService {
 
@@ -30,26 +32,32 @@ public class SlotSwapService {
         return INSTANCE;
     }
 
-    public void performSlotSwap(AbstractContainerMenu menu, MultiPlayerGameMode gameMode, int containerId, int slot, int targetSlot, LocalPlayer player) {
-        pickUpItem(menu, gameMode, containerId, slot, player);
-        pickUpItem(menu, gameMode, containerId, targetSlot, player);
+    public void performSlotSwap(AbstractContainerMenu menu, int slot, int targetSlot, LocalPlayer player) {
+        pickUpItem(menu, slot, player);
+        pickUpItem(menu, targetSlot, player);
 
         if (!player.containerMenu.getCarried().is(Items.AIR)) {
-            pickUpItem(menu, gameMode, containerId, slot, player);
+            pickUpItem(menu, slot, player);
         }
     }
 
-    private void pickUpItem(AbstractContainerMenu menu, MultiPlayerGameMode gameMode, int containerId, int slot, LocalPlayer player) {
+    private void pickUpItem(AbstractContainerMenu menu, int slot, LocalPlayer player) {
         var cursorStack = player.containerMenu.getCarried();
         var itemSlot = menu.getSlot(slot);
-        var mouseButton = 0;
 
-        if ((!cursorStack.is(Items.AIR) && canBeFilledWithPrimaryClick(itemSlot.getItem())) ||
-                (canBeFilledWithPrimaryClick(cursorStack) && !itemSlot.getItem().is(Items.AIR))) {
-            mouseButton = 1;
+        containerInputService.getContext()
+                .ifPresent(
+                        context -> containerInputService.pickup(menu, context, slot, getMouseButton(cursorStack, itemSlot))
+                );
+    }
+
+    private int getMouseButton(ItemStack cursorStack, Slot slot) {
+        if ((!cursorStack.is(Items.AIR) && canBeFilledWithPrimaryClick(slot.getItem())) ||
+                (canBeFilledWithPrimaryClick(cursorStack) && !slot.getItem().is(Items.AIR))) {
+            return SECONDARY_MOUSE_BUTTON;
         }
 
-        containerInputService.performPickup(containerId, slot, mouseButton, gameMode, player);
+        return PRIMARY_MOUSE_BUTTON;
     }
 
     private boolean canBeFilledWithPrimaryClick(ItemStack itemStack) {
