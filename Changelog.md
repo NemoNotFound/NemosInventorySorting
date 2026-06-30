@@ -1,7 +1,4 @@
-# Changelog v1.21.1
+# Changelog v1.21.2
 
 ## Fixes
-- Wrong button position after recipe book was opened, because someone (I would never) accidentally deleted the update logic
-
-## Changes
-- Slightly improved sorting performance
+- Key bind gets triggered when searching for items

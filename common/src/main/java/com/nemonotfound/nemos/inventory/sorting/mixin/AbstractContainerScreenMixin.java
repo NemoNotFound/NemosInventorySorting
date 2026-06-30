@@ -2,6 +2,7 @@ package com.nemonotfound.nemos.inventory.sorting.mixin;
 
 import com.nemonotfound.nemos.inventory.sorting.factory.*;
 import com.nemonotfound.nemos.inventory.sorting.helper.ButtonTypeMapping;
+import com.nemonotfound.nemos.inventory.sorting.helper.FilterBoxGetter;
 import com.nemonotfound.nemos.inventory.sorting.helper.SortingWidgetGetter;
 import com.nemonotfound.nemos.inventory.sorting.models.*;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
@@ -31,10 +32,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.*;
@@ -113,19 +111,19 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    public void keyPressed(KeyEvent keyEvent, CallbackInfoReturnable<Boolean> cir) {
-        if (nemosInventorySorting$triggerActionOnWidget(widget -> widget.keyPressed(keyEvent))) {
+    public void keyPressed(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
+        if (nemosInventorySorting$isSearchInactive() && nemosInventorySorting$triggerActionOnWidget(widget -> widget.keyPressed(event))) {
             cir.setReturnValue(true);
         }
 
-        if (keyEvent.hasAltDown() && !((Screen) this instanceof CreativeModeInventoryScreen)) {
+        if (event.hasAltDown() && !((Screen) this instanceof CreativeModeInventoryScreen)) {
             nemosInventorySorting$displayLockedSlots = true;
         }
     }
 
     @Override
     public boolean keyReleased(@NotNull KeyEvent keyEvent) {
-        if (nemosInventorySorting$triggerActionOnWidget(widget -> widget.keyReleased(keyEvent))) {
+        if (nemosInventorySorting$isSearchInactive() && nemosInventorySorting$triggerActionOnWidget(widget -> widget.keyReleased(keyEvent))) {
             return true;
         }
 
@@ -134,6 +132,13 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
         }
 
         return super.keyReleased(keyEvent);
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$isSearchInactive() {
+        return !Optional.ofNullable(((FilterBoxGetter) this).nemosInventorySorting$getFilterBox())
+                .map(AbstractWidget::isFocused)
+                .orElse(false);
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
@@ -284,6 +289,8 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Unique
     private boolean nemosInventorySorting$triggerActionOnWidget(Function<AbstractWidget, Boolean> function) {
+
+
         for (var widget : nemosInventorySorting$widgets) {
             if (function.apply(widget)) {
                 return true;

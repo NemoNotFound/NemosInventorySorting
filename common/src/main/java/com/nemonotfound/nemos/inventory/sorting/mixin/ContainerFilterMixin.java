@@ -1,5 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.mixin;
 
+import com.nemonotfound.nemos.inventory.sorting.helper.FilterBoxGetter;
 import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
@@ -39,7 +40,7 @@ import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValue
 import static com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId.ITEM_FILTER;
 
 @Mixin(AbstractContainerScreen.class)
-public abstract class ContainerFilterMixin extends Screen {
+public abstract class ContainerFilterMixin extends Screen implements FilterBoxGetter {
 
     @Unique
     private static final Identifier HIGHLIGHTED_SLOT = Identifier.fromNamespaceAndPath(MOD_ID, "container/highlighted_slot");
@@ -81,21 +82,21 @@ public abstract class ContainerFilterMixin extends Screen {
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    public void keyPressed(KeyEvent keyEvent, CallbackInfoReturnable<Boolean> cir) {
+    public void keyPressed(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (this.nemosInventorySorting$filterBox != null) {
-            if (this.nemosInventorySorting$filterBox.isFocused() && keyEvent.key() != GLFW.GLFW_KEY_ESCAPE) {
-                cir.setReturnValue(this.nemosInventorySorting$filterBox.keyPressed(keyEvent));
+            if (this.nemosInventorySorting$filterBox.isFocused() && event.key() != GLFW.GLFW_KEY_ESCAPE) {
+                cir.setReturnValue(this.nemosInventorySorting$filterBox.keyPressed(event));
                 return;
             }
 
-            if (!this.nemosInventorySorting$filterBox.isFocused() && keyEvent.hasControlDownWithQuirk() && QUICK_SEARCH.get().matches(keyEvent)) {
+            if (!this.nemosInventorySorting$filterBox.isFocused() && event.hasControlDownWithQuirk() && QUICK_SEARCH.get().matches(event)) {
                 nemosInventorySorting$handleQuickSearch(cir);
 
                 return;
             }
         }
 
-        if (nemosInventorySorting$triggerActionOnWidget(widget -> widget.keyPressed(keyEvent))) {
+        if (nemosInventorySorting$triggerActionOnWidget(widget -> widget.keyPressed(event))) {
             cir.setReturnValue(true);
         }
     }
@@ -284,5 +285,10 @@ public abstract class ContainerFilterMixin extends Screen {
     @Unique
     private AbstractContainerScreen<?> nemosInventorySorting$getThis() {
         return (AbstractContainerScreen<?>) (Object) this;
+    }
+
+    @Override
+    public FilterBox nemosInventorySorting$getFilterBox() {
+        return nemosInventorySorting$filterBox;
     }
 }
