@@ -178,19 +178,6 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
         }
     }
 
-    @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
-    private void mouseScrolled(double x, double y, double scrollX, double scrollY, CallbackInfoReturnable<Boolean> cir) {
-        if (hoveredSlot == null) {
-            return;
-        }
-
-        var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
-
-        if (InventoryService.getInstance().handleSingleItemScrollMove(menu, hoveredSlot.index, scrollY)) {
-            cir.setReturnValue(true);
-        }
-    }
-
     @Unique
     private void nemosInventorySorting$handleDraggingQuickMove(int mouseInput, Slot hoveredSlot) {
         var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();

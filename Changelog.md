@@ -1,4 +1,4 @@
-# Changelog v1.21.2
+# Changelog v1.21.3
 
-## Fixes
-- Key bind gets triggered when searching for items
+## Removals
+- Removed scroll-transfer

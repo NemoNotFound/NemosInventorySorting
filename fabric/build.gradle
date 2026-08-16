@@ -58,6 +58,7 @@ loom {
 sourceSets.main.resources { srcDir project.project(':common').file('src/generated/resources/').getAbsolutePath() }
 
 tasks.register('publishCurseForge', TaskPublishCurseForge) {
+    group = "publishing"
     dependsOn(tasks.jar)
     apiToken = System.getenv("CURSEFORGE_TOKEN")
 
@@ -84,3 +85,9 @@ modrinth {
     }
 }
 tasks.modrinth.dependsOn(tasks.jar)
+
+tasks.register('publishMod') {
+    group = "publishing"
+    description = "Publishes the Fabric build to Modrinth and CurseForge."
+    dependsOn(tasks.modrinth, tasks.publishCurseForge)
+}

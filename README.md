@@ -4,7 +4,7 @@
 
 **Nemo's Inventory Sorting** is a _client-side_ mod that adds buttons to your inventory GUI.  
 Sort your inventory, move all matching or all items, or drop everything at once — all with a single click.
-It also improves quick moving with drag, split-stack, and single-item scroll transfer.
+It also improves quick moving with drag and split-stack transfers.
 
 You can even filter and highlight items in containers by typing part of their name!
 Quickly filter items by pressing **Ctrl + F** (or **Command + F** on macOS).    
@@ -24,7 +24,6 @@ For more information and to see how to configure the components check the [wiki]
 - Search & highlight items
 - Quick move items with **Shift + Drag**
 - Quick move half items with **Shift + Right-Click/Drag**
-- Scroll transfer items between inventory/container or inventory/hotbar
 - Built-in dark mode resource pack
 
 ## ⚠ Disclaimer
@@ -44,9 +43,8 @@ In the player inventory, clicking the buttons does not include the hotbar. To in
 
 - **Shift + Drag**: quick-move hovered items
 - **Shift + Right-Click/Drag**: quick-move half items
-- **Scroll Up/Down**: move one item between inventory/container or inventory/hotbar
 
-> **Note:** Split and scroll actions keep at least one item in the source slot.
+> **Note:** Split actions keep at least one item in the source slot.
 
 ### Search Items
 Click the search bar or press **Ctrl + [keybind]** (or **Command + [keybind]** on macOS), then start typing.    
