@@ -1,14 +1,25 @@
 package com.nemonotfound.nemos.inventory.sorting.mixin;
 
-import com.nemonotfound.nemos.inventory.sorting.factory.*;
+import com.nemonotfound.nemos.inventory.sorting.factory.ButtonCreator;
+import com.nemonotfound.nemos.inventory.sorting.factory.DropAllButtonFactory;
+import com.nemonotfound.nemos.inventory.sorting.factory.MoveAllButtonFactory;
+import com.nemonotfound.nemos.inventory.sorting.factory.MoveSameButtonFactory;
+import com.nemonotfound.nemos.inventory.sorting.factory.SortButtonFactory;
+import com.nemonotfound.nemos.inventory.sorting.gui.components.buttons.AbstractContainerButton;
 import com.nemonotfound.nemos.inventory.sorting.helper.ButtonTypeMapping;
 import com.nemonotfound.nemos.inventory.sorting.helper.FilterBoxGetter;
 import com.nemonotfound.nemos.inventory.sorting.helper.SortingWidgetGetter;
-import com.nemonotfound.nemos.inventory.sorting.models.*;
+import com.nemonotfound.nemos.inventory.sorting.models.LockedSlot;
+import com.nemonotfound.nemos.inventory.sorting.models.Offset;
+import com.nemonotfound.nemos.inventory.sorting.models.Position;
+import com.nemonotfound.nemos.inventory.sorting.models.Size;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
 import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.LockedSlotsConfig;
+import com.nemonotfound.nemos.inventory.sorting.models.config.SettingsConfig;
+import com.nemonotfound.nemos.inventory.sorting.service.HoveredSlotRangeService;
 import com.nemonotfound.nemos.inventory.sorting.service.InventoryService;
+import com.nemonotfound.nemos.inventory.sorting.service.ScrollTransferService;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -20,7 +31,20 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.BlastFurnaceMenu;
+import net.minecraft.world.inventory.BrewingStandMenu;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.CrafterMenu;
+import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.inventory.EnchantmentMenu;
+import net.minecraft.world.inventory.FurnaceMenu;
+import net.minecraft.world.inventory.GrindstoneMenu;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.ShulkerBoxMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.SmokerMenu;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -32,15 +56,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.*;
 import static com.nemonotfound.nemos.inventory.sorting.SortingCommonClient.MOD_LOADER_HELPER;
 import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValues.*;
 import static com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId.*;
 
-//TODO: Refactor
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen implements SortingWidgetGetter {
 
@@ -89,18 +118,26 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Inject(method = "init", at = @At(value = "TAIL"))
     public void init(CallbackInfo ci) {
-        var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
-        nemosInventorySorting$inventoryEndIndex = menu.slots.size() - 9;
-        nemosInventorySorting$containerSize = nemosInventorySorting$inventoryEndIndex - 27;
+        nemosInventorySorting$setSlotIndexes();
+        nemosInventorySorting$initButtons();
+    }
 
-        var componentConfigs = nemosInventorySorting$configService.readOrGetDefaultComponentConfigs();
+    @Unique
+    private void nemosInventorySorting$setSlotIndexes() {
+        nemosInventorySorting$inventoryEndIndex = nemosInventorySorting$getMenu().slots.size() - 9;
+        nemosInventorySorting$containerSize = nemosInventorySorting$inventoryEndIndex - 27;
+    }
+
+    @Unique
+    private void nemosInventorySorting$initButtons() {
+        var configs = nemosInventorySorting$configService.readOrGetDefaultComponentConfigs();
 
         if (nemosInventorySorting$shouldHaveStorageContainerButtons()) {
-            nemosInventorySorting$initStorageContainerButtons(componentConfigs);
+            nemosInventorySorting$initStorageContainerButtons(configs);
         }
 
         if (nemosInventorySorting$shouldHaveContainerInventorySortingButtons()) {
-            nemosInventorySorting$initContainerInventoryButtons(componentConfigs);
+            nemosInventorySorting$initContainerInventoryButtons(configs);
         }
     }
 
@@ -112,7 +149,12 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (nemosInventorySorting$isSearchInactive() && nemosInventorySorting$triggerActionOnWidget(widget -> widget.keyPressed(event))) {
+        if (nemosInventorySorting$handleKeyEventForHoveredContainer(event)) {
+            cir.setReturnValue(true);
+            return;
+        }
+
+        if (nemosInventorySorting$isSearchInactive() && nemosInventorySorting$handleWidgetInput(widget -> widget.keyPressed(event))) {
             cir.setReturnValue(true);
         }
 
@@ -121,9 +163,18 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
         }
     }
 
+    @Unique
+    private boolean nemosInventorySorting$handleKeyEventForHoveredContainer(KeyEvent event) {
+        return nemosInventorySorting$handleKeyEventForHoveredContainer(
+                button -> button.matchesKeyMapping(event),
+                button -> button.keyPressed(event),
+                event.hasShiftDown()
+        );
+    }
+
     @Override
     public boolean keyReleased(@NotNull KeyEvent keyEvent) {
-        if (nemosInventorySorting$isSearchInactive() && nemosInventorySorting$triggerActionOnWidget(widget -> widget.keyReleased(keyEvent))) {
+        if (nemosInventorySorting$isSearchInactive() && nemosInventorySorting$handleWidgetInput(widget -> widget.keyReleased(keyEvent))) {
             return true;
         }
 
@@ -141,46 +192,210 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
                 .orElse(false);
     }
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void mouseClicked(MouseButtonEvent event, boolean bl, CallbackInfoReturnable<Boolean> cir) {
-        if (nemosInventorySorting$triggerActionOnWidget(widget -> widget.mouseClicked(event, bl))) {
-            cir.setReturnValue(true);
+    @Unique
+    private boolean nemosInventorySorting$handleKeyEventForHoveredContainer(
+            Predicate<AbstractContainerButton> matches,
+            Consumer<AbstractContainerButton> activate,
+            boolean shiftDown
+    ) {
+        if (!nemosInventorySorting$isSearchInactive()) {
+            return false;
         }
 
-        if (event.hasShiftDown() && event.button() == 1 && hoveredSlot != null) {
-            InventoryService.getInstance().handleSplitQuickMove(((AbstractContainerScreen<?>) (Object) this).getMenu(), hoveredSlot.index);
-            nemosInventorySorting$previousHoveredSlots.add(hoveredSlot);
-            nemosInventorySorting$previousHoveredSlot = hoveredSlot;
-            nemosInventorySorting$splitQuickMoveHandled = true;
-            cir.setReturnValue(true);
+        var matchingButtons = nemosInventorySorting$getContainerButtons(matches);
+
+        if (matchingButtons.isEmpty()) {
+            return false;
         }
 
-        if (event.hasAltDown()) {
-            nemosInventorySorting$handleLockedSlot();
-            cir.setReturnValue(true);
-        }
+        nemosInventorySorting$getHoveredButton(matchingButtons, shiftDown).ifPresent(activate);
+
+        return true;
     }
 
-    @Inject(method = "mouseDragged", at = @At("HEAD"), cancellable = true)
-    private void mouseDragged(MouseButtonEvent event, double dx, double dy, CallbackInfoReturnable<Boolean> cir) {
-        if (event.hasAltDown() && !nemosInventorySorting$previousHoveredSlots.contains(hoveredSlot)) {
-            nemosInventorySorting$handleLockedSlot();
-            cir.setReturnValue(true);
+    @Unique
+    private List<AbstractContainerButton> nemosInventorySorting$getContainerButtons(Predicate<AbstractContainerButton> matches) {
+        return nemosInventorySorting$widgets.stream()
+                .filter(AbstractContainerButton.class::isInstance)
+                .map(AbstractContainerButton.class::cast)
+                .filter(matches)
+                .toList();
+    }
+
+    @Unique
+    private Optional<AbstractContainerButton> nemosInventorySorting$getHoveredButton(
+            List<AbstractContainerButton> matchingButtons,
+            boolean shiftDown
+    ) {
+        if (!nemosInventorySorting$hasHoveredShortcutTarget()) {
+            return Optional.empty();
         }
 
-        if (event.hasShiftDown() && event.button() == 0 && hoveredSlot != null && nemosInventorySorting$previousHoveredSlot != hoveredSlot) {
-            nemosInventorySorting$handleDraggingQuickMove(event.input(), hoveredSlot);
+        var menu = nemosInventorySorting$getMenu();
+        var storageContainer = nemosInventorySorting$shouldHaveStorageContainerButtons();
+
+        return HoveredSlotRangeService.getInstance().getSlotRange(
+                menu,
+                hoveredSlot,
+                storageContainer,
+                SettingsConfig.INSTANCE.shouldIncludeHotbar(shiftDown)
+        ).flatMap(slotRange -> matchingButtons.stream()
+                        .filter(button -> button.isWithinSlotRange(slotRange))
+                        .findFirst());
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$hasHoveredShortcutTarget() {
+        if (hoveredSlot == null || (Screen) this instanceof CreativeModeInventoryScreen) {
+            return false;
         }
 
-        if (event.hasShiftDown() && event.button() == 1 && hoveredSlot != null && nemosInventorySorting$previousHoveredSlot != hoveredSlot) {
-            nemosInventorySorting$handleDraggingSplitQuickMove(hoveredSlot);
+        return nemosInventorySorting$getMenu() instanceof InventoryMenu
+                || nemosInventorySorting$shouldHaveStorageContainerButtons()
+                || nemosInventorySorting$shouldHaveContainerInventorySortingButtons();
+    }
+
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    private void mouseClicked(MouseButtonEvent event, boolean isDoubleClick, CallbackInfoReturnable<Boolean> cir) {
+        if (nemosInventorySorting$handleMouseClick(event, isDoubleClick)) {
             cir.setReturnValue(true);
         }
     }
 
     @Unique
+    private boolean nemosInventorySorting$handleMouseClick(MouseButtonEvent event, boolean isDoubleClick) {
+        if (nemosInventorySorting$handleKeyEventForHoveredContainer(event, isDoubleClick)) {
+            return true;
+        }
+
+        return nemosInventorySorting$handleWidgetInput(widget -> widget.mouseClicked(event, isDoubleClick))
+                || nemosInventorySorting$handleSplitQuickMove(event)
+                || nemosInventorySorting$handleSlotLocking(event);
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$handleKeyEventForHoveredContainer(MouseButtonEvent event, boolean isDoubleClick) {
+        return nemosInventorySorting$handleKeyEventForHoveredContainer(
+                button -> button.matchesKeyMapping(event),
+                button -> button.mouseClicked(event, isDoubleClick),
+                event.hasShiftDown()
+        );
+    }
+
+    @Inject(method = "mouseDragged", at = @At("HEAD"), cancellable = true)
+    private void mouseDragged(MouseButtonEvent event, double dx, double dy, CallbackInfoReturnable<Boolean> cir) {
+        if (nemosInventorySorting$handleMouseDrag(event)) {
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$handleMouseDrag(MouseButtonEvent event) {
+        if (nemosInventorySorting$handleDraggingSlotLock(event)) {
+            return true;
+        }
+
+        if (nemosInventorySorting$handleDragQuickMove(event)) {
+            return false;
+        }
+
+        return nemosInventorySorting$handleDraggingSplitQuickMove(event);
+    }
+
+    @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
+    private void mouseScrolled(double x, double y, double scrollX, double scrollY, CallbackInfoReturnable<Boolean> cir) {
+        if (!SettingsConfig.INSTANCE.isScrollTransferEnabled() || hoveredSlot == null) {
+            return;
+        }
+
+        var menu = nemosInventorySorting$getMenu();
+        var shiftDown = minecraft.hasShiftDown();
+        var scrollDelta = ScrollTransferService.resolveScrollDelta(scrollX, scrollY, shiftDown);
+
+        if (InventoryService.getInstance().handleSingleItemScrollMove(menu, hoveredSlot.index, scrollDelta, shiftDown)) {
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$shouldHandleSplitQuickMove(MouseButtonEvent event) {
+        return SettingsConfig.INSTANCE.isSplitQuickMoveEnabled()
+                && event.hasShiftDown()
+                && event.button() == 1
+                && hoveredSlot != null;
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$handleSplitQuickMove(MouseButtonEvent event) {
+        if (!nemosInventorySorting$shouldHandleSplitQuickMove(event)) {
+            return false;
+        }
+
+        InventoryService.getInstance().handleSplitQuickMove(nemosInventorySorting$getMenu(), hoveredSlot.index);
+        nemosInventorySorting$previousHoveredSlots.add(hoveredSlot);
+        nemosInventorySorting$previousHoveredSlot = hoveredSlot;
+        nemosInventorySorting$splitQuickMoveHandled = true;
+        return true;
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$handleSlotLocking(MouseButtonEvent event) {
+        if (!event.hasAltDown()) {
+            return false;
+        }
+
+        nemosInventorySorting$handleLockedSlot();
+        return true;
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$handleDraggingSlotLock(MouseButtonEvent event) {
+        if (!event.hasAltDown() || nemosInventorySorting$previousHoveredSlots.contains(hoveredSlot)) {
+            return false;
+        }
+
+        nemosInventorySorting$handleLockedSlot();
+        return true;
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$shouldHandleDragQuickMove(MouseButtonEvent event) {
+        return SettingsConfig.INSTANCE.isDragQuickMoveEnabled()
+                && event.hasShiftDown()
+                && event.button() == 0
+                && hoveredSlot != null
+                && nemosInventorySorting$previousHoveredSlot != hoveredSlot;
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$handleDragQuickMove(MouseButtonEvent event) {
+        if (!nemosInventorySorting$shouldHandleDragQuickMove(event)) {
+            return false;
+        }
+
+        nemosInventorySorting$handleDraggingQuickMove(event.input(), hoveredSlot);
+        return true;
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$shouldHandleDraggingSplitQuickMove(MouseButtonEvent event) {
+        return nemosInventorySorting$shouldHandleSplitQuickMove(event)
+                && nemosInventorySorting$previousHoveredSlot != hoveredSlot;
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$handleDraggingSplitQuickMove(MouseButtonEvent event) {
+        if (!nemosInventorySorting$shouldHandleDraggingSplitQuickMove(event)) {
+            return false;
+        }
+
+        nemosInventorySorting$handleDraggingSplitQuickMove(hoveredSlot);
+        return true;
+    }
+
+    @Unique
     private void nemosInventorySorting$handleDraggingQuickMove(int mouseInput, Slot hoveredSlot) {
-        var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
+        var menu = nemosInventorySorting$getMenu();
         var player = minecraft.player;
 
         if (player == null || minecraft.gameMode == null) {
@@ -199,7 +414,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Unique
     private void nemosInventorySorting$handleDraggingSplitQuickMove(Slot hoveredSlot) {
-        var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
+        var menu = nemosInventorySorting$getMenu();
 
         InventoryService.getInstance().handleSplitQuickMove(menu, hoveredSlot.index);
 
@@ -246,7 +461,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Unique
     private boolean nemosInventorySorting$isLockableSlot(int index) { //TODO: Put into LockedService
-        var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
+        var menu = nemosInventorySorting$getMenu();
         var isInventoryMenu = menu instanceof InventoryMenu;
         var isLockableInventoryIndex = index >= InventoryMenu.INV_SLOT_START && index < InventoryMenu.USE_ROW_SLOT_END;
         var isLockableContainerInventoryIndex = index >= nemosInventorySorting$containerSize;
@@ -261,7 +476,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
         }
 
         for (LockedSlot lockedSlot : LockedSlotsConfig.INSTANCE.getLockedSlots()) {
-            var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
+            var menu = nemosInventorySorting$getMenu();
             var slot = menu.getSlot(lockedSlot.index() + nemosInventorySorting$getInventoryStartIndex());
 
             guiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, LOCKED_SLOT, slot.x, slot.y, 16, 16);
@@ -270,16 +485,14 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Unique
     private int nemosInventorySorting$getInventoryStartIndex() {
-        return ((AbstractContainerScreen<?>) (Object) this).getMenu() instanceof InventoryMenu ?
+        return nemosInventorySorting$getMenu() instanceof InventoryMenu ?
                 InventoryMenu.INV_SLOT_START : nemosInventorySorting$containerSize;
     }
 
     @Unique
-    private boolean nemosInventorySorting$triggerActionOnWidget(Function<AbstractWidget, Boolean> function) {
-
-
+    private boolean nemosInventorySorting$handleWidgetInput(Function<AbstractWidget, Boolean> action) {
         for (var widget : nemosInventorySorting$widgets) {
-            if (function.apply(widget)) {
+            if (action.apply(widget)) {
                 return true;
             }
         }
@@ -289,7 +502,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Unique
     private boolean nemosInventorySorting$shouldHaveStorageContainerButtons() {
-        var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
+        var menu = nemosInventorySorting$getMenu();
 
         return menu instanceof ChestMenu ||
                 menu instanceof ShulkerBoxMenu ||
@@ -317,7 +530,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Unique
     private boolean nemosInventorySorting$shouldHaveContainerInventorySortingButtons() {
-        var menu = ((AbstractContainerScreen<?>) (Object) this).getMenu();
+        var menu = nemosInventorySorting$getMenu();
 
         return menu instanceof EnchantmentMenu ||
                 menu instanceof FurnaceMenu ||
@@ -331,18 +544,27 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Unique
     private void nemosInventorySorting$initStorageContainerButtons(List<ComponentConfig> componentConfigs) {
-        var defaultInventoryYOffset = inventoryLabelY - 2;
-
         nemosInventorySorting$createButtons(
                 componentConfigs,
                 new ButtonTypeMapping(SORT_STORAGE_CONTAINER, SortButtonFactory.getInstance(), Y_OFFSET_CONTAINER, false),
                 new ButtonTypeMapping(MOVE_SAME_STORAGE_CONTAINER, MoveSameButtonFactory.getInstance(), Y_OFFSET_CONTAINER, false),
                 new ButtonTypeMapping(MOVE_ALL_STORAGE_CONTAINER, MoveAllButtonFactory.getInstance(), Y_OFFSET_CONTAINER, false),
-                new ButtonTypeMapping(DROP_ALL_STORAGE_CONTAINER, DropAllButtonFactory.getInstance(), Y_OFFSET_CONTAINER, false),
-                new ButtonTypeMapping(SORT_STORAGE_CONTAINER_INVENTORY, SortButtonFactory.getInstance(), defaultInventoryYOffset, true),
-                new ButtonTypeMapping(MOVE_SAME_STORAGE_CONTAINER_INVENTORY, MoveSameButtonFactory.getInstance(), defaultInventoryYOffset, true),
-                new ButtonTypeMapping(MOVE_ALL_STORAGE_CONTAINER_INVENTORY, MoveAllButtonFactory.getInstance(), defaultInventoryYOffset, true),
-                new ButtonTypeMapping(DROP_ALL_STORAGE_CONTAINER_INVENTORY, DropAllButtonFactory.getInstance(), defaultInventoryYOffset, true)
+                new ButtonTypeMapping(DROP_ALL_STORAGE_CONTAINER, DropAllButtonFactory.getInstance(), Y_OFFSET_CONTAINER, false)
+        );
+
+        nemosInventorySorting$initStorageContainerInventoryButtons(componentConfigs);
+    }
+
+    @Unique
+    private void nemosInventorySorting$initStorageContainerInventoryButtons(List<ComponentConfig> componentConfigs) {
+        var yOffset = inventoryLabelY - 2;
+
+        nemosInventorySorting$createButtons(
+                componentConfigs,
+                new ButtonTypeMapping(SORT_STORAGE_CONTAINER_INVENTORY, SortButtonFactory.getInstance(), yOffset, true),
+                new ButtonTypeMapping(MOVE_SAME_STORAGE_CONTAINER_INVENTORY, MoveSameButtonFactory.getInstance(), yOffset, true),
+                new ButtonTypeMapping(MOVE_ALL_STORAGE_CONTAINER_INVENTORY, MoveAllButtonFactory.getInstance(), yOffset, true),
+                new ButtonTypeMapping(DROP_ALL_STORAGE_CONTAINER_INVENTORY, DropAllButtonFactory.getInstance(), yOffset, true)
         );
     }
 
@@ -360,23 +582,20 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     @Unique
     private void nemosInventorySorting$createButtons(List<ComponentConfig> configs, ButtonTypeMapping... mappings) {
         for (ButtonTypeMapping mapping : mappings) {
-            var optionalConfig = nemosInventorySorting$configService.getOrDefault(configs, mapping.configId());
-
-            if (optionalConfig.isEmpty()) {
-                continue;
-            }
-
-            var config = optionalConfig.get();
-
-            if (!config.isEnabled()) {
-                continue;
-            }
-
-            var yOffset = config.yOffset() != null ? config.yOffset() : mapping.defaultYOffset();
-            var xOffset = config.xOffset() != null ? config.xOffset() : imageWidth + config.rightXOffset();
-
-            nemosInventorySorting$createButton(mapping.factory(), mapping.isInventoryButton(), new Offset(xOffset, yOffset), new Size(config.width(), config.height(), BUTTON_SIZE));
+            nemosInventorySorting$configService.getOrDefault(configs, mapping.configId())
+                    .filter(ComponentConfig::isEnabled)
+                    .ifPresent(config -> nemosInventorySorting$createButton(mapping, config));
         }
+    }
+
+    @Unique
+    private void nemosInventorySorting$createButton(ButtonTypeMapping mapping, ComponentConfig config) {
+        var yOffset = config.yOffset() != null ? config.yOffset() : mapping.defaultYOffset();
+        var xOffset = config.xOffset() != null ? config.xOffset() : imageWidth + config.rightXOffset();
+        var offset = new Offset(xOffset, yOffset);
+        var size = new Size(config.width(), config.height(), BUTTON_SIZE);
+
+        nemosInventorySorting$createButton(mapping.factory(), mapping.isInventoryButton(), offset, size);
     }
 
     @Unique
@@ -391,8 +610,13 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     @Unique
     private void nemosInventorySorting$createButton(ButtonCreator<?> buttonCreator, SlotRange slotRange, Offset offset, Size size) {
         var position = new Position(leftPos, topPos);
-        var sortButton = buttonCreator.createButton(slotRange, position, offset, size, ((AbstractContainerScreen<?>) (Object) this).getMenu());
-        nemosInventorySorting$addSortingWidget(sortButton);
+        var button = buttonCreator.createButton(slotRange, position, offset, size, nemosInventorySorting$getMenu());
+        nemosInventorySorting$addSortingWidget(button);
+    }
+
+    @Unique
+    private AbstractContainerMenu nemosInventorySorting$getMenu() {
+        return ((AbstractContainerScreen<?>) (Object) this).getMenu();
     }
 
     @Override

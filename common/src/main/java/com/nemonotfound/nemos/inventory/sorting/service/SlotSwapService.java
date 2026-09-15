@@ -1,7 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
 import com.nemonotfound.nemos.inventory.sorting.SortingCommonClient;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -20,7 +19,7 @@ public class SlotSwapService {
 
     private final ContainerInputService containerInputService;
 
-    private SlotSwapService(ContainerInputService containerInputService) {
+    SlotSwapService(ContainerInputService containerInputService) {
         this.containerInputService = containerInputService;
     }
 
@@ -32,17 +31,49 @@ public class SlotSwapService {
         return INSTANCE;
     }
 
-    public void performSlotSwap(AbstractContainerMenu menu, int slot, int targetSlot, LocalPlayer player) {
-        pickUpItem(menu, slot, player);
-        pickUpItem(menu, targetSlot, player);
+    public void performSlotSwap(AbstractContainerMenu menu, int slot, int targetSlot) {
+        var sourceStack = menu.getSlot(slot).getItem();
+        var targetStack = menu.getSlot(targetSlot).getItem();
 
-        if (!player.containerMenu.getCarried().is(Items.AIR)) {
-            pickUpItem(menu, slot, player);
+        if (areEquivalentStacks(sourceStack, targetStack)) {
+            return;
+        }
+
+        if (shouldReverseSwap(sourceStack, targetStack)) {
+            int sourceSlot = slot;
+            slot = targetSlot;
+            targetSlot = sourceSlot;
+        }
+
+        swapItems(menu, slot, targetSlot);
+    }
+
+    void mergeStack(AbstractContainerMenu menu, int sourceSlot, int targetSlot) {
+        swapItems(menu, sourceSlot, targetSlot);
+    }
+
+    private void swapItems(AbstractContainerMenu menu, int sourceSlot, int targetSlot) {
+        pickUpItem(menu, sourceSlot);
+        pickUpItem(menu, targetSlot);
+
+        if (!menu.getCarried().isEmpty()) {
+            pickUpItem(menu, sourceSlot);
         }
     }
 
-    private void pickUpItem(AbstractContainerMenu menu, int slot, LocalPlayer player) {
-        var cursorStack = player.containerMenu.getCarried();
+    static boolean areEquivalentStacks(ItemStack sourceStack, ItemStack targetStack) {
+        return ItemStack.isSameItemSameComponents(sourceStack, targetStack) &&
+                sourceStack.getCount() == targetStack.getCount();
+    }
+
+    static boolean shouldReverseSwap(ItemStack sourceStack, ItemStack targetStack) {
+        return ItemStack.isSameItemSameComponents(sourceStack, targetStack) &&
+                sourceStack.getCount() < sourceStack.getMaxStackSize() &&
+                targetStack.getCount() >= targetStack.getMaxStackSize();
+    }
+
+    void pickUpItem(AbstractContainerMenu menu, int slot) {
+        var cursorStack = menu.getCarried();
         var itemSlot = menu.getSlot(slot);
 
         containerInputService.getContext()

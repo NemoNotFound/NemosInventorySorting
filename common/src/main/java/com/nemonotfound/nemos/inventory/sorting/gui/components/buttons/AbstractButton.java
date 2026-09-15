@@ -50,35 +50,43 @@ public abstract class AbstractButton extends AbstractWidget implements RecipeBoo
 
     @Override
     public boolean keyPressed(@NotNull KeyEvent keyEvent) {
-        var minecraft = Minecraft.getInstance();
-        var isKeyPressed = Arrays.stream(minecraft.options.keyMappings)
-                .filter(keyMapping -> keyMapping.same(getKeyMapping()))
-                .anyMatch(keyMapping -> keyMapping.matches(keyEvent));
-
-        if (!isKeyPressed) {
+        if (!matchesKeyMapping(keyEvent)) {
             return super.keyPressed(keyEvent);
         }
 
+        var minecraft = Minecraft.getInstance();
         playDownSound(minecraft.getSoundManager());
         onClick(new MouseButtonEvent(0, 0, new MouseButtonInfo(0, 0)), false);
 
         return true;
     }
 
-    @Override
-    public boolean mouseClicked(@NotNull MouseButtonEvent mouseButtonEvent, boolean bl) {
+    public boolean matchesKeyMapping(KeyEvent keyEvent) {
         var minecraft = Minecraft.getInstance();
-        var isKeyPressed = Arrays.stream(minecraft.options.keyMappings)
-                .filter(keyMapping -> keyMapping.same(getKeyMapping()))
-                .anyMatch(keyMapping -> keyMapping.matchesMouse(mouseButtonEvent));
 
-        if (!isKeyPressed) {
-            return super.mouseClicked(mouseButtonEvent, bl);
+        return Arrays.stream(minecraft.options.keyMappings)
+                .filter(keyMapping -> keyMapping.same(getKeyMapping()))
+                .anyMatch(keyMapping -> keyMapping.matches(keyEvent));
+    }
+
+    @Override
+    public boolean mouseClicked(@NotNull MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
+        if (!matchesKeyMapping(mouseButtonEvent)) {
+            return super.mouseClicked(mouseButtonEvent, doubleClick);
         }
 
+        var minecraft = Minecraft.getInstance();
         playDownSound(minecraft.getSoundManager());
-        onClick(mouseButtonEvent, bl);
+        onClick(mouseButtonEvent, doubleClick);
 
         return true;
+    }
+
+    public boolean matchesKeyMapping(MouseButtonEvent mouseButtonEvent) {
+        var minecraft = Minecraft.getInstance();
+
+        return Arrays.stream(minecraft.options.keyMappings)
+                .filter(keyMapping -> keyMapping.same(getKeyMapping()))
+                .anyMatch(keyMapping -> keyMapping.matchesMouse(mouseButtonEvent));
     }
 }

@@ -9,11 +9,13 @@ public class InventoryService {
     private final SortingService sortingService;
     private final MergingService mergeService;
     private final SplitQuickMoveService splitQuickMoveService;
+    private final ScrollTransferService scrollTransferService;
 
-    private InventoryService(MergingService mergeService, SortingService sortingService, SplitQuickMoveService splitQuickMoveService) {
+    private InventoryService(MergingService mergeService, SortingService sortingService, SplitQuickMoveService splitQuickMoveService, ScrollTransferService scrollTransferService) {
         this.mergeService = mergeService;
         this.sortingService = sortingService;
         this.splitQuickMoveService = splitQuickMoveService;
+        this.scrollTransferService = scrollTransferService;
     }
 
     public static InventoryService getInstance() {
@@ -21,7 +23,8 @@ public class InventoryService {
             INSTANCE = new InventoryService(
                     MergingService.getInstance(),
                     SortingService.getInstance(),
-                    SplitQuickMoveService.getInstance()
+                    SplitQuickMoveService.getInstance(),
+                    ScrollTransferService.getInstance()
             );
         }
 
@@ -39,5 +42,9 @@ public class InventoryService {
 
     public void handleSplitQuickMove(AbstractContainerMenu menu, int slot) {
         splitQuickMoveService.handleSplitQuickMove(menu, slot);
+    }
+
+    public boolean handleSingleItemScrollMove(AbstractContainerMenu menu, int slot, double scrollDelta, boolean allowLastItem) {
+        return scrollTransferService.handleSingleItemScrollMove(menu, slot, scrollDelta, allowLastItem);
     }
 }

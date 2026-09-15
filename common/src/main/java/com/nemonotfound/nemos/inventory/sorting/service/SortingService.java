@@ -30,19 +30,20 @@ public class SortingService {
 
     public static SortingService getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new SortingService(SlotSwapService.getInstance(), ComparingService.INSTANCE, Minecraft.getInstance());
+            INSTANCE = new SortingService(SlotSwapService.getInstance(), ComparingService.getInstance(), Minecraft.getInstance());
         }
 
         return INSTANCE;
     }
 
     public @NotNull List<SlotItem> sortSlotItems(AbstractContainerMenu menu, int startIndex, int endIndex) {
-        return IntStream.range(startIndex, endIndex)
+        var slotItems = IntStream.range(startIndex, endIndex)
                 .filter(index -> !LockedSlotService.INSTANCE.isLocked(index, startIndex))
                 .mapToObj(index -> new SlotItem(index, menu.slots.get(index).getItem()))
                 .filter(slotItem -> !slotItem.itemStack().isEmpty())
-                .sorted(comparingService.compare())
                 .toList();
+
+        return comparingService.sort(slotItems);
     }
 
     public Map<Integer, Integer> retrieveSlotSwaps(List<SlotItem> slotItems, int startIndex, int endIndex) {
@@ -83,8 +84,7 @@ public class SortingService {
             slotSwapService.performSlotSwap(
                     menu,
                     currentSlot,
-                    targetSlot,
-                    minecraft.player
+                    targetSlot
             );
 
             if (slotSwapMap.containsKey(targetSlot)) {

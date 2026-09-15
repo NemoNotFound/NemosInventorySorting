@@ -50,19 +50,16 @@ public class MoveSameButton extends AbstractSingleClickButton {
 
     @Override
     protected KeyMapping getKeyMapping() {
-        if (isInventoryButton) {
-            return SortingKeyMappings.MOVE_SAME_INVENTORY.get();
-        }
-
         return SortingKeyMappings.MOVE_SAME.get();
     }
 
     @Override
     protected @NotNull List<Integer> getItemSlotsToInteractWith(AbstractContainerMenu menu) {
         var slots = menu.slots;
-        var itemsOutOfIndexRange = getItemsOutOfIndexRange(slots, startIndex, currentEndIndex);
+        var endIndex = getEndIndex();
+        var itemsOutOfIndexRange = getItemsOutOfIndexRange(slots, startIndex, endIndex);
 
-        return IntStream.range(startIndex, currentEndIndex)
+        return IntStream.range(startIndex, endIndex)
                 .filter(index -> !LockedSlotService.INSTANCE.isLocked(index, startIndex))
                 .mapToObj(slotIndex -> Map.entry(slotIndex, slots.get(slotIndex).getItem()))
                 .filter(itemStackEntry -> isItemInOtherContainer(itemStackEntry.getValue(), itemsOutOfIndexRange))

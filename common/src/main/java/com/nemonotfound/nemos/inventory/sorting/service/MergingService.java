@@ -3,7 +3,9 @@ package com.nemonotfound.nemos.inventory.sorting.service;
 import com.nemonotfound.nemos.inventory.sorting.Constants;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -14,11 +16,11 @@ import static java.util.stream.Collectors.groupingBy;
 public class MergingService {
 
     private static MergingService INSTANCE;
-    private final SlotSwapService inventorySwapService;
+    private final SlotSwapService slotSwapService;
     private final Minecraft minecraft;
 
-    private MergingService(SlotSwapService inventorySwapService, Minecraft minecraft) {
-        this.inventorySwapService = inventorySwapService;
+    private MergingService(SlotSwapService slotSwapService, Minecraft minecraft) {
+        this.slotSwapService = slotSwapService;
         this.minecraft = minecraft;
     }
 
@@ -33,7 +35,7 @@ public class MergingService {
     public boolean mergeAllItems(AbstractContainerMenu menu, List<SlotItem> sortedSlotItems) {
         var groupedItemMap = sortedSlotItems.stream()
                 .filter(slotItem -> slotItem.itemStack().getMaxStackSize() > 1)
-                .collect(groupingBy(slotItem -> slotItem.itemStack().getComponents()));
+                .collect(groupingBy(slotItem -> ItemGroup.from(slotItem.itemStack())));
 
         return groupedItemMap.values().stream()
                 .filter(slotItems -> slotItems.size() > 1)
@@ -55,11 +57,10 @@ public class MergingService {
             var leftItem = leftSlot.getItem();
 
             if (!isFullStack(leftItem)) {
-                inventorySwapService.performSlotSwap(
+                slotSwapService.mergeStack(
                         menu,
                         rightSlotItem.slotIndex(),
-                        leftSlotItem.slotIndex(),
-                        minecraft.player
+                        leftSlotItem.slotIndex()
                 );
                 mergedItems = true;
             } else {
@@ -80,5 +81,12 @@ public class MergingService {
 
     private boolean isFullStack(ItemStack itemStack) {
         return itemStack.getCount() >= itemStack.getMaxStackSize();
+    }
+
+    record ItemGroup(Item item, DataComponentMap components) {
+
+        static ItemGroup from(ItemStack itemStack) {
+            return new ItemGroup(itemStack.getItem(), itemStack.getComponents());
+        }
     }
 }

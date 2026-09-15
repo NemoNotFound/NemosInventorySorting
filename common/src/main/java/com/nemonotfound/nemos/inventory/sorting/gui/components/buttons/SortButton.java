@@ -38,15 +38,11 @@ public class SortButton extends AbstractContainerButton {
 
     @Override
     public void onClick(@NotNull MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
-        inventoryService.handleSorting(menu, startIndex, currentEndIndex);
+        inventoryService.handleSorting(menu, startIndex, getEndIndex());
     }
 
     @Override
     protected KeyMapping getKeyMapping() {
-        if (isInventoryButton) {
-            return SortingKeyMappings.SORT_INVENTORY.get();
-        }
-
         return SortingKeyMappings.SORT.get();
     }
 }

@@ -5,6 +5,7 @@ import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
 import com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigs;
 import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.LockedSlotsConfig;
+import com.nemonotfound.nemos.inventory.sorting.models.config.SettingsConfig;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
 import com.nemonotfound.nemos.inventory.sorting.platform.IModLoaderHelper;
 import com.nemonotfound.nemos.inventory.sorting.platform.IRegistryHelper;
@@ -25,8 +26,10 @@ public class SortingCommonClient {
         SortingKeymappingCategories.init();
         SortingKeyMappings.init();
         DefaultConfigs.setupDefaultConfigs();
+        ConfigService.INSTANCE.migrateLegacyConfigs();
 
         ConfigService.INSTANCE.writeConfig(false, COMPONENT_CONFIG_PATH, DEFAULT_COMPONENT_CONFIGS);
+        ConfigService.INSTANCE.writeConfig(false, GENERAL_CONFIG_PATH, SettingsConfig.INSTANCE);
         ConfigService.INSTANCE.writeConfig(false, FILTER_CONFIG_PATH, FilterConfig.INSTANCE);
         ConfigService.INSTANCE.writeConfig(false, LOCKED_SLOTS_CONFIG_PATH, LockedSlotsConfig.INSTANCE);
 
@@ -36,5 +39,6 @@ public class SortingCommonClient {
 
         ConfigService.loadFilterConfig();
         ConfigService.loadLockedSlotsConfig();
+        ConfigService.loadSettingsConfig();
     }
 }

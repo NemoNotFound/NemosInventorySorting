@@ -40,10 +40,6 @@ public class MoveAllButton extends AbstractSingleClickButton {
 
     @Override
     protected KeyMapping getKeyMapping() {
-        if (isInventoryButton) {
-            return SortingKeyMappings.MOVE_ALL_INVENTORY.get();
-        }
-
         return SortingKeyMappings.MOVE_ALL.get();
     }
 }

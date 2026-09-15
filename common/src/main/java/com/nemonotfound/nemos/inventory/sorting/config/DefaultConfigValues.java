@@ -5,10 +5,11 @@ public class DefaultConfigValues {
     private DefaultConfigValues() {}
 
     public static final String CONFIG_DIRECTORY_PATH = "config/nemos-inventory-sorting/"; //TODO: Put into enum?
-    public static final String COMPONENT_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "config.json";
-    public static final String FILTER_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "filter-config.json";
-    public static final String LOCKED_SLOTS_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "locked-slots-config.json";
-    public static final String IRON_CHEST_COMPONENT_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "iron-chest-config.json";
+    public static final String COMPONENT_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "components.json";
+    public static final String GENERAL_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "general.json";
+    public static final String FILTER_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "filter.json";
+    public static final String LOCKED_SLOTS_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "locked-slots.json";
+    public static final String IRON_CHEST_COMPONENT_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "iron-chest-components.json";
 
     public static int RIGHT_X_OFFSET_SORT_STORAGE_CONTAINER = -61;
     public static int RIGHT_X_OFFSET_MOVE_SAME_STORAGE_CONTAINER = -47;

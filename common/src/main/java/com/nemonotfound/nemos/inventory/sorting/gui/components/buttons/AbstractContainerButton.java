@@ -3,6 +3,7 @@ package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 import com.nemonotfound.nemos.inventory.sorting.models.Position;
 import com.nemonotfound.nemos.inventory.sorting.models.Size;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
+import com.nemonotfound.nemos.inventory.sorting.models.config.SettingsConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -15,27 +16,22 @@ import org.lwjgl.glfw.GLFW;
 
 public abstract class AbstractContainerButton extends AbstractButton {
 
-    protected final AbstractContainerMenu menu;
-    protected final Integer startIndex;
-    protected final Integer endIndex;
-    private final Component buttonName;
-    private final Component shiftButtonName;
-    protected final boolean isInventoryButton;
+    private static final int HOTBAR_SLOT_COUNT = 9;
 
-    protected int currentEndIndex;
+    protected final AbstractContainerMenu menu;
+    protected final int startIndex;
+    private final int endIndex;
+    private final Component buttonName;
+    private final boolean inventoryButton;
 
     public AbstractContainerButton(Position position, int xOffset, Size size, SlotRange slotRange, Component buttonName, AbstractContainerMenu menu) {
         super(position, xOffset, size, buttonName);
-        this.setTooltip(Tooltip.create(buttonName));
         this.buttonName = buttonName;
-        this.shiftButtonName = buttonName.copy()
-                .append(" ")
-                .append(Component.translatable("nemos_inventory_sorting.gui.includeHotbar"));
         this.menu = menu;
         this.startIndex = slotRange.startIndex();
         this.endIndex = slotRange.endIndex();
-        this.isInventoryButton = startIndex != 0;
-        this.currentEndIndex = endIndex;
+        this.inventoryButton = startIndex != 0;
+        updateTooltip();
     }
 
     @Override
@@ -54,8 +50,7 @@ public abstract class AbstractContainerButton extends AbstractButton {
 
     private void handleShiftKeyEvent(KeyEvent keyEvent) {
         if (keyEvent.key() == GLFW.GLFW_KEY_LEFT_SHIFT || keyEvent.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
-            setTooltip();
-            setEndIndex();
+            updateTooltip();
         }
     }
 
@@ -68,24 +63,32 @@ public abstract class AbstractContainerButton extends AbstractButton {
 
     protected abstract Identifier getButtonTexture();
 
-    private void setTooltip() {
-        if (shouldIncludeHotbar()) {
-            setTooltip(Tooltip.create(shiftButtonName));
-        } else {
+    private void updateTooltip() {
+        if (!inventoryButton || !Minecraft.getInstance().hasShiftDown()) {
             setTooltip(Tooltip.create(buttonName));
+            return;
         }
+
+        var translationKey = SettingsConfig.INSTANCE.includeHotbarByDefault()
+                ? "nemos_inventory_sorting.gui.excludeHotbar"
+                : "nemos_inventory_sorting.gui.includeHotbar";
+        var shiftButtonName = buttonName.copy()
+                .append(" ")
+                .append(Component.translatable(translationKey));
+
+        setTooltip(Tooltip.create(shiftButtonName));
     }
 
-    private void setEndIndex() {
-        if (shouldIncludeHotbar()) {
-            currentEndIndex = endIndex + 9;
-        } else {
-            currentEndIndex = endIndex;
-        }
+    protected int getEndIndex() {
+        return shouldIncludeHotbar() ? endIndex + HOTBAR_SLOT_COUNT : endIndex;
+    }
+
+    public boolean isWithinSlotRange(SlotRange slotRange) {
+        return startIndex == slotRange.startIndex() && getEndIndex() == slotRange.endIndex();
     }
 
     private boolean shouldIncludeHotbar() {
-        return Minecraft.getInstance().hasShiftDown() && isInventoryButton;
+        return inventoryButton && SettingsConfig.INSTANCE.shouldIncludeHotbar(Minecraft.getInstance().hasShiftDown());
     }
 
     @Override

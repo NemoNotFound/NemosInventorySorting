@@ -7,6 +7,7 @@ import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
 import com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId;
 import com.nemonotfound.nemos.inventory.sorting.models.config.LockedSlotsConfig;
+import com.nemonotfound.nemos.inventory.sorting.models.config.SettingsConfig;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -29,6 +30,31 @@ public class ConfigService {
     private static final TypeToken<List<ComponentConfig>> COMPONENT_CONFIG_TYPE = new TypeToken<>() {};
     private static final TypeToken<FilterConfig> FILTER_CONFIG_TYPE_TOKEN = new TypeToken<>() {};
     private static final TypeToken<LockedSlotsConfig> LOCKED_SLOTS_CONFIG_TYPE_TOKEN = new TypeToken<>() {};
+    private static final TypeToken<SettingsConfig> SETTINGS_CONFIG_TYPE_TOKEN = new TypeToken<>() {};
+
+    @Deprecated
+    public void migrateLegacyConfigs() {
+        migrateConfig("config.json", COMPONENT_CONFIG_PATH);
+        migrateConfig("filter-config.json", FILTER_CONFIG_PATH);
+        migrateConfig("locked-slots-config.json", LOCKED_SLOTS_CONFIG_PATH);
+        migrateConfig("iron-chest-config.json", IRON_CHEST_COMPONENT_CONFIG_PATH);
+    }
+
+   @Deprecated
+    private void migrateConfig(String legacyFileName, String currentPath) {
+        var legacyPath = Paths.get(CONFIG_DIRECTORY_PATH, legacyFileName);
+        var targetPath = Paths.get(currentPath);
+
+        if (!Files.exists(legacyPath) || Files.exists(targetPath)) {
+            return;
+        }
+
+        try {
+            Files.move(legacyPath, targetPath);
+        } catch (Exception e) {
+            LOGGER.error("An error occurred while migrating config {} to {}:\n", legacyPath, targetPath, e);
+        }
+    }
 
     public <T> void writeConfig(boolean update, String filePath, T config) {
         if (!update && Files.exists(Paths.get(filePath))) {
@@ -58,6 +84,10 @@ public class ConfigService {
 
     public static void loadLockedSlotsConfig() {
         LockedSlotsConfig.INSTANCE = readOrDefault(LOCKED_SLOTS_CONFIG_PATH, LOCKED_SLOTS_CONFIG_TYPE_TOKEN, LockedSlotsConfig.INSTANCE);
+    }
+
+    public static void loadSettingsConfig() {
+        SettingsConfig.INSTANCE = readOrDefault(GENERAL_CONFIG_PATH, SETTINGS_CONFIG_TYPE_TOKEN, SettingsConfig.INSTANCE);
     }
 
     public List<ComponentConfig> readOrGetDefaultIronChestComponentConfigs() {

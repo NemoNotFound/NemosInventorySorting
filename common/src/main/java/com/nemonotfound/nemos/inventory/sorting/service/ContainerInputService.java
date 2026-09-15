@@ -38,7 +38,7 @@ public class ContainerInputService {
         pickup(menu, context, slot, PRIMARY_MOUSE_BUTTON);
     }
 
-    public void rightCLickPickup(AbstractContainerMenu menu, ContainerInputContext context, int slot) {
+    public void rightClickPickup(AbstractContainerMenu menu, ContainerInputContext context, int slot) {
         pickup(menu, context, slot, SECONDARY_MOUSE_BUTTON);
     }
 

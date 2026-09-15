@@ -63,7 +63,7 @@ public class SplitQuickMoveService {
             return;
         }
 
-        containerInputService.rightCLickPickup(menu, context, sourceSlot);
+        containerInputService.rightClickPickup(menu, context, sourceSlot);
         distributeCarriedStackToQuickMoveTarget(menu, context, sourceSlot, Set.of());
         returnCarriedStackToSource(menu, context, sourceSlot);
     }
@@ -79,7 +79,7 @@ public class SplitQuickMoveService {
         var temporaryCarriedSlotIndex = temporaryCarriedSlot.get().index;
 
         containerInputService.leftClickPickup(menu, context, temporaryCarriedSlotIndex);
-        containerInputService.rightCLickPickup(menu, context, sourceSlot);
+        containerInputService.rightClickPickup(menu, context, sourceSlot);
         distributeCarriedStackToQuickMoveTarget(menu, context, sourceSlot, Set.of(temporaryCarriedSlotIndex));
         returnCarriedStackToSource(menu, context, sourceSlot);
 
