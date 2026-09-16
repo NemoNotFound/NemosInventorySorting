@@ -1,17 +1,17 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.devnemo.nemos.inventory.sorting.mixin",
+  "package": "com.nemonotfound.nemos.inventory.sorting.mixin",
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "client": [
     "AbstractContainerScreenMixin",
-    "AbstractRecipeBookScreenMixin"
+    "AbstractRecipeBookScreenMixin",
+    "EditBoxMixin"
   ],
   "server": [],
   "injectors": {
     "defaultRequire": 1
   }
 }
-

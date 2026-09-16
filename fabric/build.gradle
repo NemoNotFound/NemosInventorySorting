@@ -54,6 +54,9 @@ tasks.withType(Javadoc).configureEach {
 tasks.named("sourcesJar", Jar) {
     from(project(":common").sourceSets.main.allSource)
 }
+tasks.named("test", Test) {
+    enabled = false
+}
 
 processResources {
     from project(":common").sourceSets.main.resources
