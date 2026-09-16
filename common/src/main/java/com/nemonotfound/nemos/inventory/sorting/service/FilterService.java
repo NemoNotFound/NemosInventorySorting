@@ -59,7 +59,7 @@ public class FilterService {
         }
 
         var bundleContents = itemStack.get(DataComponents.BUNDLE_CONTENTS);
-        var stream = bundleContents != null ? bundleContents.itemCopyStream() : Stream.<ItemStack>builder().build();
+        var stream = bundleContents != null ? bundleContents.itemCopies() : Stream.<ItemStack>builder().build();
 
         return contentsMatchFilter(stream, filter);
     }

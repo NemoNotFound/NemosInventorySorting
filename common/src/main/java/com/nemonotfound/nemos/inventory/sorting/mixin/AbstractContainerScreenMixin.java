@@ -21,6 +21,7 @@ import com.nemonotfound.nemos.inventory.sorting.service.HoveredSlotRangeService;
 import com.nemonotfound.nemos.inventory.sorting.service.InventoryService;
 import com.nemonotfound.nemos.inventory.sorting.service.ScrollTransferService;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
@@ -69,6 +70,7 @@ import static com.nemonotfound.nemos.inventory.sorting.Constants.*;
 import static com.nemonotfound.nemos.inventory.sorting.SortingCommonClient.MOD_LOADER_HELPER;
 import static com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigValues.*;
 import static com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId.*;
+import static com.nemonotfound.nemos.inventory.sorting.service.ContainerInputService.PRIMARY_MOUSE_BUTTON;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin extends Screen implements SortingWidgetGetter {
@@ -256,8 +258,8 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void mouseClicked(MouseButtonEvent event, boolean isDoubleClick, CallbackInfoReturnable<Boolean> cir) {
-        if (nemosInventorySorting$handleMouseClick(event, isDoubleClick)) {
+    private void mouseClicked(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir) {
+        if (nemosInventorySorting$handleMouseClick(event, doubleClick)) {
             cir.setReturnValue(true);
         }
     }
@@ -321,7 +323,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     private boolean nemosInventorySorting$shouldHandleSplitQuickMove(MouseButtonEvent event) {
         return SettingsConfig.INSTANCE.isSplitQuickMoveEnabled()
                 && event.hasShiftDown()
-                && event.button() == 1
+                && event.button() == InputConstants.MOUSE_BUTTON_RIGHT
                 && hoveredSlot != null;
     }
 
@@ -362,7 +364,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     private boolean nemosInventorySorting$shouldHandleDragQuickMove(MouseButtonEvent event) {
         return SettingsConfig.INSTANCE.isDragQuickMoveEnabled()
                 && event.hasShiftDown()
-                && event.button() == 0
+                && event.button() == InputConstants.MOUSE_BUTTON_LEFT
                 && hoveredSlot != null
                 && nemosInventorySorting$previousHoveredSlot != hoveredSlot;
     }
@@ -373,7 +375,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
             return false;
         }
 
-        nemosInventorySorting$handleDraggingQuickMove(event.input(), hoveredSlot);
+        nemosInventorySorting$handleDraggingQuickMove(PRIMARY_MOUSE_BUTTON, hoveredSlot);
         return true;
     }
 
@@ -429,7 +431,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
         nemosInventorySorting$previousHoveredSlot = null;
         nemosInventorySorting$displayTooltip = true;
 
-        if (nemosInventorySorting$splitQuickMoveHandled && event.button() == 1) {
+        if (nemosInventorySorting$splitQuickMoveHandled && event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             nemosInventorySorting$splitQuickMoveHandled = false;
             cir.setReturnValue(true);
         }

@@ -50,8 +50,8 @@ class ItemSortingFactoryTest {
         var twoItems = containedStack(item, 2);
         var firstContents = mock(ItemContainerContents.class);
         var secondContents = mock(ItemContainerContents.class);
-        when(firstContents.allItemsCopyStream()).thenAnswer(_ -> Stream.of(oneItem));
-        when(secondContents.allItemsCopyStream()).thenAnswer(_ -> Stream.of(twoItems));
+        when(firstContents.itemCopies()).thenAnswer(_ -> Stream.of(oneItem));
+        when(secondContents.itemCopies()).thenAnswer(_ -> Stream.of(twoItems));
         var firstComponents = DataComponentMap.builder().set(container, firstContents).build();
         var secondComponents = DataComponentMap.builder().set(container, secondContents).build();
 
@@ -68,8 +68,8 @@ class ItemSortingFactoryTest {
         var firstContents = mock(ItemContainerContents.class);
         var secondContents = mock(ItemContainerContents.class);
         when(emptyStack.isEmpty()).thenReturn(true);
-        when(firstContents.allItemsCopyStream()).thenAnswer(_ -> Stream.of(itemStack));
-        when(secondContents.allItemsCopyStream()).thenAnswer(_ -> Stream.of(emptyStack, itemStack));
+        when(firstContents.itemCopies()).thenAnswer(_ -> Stream.of(itemStack));
+        when(secondContents.itemCopies()).thenAnswer(_ -> Stream.of(emptyStack, itemStack));
         var firstComponents = DataComponentMap.builder().set(container, firstContents).build();
         var secondComponents = DataComponentMap.builder().set(container, secondContents).build();
 
@@ -86,8 +86,8 @@ class ItemSortingFactoryTest {
         var secondItem = mock(Item.class);
         when(firstItem.getDescriptionId()).thenReturn("minecraft:stone");
         when(secondItem.getDescriptionId()).thenReturn("minecraft:dirt");
-        when(firstContents.allItemsCopyStream()).thenAnswer(_ -> Stream.of(containedStack(firstItem, 1)));
-        when(secondContents.allItemsCopyStream()).thenAnswer(_ -> Stream.of(containedStack(secondItem, 1)));
+        when(firstContents.itemCopies()).thenAnswer(_ -> Stream.of(containedStack(firstItem, 1)));
+        when(secondContents.itemCopies()).thenAnswer(_ -> Stream.of(containedStack(secondItem, 1)));
         var firstComponents = DataComponentMap.builder().set(container, firstContents).build();
         var secondComponents = DataComponentMap.builder().set(container, secondContents).build();
 

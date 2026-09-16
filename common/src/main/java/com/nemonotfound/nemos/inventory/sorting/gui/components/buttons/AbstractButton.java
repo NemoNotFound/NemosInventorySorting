@@ -3,6 +3,7 @@ package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 import com.nemonotfound.nemos.inventory.sorting.gui.components.RecipeBookUpdatable;
 import com.nemonotfound.nemos.inventory.sorting.models.Position;
 import com.nemonotfound.nemos.inventory.sorting.models.Size;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -56,7 +57,7 @@ public abstract class AbstractButton extends AbstractWidget implements RecipeBoo
 
         var minecraft = Minecraft.getInstance();
         playDownSound(minecraft.getSoundManager());
-        onClick(new MouseButtonEvent(0, 0, new MouseButtonInfo(0, 0)), false);
+        onClick(new MouseButtonEvent(0, 0, new MouseButtonInfo(InputConstants.MOUSE_BUTTON_LEFT, 0)), false);
 
         return true;
     }

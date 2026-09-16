@@ -1,6 +1,7 @@
 package com.nemonotfound.nemos.inventory.sorting.mixin;
 
 import com.nemonotfound.nemos.inventory.sorting.helper.FilterBoxGetter;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
@@ -21,7 +22,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -84,7 +84,7 @@ public abstract class ContainerFilterMixin extends Screen implements FilterBoxGe
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (this.nemosInventorySorting$filterBox != null) {
-            if (this.nemosInventorySorting$filterBox.isFocused() && event.key() != GLFW.GLFW_KEY_ESCAPE) {
+            if (this.nemosInventorySorting$filterBox.isFocused() && event.key() != InputConstants.KEY_ESCAPE) {
                 cir.setReturnValue(this.nemosInventorySorting$filterBox.keyPressed(event));
                 return;
             }
@@ -147,7 +147,11 @@ public abstract class ContainerFilterMixin extends Screen implements FilterBoxGe
 
         this.setFocused(optionalGuiEventListener.get());
         this.nemosInventorySorting$filterBox.setFocused(true);
-        this.nemosInventorySorting$filterBox.onClick(new MouseButtonEvent(filterBoxX, filterBoxY, new MouseButtonInfo(0, 0)), false);
+        this.nemosInventorySorting$filterBox.onClick(new MouseButtonEvent(
+                filterBoxX,
+                filterBoxY,
+                new MouseButtonInfo(InputConstants.MOUSE_BUTTON_LEFT, 0)
+        ), false);
         cir.setReturnValue(true);
     }
 

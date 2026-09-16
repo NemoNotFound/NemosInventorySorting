@@ -78,7 +78,7 @@ public class ItemSortingFactory {
             return "<max-depth>";
         }
 
-        var itemStacks = contents.allItemsCopyStream().toList();
+        var itemStacks = contents.itemCopies().toList();
 
         return IntStream.range(0, itemStacks.size())
                 .mapToObj(slot -> slot + ":" + containedItemSortKey(itemStacks.get(slot), containerDepth + 1, itemIdProvider))

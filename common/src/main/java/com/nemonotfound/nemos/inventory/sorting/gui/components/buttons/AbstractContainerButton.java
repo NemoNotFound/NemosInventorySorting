@@ -4,6 +4,7 @@ import com.nemonotfound.nemos.inventory.sorting.models.Position;
 import com.nemonotfound.nemos.inventory.sorting.models.Size;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
 import com.nemonotfound.nemos.inventory.sorting.models.config.SettingsConfig;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -12,7 +13,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.glfw.GLFW;
 
 public abstract class AbstractContainerButton extends AbstractButton {
 
@@ -49,7 +49,7 @@ public abstract class AbstractContainerButton extends AbstractButton {
     }
 
     private void handleShiftKeyEvent(KeyEvent keyEvent) {
-        if (keyEvent.key() == GLFW.GLFW_KEY_LEFT_SHIFT || keyEvent.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+        if (keyEvent.key() == InputConstants.KEY_LSHIFT || keyEvent.key() == InputConstants.KEY_RSHIFT) {
             updateTooltip();
         }
     }

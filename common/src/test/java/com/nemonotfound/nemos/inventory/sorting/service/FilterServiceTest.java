@@ -222,7 +222,7 @@ class FilterServiceTest {
 
         when(itemStack.has(DataComponents.BUNDLE_CONTENTS)).thenReturn(true);
         when(itemStack.get(DataComponents.BUNDLE_CONTENTS)).thenReturn(bundleContents);
-        when(bundleContents.itemCopyStream()).thenReturn(Stream.of(contents));
+        when(bundleContents.itemCopies()).thenReturn(Stream.of(contents));
 
         return itemStack;
     }

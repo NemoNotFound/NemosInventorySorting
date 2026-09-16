@@ -1,8 +1,8 @@
 package com.nemonotfound.nemos.inventory.sorting.client;
 
 import com.nemonotfound.nemos.inventory.sorting.SortingCommonClient;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Supplier;
 
@@ -13,32 +13,32 @@ public class SortingKeyMappings {
 
     public static Supplier<KeyMapping> SORT = registerKeyMapping(new KeyMapping(
             String.format("%s.key.sort", MOD_ID),
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             NEMOS_INVENTORY_SORTING
     ));
     public static Supplier<KeyMapping> MOVE_SAME = registerKeyMapping(new KeyMapping(
             String.format("%s.key.moveSame", MOD_ID),
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             NEMOS_INVENTORY_SORTING
     ));
     public static Supplier<KeyMapping> MOVE_ALL = registerKeyMapping(new KeyMapping(
             String.format("%s.key.moveAll", MOD_ID),
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             NEMOS_INVENTORY_SORTING
     ));
     public static Supplier<KeyMapping> DROP_ALL = registerKeyMapping(new KeyMapping(
             String.format("%s.key.dropAll", MOD_ID),
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             NEMOS_INVENTORY_SORTING
     ));
     public static Supplier<KeyMapping> TOGGLE_FILTER_PERSISTENCE = registerKeyMapping(new KeyMapping(
             String.format("%s.key.toggleFilterPersistence", MOD_ID),
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             NEMOS_INVENTORY_SORTING
     ));
     public static Supplier<KeyMapping> QUICK_SEARCH = registerKeyMapping(new KeyMapping(
             String.format("%s.key.quickSearch", MOD_ID),
-            GLFW.GLFW_KEY_F,
+            InputConstants.KEY_F,
             NEMOS_INVENTORY_SORTING
     ));
 
