@@ -2,11 +2,13 @@ package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 
 import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
 import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
+import com.nemonotfound.nemos.inventory.sorting.models.config.SettingsConfig;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -71,6 +73,16 @@ public class ToggleFilterPersistenceButton extends AbstractButton {
     @Override
     protected KeyMapping getKeyMapping() {
         return SortingKeyMappings.TOGGLE_FILTER_PERSISTENCE.get();
+    }
+
+    @Override
+    public boolean matchesKeyMapping(KeyEvent keyEvent) {
+        return SettingsConfig.INSTANCE.areKeyMappingsEnabled() && super.matchesKeyMapping(keyEvent);
+    }
+
+    @Override
+    public boolean matchesKeyMapping(MouseButtonEvent mouseButtonEvent) {
+        return SettingsConfig.INSTANCE.areKeyMappingsEnabled() && super.matchesKeyMapping(mouseButtonEvent);
     }
 
     @Override

@@ -54,6 +54,16 @@ public class MoveSameButton extends AbstractSingleClickButton {
     }
 
     @Override
+    protected KeyMapping getInventoryKeyMapping() {
+        return SortingKeyMappings.MOVE_SAME_INVENTORY.get();
+    }
+
+    @Override
+    protected KeyMapping getHoverKeyMapping() {
+        return SortingKeyMappings.HOVER_MOVE_SAME.get();
+    }
+
+    @Override
     protected @NotNull List<Integer> getItemSlotsToInteractWith(AbstractContainerMenu menu) {
         var slots = menu.slots;
         var endIndex = getEndIndex();

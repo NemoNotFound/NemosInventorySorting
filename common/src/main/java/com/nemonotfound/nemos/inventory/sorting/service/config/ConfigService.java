@@ -32,30 +32,6 @@ public class ConfigService {
     private static final TypeToken<LockedSlotsConfig> LOCKED_SLOTS_CONFIG_TYPE_TOKEN = new TypeToken<>() {};
     private static final TypeToken<SettingsConfig> SETTINGS_CONFIG_TYPE_TOKEN = new TypeToken<>() {};
 
-    @Deprecated
-    public void migrateLegacyConfigs() {
-        migrateConfig("config.json", COMPONENT_CONFIG_PATH);
-        migrateConfig("filter-config.json", FILTER_CONFIG_PATH);
-        migrateConfig("locked-slots-config.json", LOCKED_SLOTS_CONFIG_PATH);
-        migrateConfig("iron-chest-config.json", IRON_CHEST_COMPONENT_CONFIG_PATH);
-    }
-
-   @Deprecated
-    private void migrateConfig(String legacyFileName, String currentPath) {
-        var legacyPath = Paths.get(CONFIG_DIRECTORY_PATH, legacyFileName);
-        var targetPath = Paths.get(currentPath);
-
-        if (!Files.exists(legacyPath) || Files.exists(targetPath)) {
-            return;
-        }
-
-        try {
-            Files.move(legacyPath, targetPath);
-        } catch (Exception e) {
-            LOGGER.error("An error occurred while migrating config {} to {}:\n", legacyPath, targetPath, e);
-        }
-    }
-
     public <T> void writeConfig(boolean update, String filePath, T config) {
         if (!update && Files.exists(Paths.get(filePath))) {
             return;

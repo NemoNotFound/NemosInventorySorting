@@ -5,10 +5,13 @@ import com.nemonotfound.nemos.inventory.sorting.models.Size;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
 import com.nemonotfound.nemos.inventory.sorting.models.config.SettingsConfig;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -62,6 +65,40 @@ public abstract class AbstractContainerButton extends AbstractButton {
     protected abstract Identifier getButtonHoverTexture();
 
     protected abstract Identifier getButtonTexture();
+
+    protected abstract KeyMapping getInventoryKeyMapping();
+
+    protected abstract KeyMapping getHoverKeyMapping();
+
+    public boolean matchesHoverKeyMapping(KeyEvent keyEvent) {
+        return SettingsConfig.INSTANCE.areHoverKeyMappingsEnabled() && getHoverKeyMapping().matches(keyEvent);
+    }
+
+    public boolean matchesHoverKeyMapping(MouseButtonEvent mouseButtonEvent) {
+        return SettingsConfig.INSTANCE.areHoverKeyMappingsEnabled() && getHoverKeyMapping().matchesMouse(mouseButtonEvent);
+    }
+
+    public void activateKeyMapping() {
+        playDownSound(Minecraft.getInstance().getSoundManager());
+        onClick(new MouseButtonEvent(0, 0, new MouseButtonInfo(InputConstants.MOUSE_BUTTON_LEFT, 0)), false);
+    }
+
+    public void activateKeyMapping(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
+        playDownSound(Minecraft.getInstance().getSoundManager());
+        onClick(mouseButtonEvent, doubleClick);
+    }
+
+    @Override
+    public boolean matchesKeyMapping(KeyEvent keyEvent) {
+        return SettingsConfig.INSTANCE.areContainerKeyMappingsEnabled()
+                && (inventoryButton ? getInventoryKeyMapping() : getKeyMapping()).matches(keyEvent);
+    }
+
+    @Override
+    public boolean matchesKeyMapping(MouseButtonEvent mouseButtonEvent) {
+        return SettingsConfig.INSTANCE.areContainerKeyMappingsEnabled()
+                && (inventoryButton ? getInventoryKeyMapping() : getKeyMapping()).matchesMouse(mouseButtonEvent);
+    }
 
     private void updateTooltip() {
         if (!inventoryButton || !Minecraft.getInstance().hasShiftDown()) {

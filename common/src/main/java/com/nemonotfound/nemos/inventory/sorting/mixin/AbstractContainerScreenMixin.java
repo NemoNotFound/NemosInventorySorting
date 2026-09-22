@@ -160,7 +160,11 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
             cir.setReturnValue(true);
         }
 
-        if (event.hasAltDown() && !((Screen) this instanceof CreativeModeInventoryScreen)) {
+        if (
+                SettingsConfig.INSTANCE.isSlotLockingEnabled()
+                        && event.hasAltDown()
+                        && !((Screen) this instanceof CreativeModeInventoryScreen)
+        ) {
             nemosInventorySorting$displayLockedSlots = true;
         }
     }
@@ -168,8 +172,8 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     @Unique
     private boolean nemosInventorySorting$handleKeyEventForHoveredContainer(KeyEvent event) {
         return nemosInventorySorting$handleKeyEventForHoveredContainer(
-                button -> button.matchesKeyMapping(event),
-                button -> button.keyPressed(event),
+                button -> button.matchesHoverKeyMapping(event),
+                AbstractContainerButton::activateKeyMapping,
                 event.hasShiftDown()
         );
     }
@@ -210,9 +214,10 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
             return false;
         }
 
-        nemosInventorySorting$getHoveredButton(matchingButtons, shiftDown).ifPresent(activate);
+        var hoveredButton = nemosInventorySorting$getHoveredButton(matchingButtons, shiftDown);
+        hoveredButton.ifPresent(activate);
 
-        return true;
+        return hoveredButton.isPresent();
     }
 
     @Unique
@@ -242,8 +247,8 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
                 storageContainer,
                 SettingsConfig.INSTANCE.shouldIncludeHotbar(shiftDown)
         ).flatMap(slotRange -> matchingButtons.stream()
-                        .filter(button -> button.isWithinSlotRange(slotRange))
-                        .findFirst());
+                .filter(button -> button.isWithinSlotRange(slotRange))
+                .findFirst());
     }
 
     @Unique
@@ -278,8 +283,8 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     @Unique
     private boolean nemosInventorySorting$handleKeyEventForHoveredContainer(MouseButtonEvent event, boolean isDoubleClick) {
         return nemosInventorySorting$handleKeyEventForHoveredContainer(
-                button -> button.matchesKeyMapping(event),
-                button -> button.mouseClicked(event, isDoubleClick),
+                button -> button.matchesHoverKeyMapping(event),
+                button -> button.activateKeyMapping(event, isDoubleClick),
                 event.hasShiftDown()
         );
     }
@@ -342,7 +347,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Unique
     private boolean nemosInventorySorting$handleSlotLocking(MouseButtonEvent event) {
-        if (!event.hasAltDown()) {
+        if (!SettingsConfig.INSTANCE.isSlotLockingEnabled() || !event.hasAltDown()) {
             return false;
         }
 
@@ -352,7 +357,11 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Unique
     private boolean nemosInventorySorting$handleDraggingSlotLock(MouseButtonEvent event) {
-        if (!event.hasAltDown() || nemosInventorySorting$previousHoveredSlots.contains(hoveredSlot)) {
+        if (
+                !SettingsConfig.INSTANCE.isSlotLockingEnabled()
+                        || !event.hasAltDown()
+                        || nemosInventorySorting$previousHoveredSlots.contains(hoveredSlot)
+        ) {
             return false;
         }
 
@@ -473,7 +482,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlots(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"))
     void renderHighlightedSlot(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        if (!nemosInventorySorting$displayLockedSlots) {
+        if (!SettingsConfig.INSTANCE.isSlotLockingEnabled() || !nemosInventorySorting$displayLockedSlots) {
             return;
         }
 

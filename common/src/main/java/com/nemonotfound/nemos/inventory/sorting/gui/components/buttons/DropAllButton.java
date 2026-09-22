@@ -42,4 +42,14 @@ public class DropAllButton extends AbstractSingleClickButton {
     protected KeyMapping getKeyMapping() {
         return SortingKeyMappings.DROP_ALL.get();
     }
+
+    @Override
+    protected KeyMapping getInventoryKeyMapping() {
+        return SortingKeyMappings.DROP_ALL_INVENTORY.get();
+    }
+
+    @Override
+    protected KeyMapping getHoverKeyMapping() {
+        return SortingKeyMappings.HOVER_DROP_ALL.get();
+    }
 }

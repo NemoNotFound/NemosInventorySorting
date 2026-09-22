@@ -4,6 +4,7 @@ import com.nemonotfound.nemos.inventory.sorting.helper.FilterBoxGetter;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
+import com.nemonotfound.nemos.inventory.sorting.models.config.SettingsConfig;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
 import com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId;
 import com.nemonotfound.nemos.inventory.sorting.gui.components.FilterBox;
@@ -49,8 +50,10 @@ public abstract class ContainerFilterMixin extends Screen implements FilterBoxGe
     @Unique
     private static final Identifier DIMMED_SLOT = Identifier.fromNamespaceAndPath(MOD_ID, "container/dimmed_slot");
 
-    @Shadow protected int leftPos;
-    @Shadow protected int topPos;
+    @Shadow
+    protected int leftPos;
+    @Shadow
+    protected int topPos;
     @Unique
     private FilterBox nemosInventorySorting$filterBox;
     @Unique
@@ -89,7 +92,12 @@ public abstract class ContainerFilterMixin extends Screen implements FilterBoxGe
                 return;
             }
 
-            if (!this.nemosInventorySorting$filterBox.isFocused() && event.hasControlDownWithQuirk() && QUICK_SEARCH.get().matches(event)) {
+            if (
+                    SettingsConfig.INSTANCE.areKeyMappingsEnabled()
+                            && !this.nemosInventorySorting$filterBox.isFocused()
+                            && event.hasControlDownWithQuirk()
+                            && QUICK_SEARCH.get().matches(event)
+            ) {
                 nemosInventorySorting$handleQuickSearch(cir);
 
                 return;
@@ -120,7 +128,13 @@ public abstract class ContainerFilterMixin extends Screen implements FilterBoxGe
             }
         }
 
-        if (this.nemosInventorySorting$filterBox != null && !this.nemosInventorySorting$filterBox.isFocused() && mouseButtonEvent.hasControlDown() && QUICK_SEARCH.get().matchesMouse(mouseButtonEvent)) {
+        if (
+                SettingsConfig.INSTANCE.areKeyMappingsEnabled()
+                        && this.nemosInventorySorting$filterBox != null
+                        && !this.nemosInventorySorting$filterBox.isFocused()
+                        && mouseButtonEvent.hasControlDown()
+                        && QUICK_SEARCH.get().matchesMouse(mouseButtonEvent)
+        ) {
             nemosInventorySorting$handleQuickSearch(cir);
 
             return;

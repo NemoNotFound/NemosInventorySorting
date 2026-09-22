@@ -45,4 +45,14 @@ public class SortButton extends AbstractContainerButton {
     protected KeyMapping getKeyMapping() {
         return SortingKeyMappings.SORT.get();
     }
+
+    @Override
+    protected KeyMapping getInventoryKeyMapping() {
+        return SortingKeyMappings.SORT_INVENTORY.get();
+    }
+
+    @Override
+    protected KeyMapping getHoverKeyMapping() {
+        return SortingKeyMappings.HOVER_SORT.get();
+    }
 }

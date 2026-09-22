@@ -13,16 +13,35 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.MOD_ID;
+import static com.nemonotfound.nemos.inventory.sorting.models.config.SettingsConfig.INSTANCE;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = MOD_ID)
 public class ClientEvents {
 
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(SortingKeyMappings.SORT.get());
-        event.register(SortingKeyMappings.MOVE_SAME.get());
-        event.register(SortingKeyMappings.MOVE_ALL.get());
-        event.register(SortingKeyMappings.DROP_ALL.get());
+        if (!INSTANCE.areKeyMappingsEnabled()) {
+            return;
+        }
+
+        if (INSTANCE.areHoverKeyMappingsEnabled()) {
+            event.register(SortingKeyMappings.HOVER_SORT.get());
+            event.register(SortingKeyMappings.HOVER_MOVE_SAME.get());
+            event.register(SortingKeyMappings.HOVER_MOVE_ALL.get());
+            event.register(SortingKeyMappings.HOVER_DROP_ALL.get());
+        }
+
+        if (INSTANCE.areContainerKeyMappingsEnabled()) {
+            event.register(SortingKeyMappings.SORT.get());
+            event.register(SortingKeyMappings.SORT_INVENTORY.get());
+            event.register(SortingKeyMappings.MOVE_SAME.get());
+            event.register(SortingKeyMappings.MOVE_SAME_INVENTORY.get());
+            event.register(SortingKeyMappings.MOVE_ALL.get());
+            event.register(SortingKeyMappings.MOVE_ALL_INVENTORY.get());
+            event.register(SortingKeyMappings.DROP_ALL.get());
+            event.register(SortingKeyMappings.DROP_ALL_INVENTORY.get());
+        }
+
         event.register(SortingKeyMappings.TOGGLE_FILTER_PERSISTENCE.get());
         event.register(SortingKeyMappings.QUICK_SEARCH.get());
     }

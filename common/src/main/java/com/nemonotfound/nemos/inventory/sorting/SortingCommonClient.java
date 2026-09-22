@@ -23,10 +23,7 @@ public class SortingCommonClient {
     public static void init() {
         Constants.LOGGER.info("I guess your chests are just as messy as mine, huh?");
 
-        SortingKeymappingCategories.init();
-        SortingKeyMappings.init();
         DefaultConfigs.setupDefaultConfigs();
-        ConfigService.INSTANCE.migrateLegacyConfigs();
 
         ConfigService.INSTANCE.writeConfig(false, COMPONENT_CONFIG_PATH, DEFAULT_COMPONENT_CONFIGS);
         ConfigService.INSTANCE.writeConfig(false, GENERAL_CONFIG_PATH, SettingsConfig.INSTANCE);
@@ -40,5 +37,8 @@ public class SortingCommonClient {
         ConfigService.loadFilterConfig();
         ConfigService.loadLockedSlotsConfig();
         ConfigService.loadSettingsConfig();
+
+        SortingKeymappingCategories.init();
+        SortingKeyMappings.init();
     }
 }

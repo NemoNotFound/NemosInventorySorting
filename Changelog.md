@@ -1,20 +1,12 @@
-# Changelog v1.22
+# Changelog v1.22.1
 
 ## Additions
-- Added back revised scroll-transfer
-  - If you encounter bugs, please let me know
-- Shift-scroll can transfer the last item from a source slot
+- Added separate keybinds for containers, the player inventory and the hovered inventory
 - Added settings
-  - `includeHotbarByDefault`
-  - `enableDragQuickMove`
-  - `enableSplitQuickMove`
-  - `enableScrollTransfer`
-  - `enableSlotLocking`
-
-## Changes
-- Sort, move, and drop keybinds now act on hovered container
-- Sorting now by item component and NBT data, including tropical fish variants
-- Container items such as shulker boxes are sorted by their contents
+  - `enableKeyMappings`
+  - `enableHoverKeyMappings`
+  - `enableContainerKeyMappings`
 
 ## Fixes
-- Sorting didn't sort by count properly
+- `enableSlotLocking` didn't disable slot locking
+- Hover keybinds blocked other inputs when no valid inventory was hovered
