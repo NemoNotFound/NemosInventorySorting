@@ -35,4 +35,14 @@ public class MoveAllButton extends AbstractSingleClickButton<MoveAllButton> {
     protected KeyMapping getKeyMapping() {
         return ModKeyMappings.MOVE_ALL.get();
     }
+
+    @Override
+    protected KeyMapping getInventoryKeyMapping() {
+        return ModKeyMappings.MOVE_ALL_INVENTORY.get();
+    }
+
+    @Override
+    protected KeyMapping getHoverKeyMapping() {
+        return ModKeyMappings.HOVER_MOVE_ALL.get();
+    }
 }

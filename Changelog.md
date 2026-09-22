@@ -1,4 +1,8 @@
-# Changelog v1.14.5
+# Changelog v1.22.1
 
-## Fixes
-- Fixed issues with sorting
+## Additions
+- Added separate keybinds for containers, the player inventory and the hovered inventory
+- Added settings
+  - `enableKeyMappings`
+  - `enableHoverKeyMappings`
+  - `enableContainerKeyMappings`

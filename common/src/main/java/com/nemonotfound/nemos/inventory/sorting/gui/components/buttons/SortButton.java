@@ -38,4 +38,14 @@ public class SortButton extends AbstractInventoryButton {
     protected KeyMapping getKeyMapping() {
         return ModKeyMappings.SORT.get();
     }
+
+    @Override
+    protected KeyMapping getInventoryKeyMapping() {
+        return ModKeyMappings.SORT_INVENTORY.get();
+    }
+
+    @Override
+    protected KeyMapping getHoverKeyMapping() {
+        return ModKeyMappings.HOVER_SORT.get();
+    }
 }

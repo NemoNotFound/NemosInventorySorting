@@ -13,6 +13,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import static com.nemonotfound.nemos.inventory.sorting.Constants.MOD_ID;
+import static com.nemonotfound.nemos.inventory.sorting.config.model.SettingsConfig.INSTANCE;
 
 @Mod(MOD_ID)
 public class NemosInventorySortingForge {
@@ -46,10 +47,28 @@ public class NemosInventorySortingForge {
     }
 
     private void registerKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(ModKeyMappings.SORT.get());
-        event.register(ModKeyMappings.MOVE_SAME.get());
-        event.register(ModKeyMappings.MOVE_ALL.get());
-        event.register(ModKeyMappings.DROP_ALL.get());
+        if (!INSTANCE.areKeyMappingsEnabled()) {
+            return;
+        }
+
+        if (INSTANCE.areHoverKeyMappingsEnabled()) {
+            event.register(ModKeyMappings.HOVER_SORT.get());
+            event.register(ModKeyMappings.HOVER_MOVE_SAME.get());
+            event.register(ModKeyMappings.HOVER_MOVE_ALL.get());
+            event.register(ModKeyMappings.HOVER_DROP_ALL.get());
+        }
+
+        if (INSTANCE.areContainerKeyMappingsEnabled()) {
+            event.register(ModKeyMappings.SORT.get());
+            event.register(ModKeyMappings.SORT_INVENTORY.get());
+            event.register(ModKeyMappings.MOVE_SAME.get());
+            event.register(ModKeyMappings.MOVE_SAME_INVENTORY.get());
+            event.register(ModKeyMappings.MOVE_ALL.get());
+            event.register(ModKeyMappings.MOVE_ALL_INVENTORY.get());
+            event.register(ModKeyMappings.DROP_ALL.get());
+            event.register(ModKeyMappings.DROP_ALL_INVENTORY.get());
+        }
+
         event.register(ModKeyMappings.TOGGLE_FILTER_PERSISTENCE.get());
         event.register(ModKeyMappings.QUICK_SEARCH.get());
     }

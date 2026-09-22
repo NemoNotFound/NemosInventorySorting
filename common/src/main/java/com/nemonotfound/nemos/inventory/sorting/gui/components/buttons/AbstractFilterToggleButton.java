@@ -1,6 +1,7 @@
 package com.nemonotfound.nemos.inventory.sorting.gui.components.buttons;
 
 import com.nemonotfound.nemos.inventory.sorting.config.model.FilterConfig;
+import com.nemonotfound.nemos.inventory.sorting.config.model.SettingsConfig;
 import com.nemonotfound.nemos.inventory.sorting.gui.components.RecipeBookUpdatable;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -50,6 +51,10 @@ public abstract class AbstractFilterToggleButton extends AbstractWidget implemen
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (!SettingsConfig.INSTANCE.areKeyMappingsEnabled()) {
+            return super.keyPressed(keyCode, scanCode, modifiers);
+        }
+
         var minecraft = Minecraft.getInstance();
         var isKeyPressed = Arrays.stream(minecraft.options.keyMappings)
                 .filter(keyMapping -> keyMapping.same(getKeyMapping()))
@@ -67,6 +72,10 @@ public abstract class AbstractFilterToggleButton extends AbstractWidget implemen
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!SettingsConfig.INSTANCE.areKeyMappingsEnabled()) {
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+
         var minecraft = Minecraft.getInstance();
         var isKeyPressed = Arrays.stream(minecraft.options.keyMappings)
                 .filter(keyMapping -> keyMapping.same(getKeyMapping()))

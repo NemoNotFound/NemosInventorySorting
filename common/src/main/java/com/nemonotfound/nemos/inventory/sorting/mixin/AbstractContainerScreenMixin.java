@@ -198,7 +198,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
                 return;
             }
 
-            if (!this.nemosInventorySorting$filterBox.isFocused() && hasControlDown() && keyCode == 70) {
+            if (SettingsConfig.INSTANCE.areKeyMappingsEnabled() && !this.nemosInventorySorting$filterBox.isFocused() && hasControlDown() && keyCode == 70) {
                 nemosInventorySorting$handleQuickSearch(cir);
 
                 return;
@@ -207,6 +207,12 @@ public abstract class AbstractContainerScreenMixin extends Screen {
 
         if (nemosInventorySorting$handleHoveredKey(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
+            return;
+        }
+
+        if (nemosInventorySorting$triggerActionOnWidget(widget -> widget.keyPressed(keyCode, scanCode, modifiers))) {
+            cir.setReturnValue(true);
+            return;
         }
 
         if (SettingsConfig.INSTANCE.isSlotLockingEnabled() && hasAltDown()) {
@@ -227,7 +233,10 @@ public abstract class AbstractContainerScreenMixin extends Screen {
                 .filter(AbstractInventoryButton.class::isInstance)
                 .map(AbstractInventoryButton.class::cast)
                 .filter(button -> button.matchesKey(keyCode, scanCode) && button.matchesSlotRange(range.startIndex(), range.endIndex()))
-                .findFirst().map(button -> button.keyPressed(keyCode, scanCode, modifiers)).orElse(false);
+                .findFirst().map(button -> {
+                    button.activateHoverKeyMapping();
+                    return true;
+                }).orElse(false);
     }
 
     @Override
@@ -254,7 +263,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
             }
         }
 
-        if (this.nemosInventorySorting$filterBox != null && !this.nemosInventorySorting$filterBox.isFocused() && hasControlDown() && QUICK_SEARCH.get().matchesMouse(button)) {
+        if (SettingsConfig.INSTANCE.areKeyMappingsEnabled() && this.nemosInventorySorting$filterBox != null && !this.nemosInventorySorting$filterBox.isFocused() && hasControlDown() && QUICK_SEARCH.get().matchesMouse(button)) {
             nemosInventorySorting$handleQuickSearch(cir);
 
             return;
@@ -288,7 +297,10 @@ public abstract class AbstractContainerScreenMixin extends Screen {
         return nemosInventorySorting$widgets.stream().filter(AbstractInventoryButton.class::isInstance)
                 .map(AbstractInventoryButton.class::cast)
                 .filter(button -> button.matchesMouse(mouseButton) && button.matchesSlotRange(range.startIndex(), range.endIndex()))
-                .findFirst().map(button -> button.mouseClicked(0, 0, mouseButton)).orElse(false);
+                .findFirst().map(button -> {
+                    button.activateHoverKeyMapping();
+                    return true;
+                }).orElse(false);
     }
 
     @Inject(method = "mouseDragged", at = @At("HEAD"), cancellable = true)

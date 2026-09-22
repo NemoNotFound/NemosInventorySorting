@@ -44,9 +44,13 @@ public abstract class AbstractInventoryButton extends AbstractWidget implements 
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (!SettingsConfig.INSTANCE.areContainerKeyMappingsEnabled()) {
+            return super.keyPressed(keyCode, scanCode, modifiers);
+        }
+
         var minecraft = Minecraft.getInstance();
         var isKeyPressed = Arrays.stream(minecraft.options.keyMappings)
-                .filter(keyMapping -> keyMapping.same(getKeyMapping()))
+                .filter(keyMapping -> keyMapping.same(getContainerKeyMapping()))
                 .anyMatch(keyMapping -> keyMapping.matches(keyCode, scanCode));
 
         if (!isKeyPressed) {
@@ -66,9 +70,13 @@ public abstract class AbstractInventoryButton extends AbstractWidget implements 
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!SettingsConfig.INSTANCE.areContainerKeyMappingsEnabled()) {
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+
         var minecraft = Minecraft.getInstance();
         var isKeyPressed = Arrays.stream(minecraft.options.keyMappings)
-                .filter(keyMapping -> keyMapping.same(getKeyMapping()))
+                .filter(keyMapping -> keyMapping.same(getContainerKeyMapping()))
                 .anyMatch(keyMapping -> keyMapping.matchesMouse(button));
 
         if (!isKeyPressed) {
@@ -83,12 +91,26 @@ public abstract class AbstractInventoryButton extends AbstractWidget implements 
 
     protected abstract KeyMapping getKeyMapping();
 
+    protected abstract KeyMapping getInventoryKeyMapping();
+
+    protected abstract KeyMapping getHoverKeyMapping();
+
+    private KeyMapping getContainerKeyMapping() {
+        return isInventoryButton ? getInventoryKeyMapping() : getKeyMapping();
+    }
+
     public boolean matchesKey(int keyCode, int scanCode) {
-        return getKeyMapping().matches(keyCode, scanCode);
+        return SettingsConfig.INSTANCE.areHoverKeyMappingsEnabled() && getHoverKeyMapping().matches(keyCode, scanCode);
     }
 
     public boolean matchesMouse(int button) {
-        return getKeyMapping().matchesMouse(button);
+        return SettingsConfig.INSTANCE.areHoverKeyMappingsEnabled() && getHoverKeyMapping().matchesMouse(button);
+    }
+
+    public void activateHoverKeyMapping() {
+        var minecraft = Minecraft.getInstance();
+        playDownSound(minecraft.getSoundManager());
+        onClick(0, 0);
     }
 
     @Override

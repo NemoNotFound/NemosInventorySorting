@@ -9,6 +9,9 @@ public class SettingsConfig {
     private boolean enableSplitQuickMove = true;
     private boolean enableScrollTransfer = true;
     private boolean enableSlotLocking = true;
+    private Boolean enableKeyMappings = true;
+    private Boolean enableHoverKeyMappings = true;
+    private Boolean enableContainerKeyMappings = true;
 
     private SettingsConfig() {
     }
@@ -35,5 +38,17 @@ public class SettingsConfig {
 
     public boolean isSlotLockingEnabled() {
         return enableSlotLocking;
+    }
+
+    public boolean areKeyMappingsEnabled() {
+        return enableKeyMappings == null || enableKeyMappings;
+    }
+
+    public boolean areHoverKeyMappingsEnabled() {
+        return areKeyMappingsEnabled() && (enableHoverKeyMappings == null || enableHoverKeyMappings);
+    }
+
+    public boolean areContainerKeyMappingsEnabled() {
+        return areKeyMappingsEnabled() && (enableContainerKeyMappings == null || enableContainerKeyMappings);
     }
 }

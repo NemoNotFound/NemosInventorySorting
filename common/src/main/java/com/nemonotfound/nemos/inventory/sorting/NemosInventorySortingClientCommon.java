@@ -18,7 +18,6 @@ public class NemosInventorySortingClientCommon {
 
     public static void init() {
         Constants.LOG.info("Thank you for using Nemo's Inventory Sorting!");
-        ModKeyMappings.init();
         DefaultConfigs.setupDefaultConfigs();
 
         ConfigService.getInstance().migrateLegacyConfigs();
@@ -29,6 +28,7 @@ public class NemosInventorySortingClientCommon {
 
         ConfigService.getInstance().loadSettingsConfig();
         ConfigService.getInstance().loadLockedSlotsConfig();
+        ModKeyMappings.init();
 
         if (MOD_LOADER_HELPER.isModLoaded("ironchest")) {
             ConfigService.getInstance().writeConfig(false, IRON_CHEST_COMPONENT_CONFIG_PATH, DEFAULT_IRON_CHEST_COMPONENT_CONFIGS);
