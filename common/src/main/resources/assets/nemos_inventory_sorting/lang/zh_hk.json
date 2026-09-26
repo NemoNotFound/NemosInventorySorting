@@ -12,7 +12,7 @@
   "nemos_inventory_sorting.gui.toggleFilterPersistence.toggleOn": "啟用篩選器持續生效",
   "nemos_inventory_sorting.gui.toggleFilterPersistence.toggleOff": "停用篩選器持續生效",
   "nemos_inventory_sorting.itemFilter": "篩選物品",
-  "nemos_inventory_sorting.gui.inventory.itemFilter": "篩選...",
+  "nemos_inventory_sorting.gui.inventory.itemFilter": "篩選⋯⋯",
   "nemos_inventory_sorting.resourcePack.darkMode.name": "深色模式",
   "nemos_inventory_sorting.resourcePack.darkMode.description": "深色按鈕",
   "key.category.nemos_inventory_sorting.nemos_inventory_sorting": "Nemo's Inventory Sorting",
