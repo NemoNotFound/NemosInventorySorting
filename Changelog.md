@@ -1,12 +1,4 @@
-# Changelog v1.22.1
+# Changelog v1.21.4
 
-## Additions
-- Added separate keybinds for containers, the player inventory and the hovered inventory
-- Added settings
-  - `enableKeyMappings`
-  - `enableHoverKeyMappings`
-  - `enableContainerKeyMappings`
-
-## Fixes
-- `enableSlotLocking` didn't disable slot locking
-- Hover keybinds blocked other inputs when no valid inventory was hovered
+## Changes
+- Adapted sorting logic to be able to sort modded bundles/backpacks properly (hope I didn't break anything)
