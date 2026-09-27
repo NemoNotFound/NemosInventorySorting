@@ -1,13 +1,8 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
-import com.nemonotfound.nemos.inventory.sorting.SortingCommonClient;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 import static com.nemonotfound.nemos.inventory.sorting.service.ContainerInputService.PRIMARY_MOUSE_BUTTON;
 import static com.nemonotfound.nemos.inventory.sorting.service.ContainerInputService.SECONDARY_MOUSE_BUTTON;
