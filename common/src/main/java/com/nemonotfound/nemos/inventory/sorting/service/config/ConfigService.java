@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
 import com.nemonotfound.nemos.inventory.sorting.enums.config.ConfigId;
+import com.nemonotfound.nemos.inventory.sorting.models.config.ContainerLockedSlotsConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.LockedSlotsConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.SettingsConfig;
 
@@ -30,6 +31,7 @@ public class ConfigService {
     private static final TypeToken<List<ComponentConfig>> COMPONENT_CONFIG_TYPE = new TypeToken<>() {};
     private static final TypeToken<FilterConfig> FILTER_CONFIG_TYPE_TOKEN = new TypeToken<>() {};
     private static final TypeToken<LockedSlotsConfig> LOCKED_SLOTS_CONFIG_TYPE_TOKEN = new TypeToken<>() {};
+    private static final TypeToken<ContainerLockedSlotsConfig> LOCKED_CONTAINER_SLOTS_CONFIG_TYPE_TOKEN = new TypeToken<>() {};
     private static final TypeToken<SettingsConfig> SETTINGS_CONFIG_TYPE_TOKEN = new TypeToken<>() {};
 
     @Deprecated
@@ -84,6 +86,14 @@ public class ConfigService {
 
     public static void loadLockedSlotsConfig() {
         LockedSlotsConfig.INSTANCE = readOrDefault(LOCKED_SLOTS_CONFIG_PATH, LOCKED_SLOTS_CONFIG_TYPE_TOKEN, LockedSlotsConfig.INSTANCE);
+    }
+
+    public static void loadContainerLockedSlotsConfig() {
+        var config = readOrDefault(LOCKED_CONTAINER_SLOTS_CONFIG_PATH, LOCKED_CONTAINER_SLOTS_CONFIG_TYPE_TOKEN, ContainerLockedSlotsConfig.INSTANCE);
+
+        if (config != null) {
+            ContainerLockedSlotsConfig.INSTANCE = config;
+        }
     }
 
     public static void loadSettingsConfig() {

@@ -3,6 +3,7 @@ package com.nemonotfound.nemos.inventory.sorting;
 import com.nemonotfound.nemos.inventory.sorting.client.SortingKeymappingCategories;
 import com.nemonotfound.nemos.inventory.sorting.client.SortingKeyMappings;
 import com.nemonotfound.nemos.inventory.sorting.config.DefaultConfigs;
+import com.nemonotfound.nemos.inventory.sorting.models.config.ContainerLockedSlotsConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.FilterConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.LockedSlotsConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.SettingsConfig;
@@ -32,6 +33,7 @@ public class SortingCommonClient {
         ConfigService.INSTANCE.writeConfig(false, GENERAL_CONFIG_PATH, SettingsConfig.INSTANCE);
         ConfigService.INSTANCE.writeConfig(false, FILTER_CONFIG_PATH, FilterConfig.INSTANCE);
         ConfigService.INSTANCE.writeConfig(false, LOCKED_SLOTS_CONFIG_PATH, LockedSlotsConfig.INSTANCE);
+        ConfigService.INSTANCE.writeConfig(false, LOCKED_CONTAINER_SLOTS_CONFIG_PATH, ContainerLockedSlotsConfig.INSTANCE);
 
         if (MOD_LOADER_HELPER.isModLoaded("ironchest")) {
             ConfigService.INSTANCE.writeConfig(false, IRON_CHEST_COMPONENT_CONFIG_PATH, DEFAULT_IRON_CHEST_COMPONENT_CONFIGS);
@@ -39,6 +41,7 @@ public class SortingCommonClient {
 
         ConfigService.loadFilterConfig();
         ConfigService.loadLockedSlotsConfig();
+        ConfigService.loadContainerLockedSlotsConfig();
         ConfigService.loadSettingsConfig();
     }
 }

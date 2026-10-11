@@ -15,10 +15,12 @@ import com.nemonotfound.nemos.inventory.sorting.models.Position;
 import com.nemonotfound.nemos.inventory.sorting.models.Size;
 import com.nemonotfound.nemos.inventory.sorting.models.SlotRange;
 import com.nemonotfound.nemos.inventory.sorting.models.config.ComponentConfig;
+import com.nemonotfound.nemos.inventory.sorting.models.config.ContainerLockedSlotsConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.LockedSlotsConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.SettingsConfig;
 import com.nemonotfound.nemos.inventory.sorting.service.HoveredSlotRangeService;
 import com.nemonotfound.nemos.inventory.sorting.service.InventoryService;
+import com.nemonotfound.nemos.inventory.sorting.service.LockedSlotService;
 import com.nemonotfound.nemos.inventory.sorting.service.ScrollTransferService;
 import com.nemonotfound.nemos.inventory.sorting.service.config.ConfigService;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -45,6 +47,13 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.ShulkerBoxMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmokerMenu;
+import net.minecraft.world.Container;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -119,6 +128,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     @Inject(method = "init", at = @At(value = "TAIL"))
     public void init(CallbackInfo ci) {
         nemosInventorySorting$setSlotIndexes();
+        nemosInventorySorting$setCurrentContainerKey();
         nemosInventorySorting$initButtons();
     }
 
@@ -126,6 +136,62 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
     private void nemosInventorySorting$setSlotIndexes() {
         nemosInventorySorting$inventoryEndIndex = nemosInventorySorting$getMenu().slots.size() - 9;
         nemosInventorySorting$containerSize = nemosInventorySorting$inventoryEndIndex - 27;
+    }
+
+    @Inject(method = "removed", at = @At("HEAD"))
+    private void nemosInventorySorting$onRemoved(CallbackInfo ci) {
+        ContainerLockedSlotsConfig.INSTANCE.setCurrentContainerKey(null);
+    }
+
+    @Unique
+    private void nemosInventorySorting$setCurrentContainerKey() {
+        var key = nemosInventorySorting$shouldHaveStorageContainerButtons() ? nemosInventorySorting$resolveContainerKey() : null;
+
+        ContainerLockedSlotsConfig.INSTANCE.setCurrentContainerKey(key);
+    }
+
+    /**
+     * Identifies the opened container. Placed containers are identified by dimension + block position
+     * (double chests by their lowest half), entities (chest minecarts, chest boats, ...) by UUID and the
+     * ender chest is shared by all positions. Returns null when the container cannot be identified.
+     */
+    @Unique
+    private @Nullable String nemosInventorySorting$resolveContainerKey() {
+        if (minecraft == null || minecraft.level == null) {
+            return null;
+        }
+
+        var hitResult = minecraft.hitResult;
+
+        if (hitResult instanceof EntityHitResult entityHit && entityHit.getEntity() instanceof Container) {
+            return "entity:" + entityHit.getEntity().getUUID();
+        }
+
+        if (!(hitResult instanceof BlockHitResult blockHit)) {
+            return null;
+        }
+
+        var level = minecraft.level;
+        var pos = blockHit.getBlockPos();
+        var state = level.getBlockState(pos);
+
+        if (state.is(Blocks.ENDER_CHEST)) {
+            return "ender_chest";
+        }
+
+        if (state.getBlock() instanceof ChestBlock && state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
+            BlockPos other = pos.relative(ChestBlock.getConnectedDirection(state));
+
+            if (other.asLong() < pos.asLong()) {
+                pos = other;
+            }
+        }
+
+        if (!(level.getBlockEntity(pos) instanceof Container)) {
+            return null;
+        }
+
+        return level.dimension() + "@" + pos.getX() + "," + pos.getY() + "," + pos.getZ();
     }
 
     @Unique
@@ -304,7 +370,8 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
     private void mouseScrolled(double x, double y, double scrollX, double scrollY, CallbackInfoReturnable<Boolean> cir) {
-        if (!SettingsConfig.INSTANCE.isScrollTransferEnabled() || hoveredSlot == null) {
+        if (!SettingsConfig.INSTANCE.isScrollTransferEnabled() || hoveredSlot == null
+                || nemosInventorySorting$isLockedSlot(hoveredSlot.index)) {
             return;
         }
 
@@ -322,7 +389,8 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
         return SettingsConfig.INSTANCE.isSplitQuickMoveEnabled()
                 && event.hasShiftDown()
                 && event.button() == 1
-                && hoveredSlot != null;
+                && hoveredSlot != null
+                && !nemosInventorySorting$isLockedSlot(hoveredSlot.index);
     }
 
     @Unique
@@ -364,6 +432,7 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
                 && event.hasShiftDown()
                 && event.button() == 0
                 && hoveredSlot != null
+                && !nemosInventorySorting$isLockedSlot(hoveredSlot.index)
                 && nemosInventorySorting$previousHoveredSlot != hoveredSlot;
     }
 
@@ -448,6 +517,13 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
             return;
         }
 
+        if (nemosInventorySorting$isLockableContainerSlot(hoveredSlot.index)) {
+            ContainerLockedSlotsConfig.INSTANCE.toggle(hoveredSlot.index);
+            ConfigService.INSTANCE.writeConfig(true, LOCKED_CONTAINER_SLOTS_CONFIG_PATH, ContainerLockedSlotsConfig.INSTANCE);
+            nemosInventorySorting$previousHoveredSlots.add(hoveredSlot);
+            return;
+        }
+
         var index = hoveredSlot.index - nemosInventorySorting$getInventoryStartIndex();
         var lockedSlot = new LockedSlot(index);
 
@@ -459,8 +535,40 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
         nemosInventorySorting$previousHoveredSlots.add(hoveredSlot);
     }
 
+    @Inject(method = "slotClicked", at = @At("HEAD"), cancellable = true)
+    private void nemosInventorySorting$blockLockedSlotClicks(@Nullable Slot slot, int slotId, int mouseButton, ContainerInput containerInput, CallbackInfo ci) {
+        if (slot != null && nemosInventorySorting$isLockedSlot(slot.index)) {
+            ci.cancel();
+        }
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$isLockedSlot(int index) {
+        if ((Screen) this instanceof CreativeModeInventoryScreen || !nemosInventorySorting$isLockableSlot(index)) {
+            return false;
+        }
+
+        if (nemosInventorySorting$isLockableContainerSlot(index)) {
+            return ContainerLockedSlotsConfig.INSTANCE.isLocked(index);
+        }
+
+        return LockedSlotService.INSTANCE.isLocked(index, nemosInventorySorting$getInventoryStartIndex());
+    }
+
+    @Unique
+    private boolean nemosInventorySorting$isLockableContainerSlot(int index) {
+        return !(nemosInventorySorting$getMenu() instanceof InventoryMenu)
+                && ContainerLockedSlotsConfig.INSTANCE.hasCurrentContainer()
+                && index >= 0
+                && index < nemosInventorySorting$containerSize;
+    }
+
     @Unique
     private boolean nemosInventorySorting$isLockableSlot(int index) { //TODO: Put into LockedService
+        if (nemosInventorySorting$isLockableContainerSlot(index)) {
+            return true;
+        }
+
         var menu = nemosInventorySorting$getMenu();
         var isInventoryMenu = menu instanceof InventoryMenu;
         var isLockableInventoryIndex = index >= InventoryMenu.INV_SLOT_START && index < InventoryMenu.USE_ROW_SLOT_END;
@@ -471,8 +579,16 @@ public abstract class AbstractContainerScreenMixin extends Screen implements Sor
 
     @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlots(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"))
     void renderHighlightedSlot(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        if (!nemosInventorySorting$displayLockedSlots) {
+        if ((Screen) this instanceof CreativeModeInventoryScreen) {
             return;
+        }
+
+        for (int containerIndex : ContainerLockedSlotsConfig.INSTANCE.getLockedSlots()) {
+            if (containerIndex < nemosInventorySorting$containerSize) {
+                var slot = nemosInventorySorting$getMenu().getSlot(containerIndex);
+
+                guiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, LOCKED_SLOT, slot.x, slot.y, 16, 16);
+            }
         }
 
         for (LockedSlot lockedSlot : LockedSlotsConfig.INSTANCE.getLockedSlots()) {

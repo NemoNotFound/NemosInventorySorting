@@ -1,5 +1,6 @@
 package com.nemonotfound.nemos.inventory.sorting.service;
 
+import com.nemonotfound.nemos.inventory.sorting.models.config.ContainerLockedSlotsConfig;
 import com.nemonotfound.nemos.inventory.sorting.models.config.LockedSlotsConfig;
 
 import java.util.List;
@@ -23,7 +24,12 @@ public class LockedSlotService {
     }
 
     public boolean isLocked(int index, int startIndex) {
-        return startIndex != 0 && lockedSlotsConfig.getLockedSlots().stream()
+        if (startIndex == 0) {
+            // Container range: slot indexes are container-relative and stored per opened container
+            return ContainerLockedSlotsConfig.INSTANCE.isLocked(index);
+        }
+
+        return lockedSlotsConfig.getLockedSlots().stream()
                 .anyMatch(slot -> slot.index() + startIndex == index);
     }
 }

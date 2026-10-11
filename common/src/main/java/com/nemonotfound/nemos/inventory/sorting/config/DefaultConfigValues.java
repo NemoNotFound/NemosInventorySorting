@@ -9,6 +9,7 @@ public class DefaultConfigValues {
     public static final String GENERAL_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "general.json";
     public static final String FILTER_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "filter.json";
     public static final String LOCKED_SLOTS_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "locked-slots.json";
+    public static final String LOCKED_CONTAINER_SLOTS_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "locked-container-slots.json";
     public static final String IRON_CHEST_COMPONENT_CONFIG_PATH = CONFIG_DIRECTORY_PATH + "iron-chest-components.json";
 
     public static int RIGHT_X_OFFSET_SORT_STORAGE_CONTAINER = -61;
