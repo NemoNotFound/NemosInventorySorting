@@ -17,6 +17,9 @@
     "entrypoints": {
         "client": [
             "com.nemonotfound.nemos.inventory.sorting.SortingClientFabric"
+        ],
+        "fabric-datagen": [
+            "com.nemonotfound.nemos.inventory.sorting.DataGenerator"
         ]
     },
     "mixins": [
@@ -35,4 +38,3 @@
     },
     "accessWidener": "nemos_inventory_sorting.accesswidener"
 }
-  

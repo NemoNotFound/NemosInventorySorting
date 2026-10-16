@@ -1,0 +1,49 @@
+package com.nemonotfound.nemos.inventory.sorting.datagen.language;
+
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
+import net.minecraft.core.HolderLookup;
+import org.jspecify.annotations.NonNull;
+
+import java.util.concurrent.CompletableFuture;
+
+public class SimplifiedChineseProvider extends FabricLanguageProvider {
+    public SimplifiedChineseProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, "zh_cn", registries);
+    }
+
+    @Override
+    public void generateTranslations(HolderLookup.@NonNull Provider registries, TranslationBuilder translationBuilder) {
+        translationBuilder.add("nemos_inventory_sorting.gui.sortButton", "整理");
+        translationBuilder.add("nemos_inventory_sorting.gui.dropAll", "全部丢弃");
+        translationBuilder.add("nemos_inventory_sorting.gui.dropAllShift", "全部丢弃（包括快捷栏）");
+        translationBuilder.add("nemos_inventory_sorting.gui.moveSame", "移动同类物品");
+        translationBuilder.add("nemos_inventory_sorting.gui.moveSameShift", "移动同类物品（包括快捷栏）");
+        translationBuilder.add("nemos_inventory_sorting.gui.moveAll", "移动全部");
+        translationBuilder.add("nemos_inventory_sorting.gui.moveAllShift", "移动全部（包括快捷栏）");
+        translationBuilder.add("nemos_inventory_sorting.gui.includeHotbar", "（包括快捷栏）");
+        translationBuilder.add("nemos_inventory_sorting.gui.excludeHotbar", "（不包括快捷栏）");
+        translationBuilder.add("nemos_inventory_sorting.gui.toggleFilterPersistence", "切换筛选器持续生效");
+        translationBuilder.add("nemos_inventory_sorting.gui.toggleFilterPersistence.toggleOn", "启用筛选器持续生效");
+        translationBuilder.add("nemos_inventory_sorting.gui.toggleFilterPersistence.toggleOff", "停用筛选器持续生效");
+        translationBuilder.add("nemos_inventory_sorting.itemFilter", "筛选物品");
+        translationBuilder.add("nemos_inventory_sorting.gui.inventory.itemFilter", "筛选…");
+        translationBuilder.add("nemos_inventory_sorting.resourcePack.darkMode.name", "深色模式");
+        translationBuilder.add("nemos_inventory_sorting.resourcePack.darkMode.description", "深色按钮");
+        translationBuilder.add("key.category.nemos_inventory_sorting.nemos_inventory_sorting", "Nemo's Inventory Sorting");
+        translationBuilder.add("nemos_inventory_sorting.key.hoverDropAll", "全部丢弃（鼠标悬停）");
+        translationBuilder.add("nemos_inventory_sorting.key.hoverMoveAll", "移动全部（鼠标悬停）");
+        translationBuilder.add("nemos_inventory_sorting.key.hoverMoveSame", "移动同类物品（鼠标悬停）");
+        translationBuilder.add("nemos_inventory_sorting.key.hoverSort", "整理（鼠标悬停）");
+        translationBuilder.add("nemos_inventory_sorting.key.dropAll", "全部丢弃（容器）");
+        translationBuilder.add("nemos_inventory_sorting.key.dropAllInventory", "全部丢弃（物品栏）");
+        translationBuilder.add("nemos_inventory_sorting.key.moveAll", "移动全部（容器）");
+        translationBuilder.add("nemos_inventory_sorting.key.moveAllInventory", "移动全部（物品栏）");
+        translationBuilder.add("nemos_inventory_sorting.key.moveSame", "移动同类物品（容器）");
+        translationBuilder.add("nemos_inventory_sorting.key.moveSameInventory", "移动同类物品（物品栏）");
+        translationBuilder.add("nemos_inventory_sorting.key.sort", "整理（容器）");
+        translationBuilder.add("nemos_inventory_sorting.key.sortInventory", "整理（物品栏）");
+        translationBuilder.add("nemos_inventory_sorting.key.toggleFilterPersistence", "切换筛选器持续生效");
+        translationBuilder.add("nemos_inventory_sorting.key.quickSearch", "快速搜索（Ctrl/Command + 按键绑定）");
+    }
+}

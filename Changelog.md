@@ -1,4 +1,10 @@
-# Changelog v1.22.2
+# Changelog v1.22.3
 
-## Changes
-- Adapted sorting logic to be able to sort modded bundles/backpacks properly (hope I didn't break anything)
+## Additions
+- Added translations:
+  - de_de
+  - lzh
+  - ru_ru
+  - tr_tr
+  - zh_cn
+  - zh_hk

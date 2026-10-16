@@ -27,6 +27,14 @@ dependencies {
     compileOnly("maven.modrinth:nemos-backpacks:${nemos_backpacks_version}")
 }
 
+fabricApi {
+    configureDataGeneration {
+        client = true
+        outputDirectory = project(':common').file('src/generated/resources/')
+        modId = project.mod_id
+    }
+}
+
 base {
     archivesName = "${mod_id_jar}-Fabric"
 }
@@ -54,8 +62,6 @@ loom {
         }
     }
 }
-
-sourceSets.main.resources { srcDir project.project(':common').file('src/generated/resources/').getAbsolutePath() }
 
 tasks.register('publishCurseForge', TaskPublishCurseForge) {
     group = "publishing"
